@@ -8,7 +8,7 @@
 # Dosi_Xchange
 iOS App for Exchanging Area Dosimeters
 
-Created by Ryan Ford (feat. Helen Choi)
+Created by Ryan Ford (Feat. Helen Choi)
 
 This app was created as a major revision (complete rebuild) of the Dosimeter Manager app.  Issues overcome in this version are:
 * Data is now centrally managed in CloudKit
