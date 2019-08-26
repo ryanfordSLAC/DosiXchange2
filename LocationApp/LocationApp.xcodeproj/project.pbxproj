@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5C20C366230DED8F007044EE /* Alerts.png in Resources */ = {isa = PBXBuildFile; fileRef = 5C20C363230DED8F007044EE /* Alerts.png */; };
-		5C20C367230DED8F007044EE /* Scanner Logic 1.png in Resources */ = {isa = PBXBuildFile; fileRef = 5C20C364230DED8F007044EE /* Scanner Logic 1.png */; };
-		5C20C368230DED8F007044EE /* Scanner Logic 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 5C20C365230DED8F007044EE /* Scanner Logic 2.png */; };
 		5C7925A122DE9B1900B981B2 /* LocationDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C7925A022DE9B1900B981B2 /* LocationDetails.swift */; };
 		5C941E5522D93335008C9B3E /* LocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C941E5422D93335008C9B3E /* LocationViewController.swift */; };
 		5CF01FDE22D92F19004604BC /* ToolsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CF01FDD22D92F19004604BC /* ToolsViewController.swift */; };
@@ -34,9 +31,9 @@
 		84AA30E32234DE2700F07697 /* Inlight.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 84AA30E22234DE2700F07697 /* Inlight.jpg */; };
 		84AA30E522356ABF00F07697 /* beep-5.wav in Resources */ = {isa = PBXBuildFile; fileRef = 84AA30E422356ABE00F07697 /* beep-5.wav */; };
 		84AA30E722356BEE00F07697 /* QRCodeImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 84AA30E622356BEE00F07697 /* QRCodeImage.png */; };
-		84AB347F23149EE500C7F99A /* Alerts.png in Resources */ = {isa = PBXBuildFile; fileRef = 84AB347C23149EE400C7F99A /* Alerts.png */; };
-		84AB348023149EE500C7F99A /* Scanner Logic 1.png in Resources */ = {isa = PBXBuildFile; fileRef = 84AB347D23149EE400C7F99A /* Scanner Logic 1.png */; };
-		84AB348123149EE500C7F99A /* Scanner Logic 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 84AB347E23149EE500C7F99A /* Scanner Logic 2.png */; };
+		84AB348523149F6100C7F99A /* Scanner Logic 1.png in Resources */ = {isa = PBXBuildFile; fileRef = 84AB348223149F6100C7F99A /* Scanner Logic 1.png */; };
+		84AB348623149F6100C7F99A /* Alerts.png in Resources */ = {isa = PBXBuildFile; fileRef = 84AB348323149F6100C7F99A /* Alerts.png */; };
+		84AB348723149F6100C7F99A /* Scanner Logic 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 84AB348423149F6100C7F99A /* Scanner Logic 2.png */; };
 		84B58D4D21FD69C80013D5F3 /* UploadToCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B58D4C21FD69C80013D5F3 /* UploadToCloud.swift */; };
 		84E09F2021AA609B000CE8E2 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84E09F1F21AA609B000CE8E2 /* MapKit.framework */; };
 		84F477962167173A00A63336 /* LocationApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84F477942167173A00A63336 /* LocationApp.xcdatamodeld */; };
@@ -62,9 +59,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		5C20C363230DED8F007044EE /* Alerts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Alerts.png; sourceTree = "<group>"; };
-		5C20C364230DED8F007044EE /* Scanner Logic 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Scanner Logic 1.png"; sourceTree = "<group>"; };
-		5C20C365230DED8F007044EE /* Scanner Logic 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Scanner Logic 2.png"; sourceTree = "<group>"; };
 		5C7925A022DE9B1900B981B2 /* LocationDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetails.swift; sourceTree = "<group>"; };
 		5C941E5422D93335008C9B3E /* LocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationViewController.swift; sourceTree = "<group>"; };
 		5CF01FDD22D92F19004604BC /* ToolsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsViewController.swift; sourceTree = "<group>"; };
@@ -96,9 +90,9 @@
 		84AA30E22234DE2700F07697 /* Inlight.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Inlight.jpg; sourceTree = "<group>"; };
 		84AA30E422356ABE00F07697 /* beep-5.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "beep-5.wav"; sourceTree = "<group>"; };
 		84AA30E622356BEE00F07697 /* QRCodeImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = QRCodeImage.png; sourceTree = "<group>"; };
-		84AB347C23149EE400C7F99A /* Alerts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Alerts.png; sourceTree = "<group>"; };
-		84AB347D23149EE400C7F99A /* Scanner Logic 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Scanner Logic 1.png"; sourceTree = "<group>"; };
-		84AB347E23149EE500C7F99A /* Scanner Logic 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Scanner Logic 2.png"; sourceTree = "<group>"; };
+		84AB348223149F6100C7F99A /* Scanner Logic 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Scanner Logic 1.png"; sourceTree = "<group>"; };
+		84AB348323149F6100C7F99A /* Alerts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Alerts.png; sourceTree = "<group>"; };
+		84AB348423149F6100C7F99A /* Scanner Logic 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Scanner Logic 2.png"; sourceTree = "<group>"; };
 		84B58D4C21FD69C80013D5F3 /* UploadToCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadToCloud.swift; sourceTree = "<group>"; };
 		84E09F1F21AA609B000CE8E2 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		84F477952167173A00A63336 /* LocationApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = LocationApp.xcdatamodel; sourceTree = "<group>"; };
@@ -209,12 +203,9 @@
 		84505D1D2231DEAD009551BC /* Other Asseets */ = {
 			isa = PBXGroup;
 			children = (
-				5C20C363230DED8F007044EE /* Alerts.png */,
-				5C20C364230DED8F007044EE /* Scanner Logic 1.png */,
-				5C20C365230DED8F007044EE /* Scanner Logic 2.png */,
-				84AB347C23149EE400C7F99A /* Alerts.png */,
-				84AB347D23149EE400C7F99A /* Scanner Logic 1.png */,
-				84AB347E23149EE500C7F99A /* Scanner Logic 2.png */,
+				84AB348323149F6100C7F99A /* Alerts.png */,
+				84AB348223149F6100C7F99A /* Scanner Logic 1.png */,
+				84AB348423149F6100C7F99A /* Scanner Logic 2.png */,
 				84505D1B2231DE41009551BC /* scannerbeep.mp3 */,
 				84AA30E422356ABE00F07697 /* beep-5.wav */,
 				84AA30E622356BEE00F07697 /* QRCodeImage.png */,
@@ -395,20 +386,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				84AB348123149EE500C7F99A /* Scanner Logic 2.png in Resources */,
 				8421B06E2165BBB90041A53A /* LaunchScreen.storyboard in Resources */,
 				84AA30E32234DE2700F07697 /* Inlight.jpg in Resources */,
+				84AB348523149F6100C7F99A /* Scanner Logic 1.png in Resources */,
 				84505D1C2231DE41009551BC /* scannerbeep.mp3 in Resources */,
 				8487FE3221A9153100CC62E8 /* DatabaseContents.rtf in Resources */,
 				84AA30E522356ABF00F07697 /* beep-5.wav in Resources */,
+				84AB348723149F6100C7F99A /* Scanner Logic 2.png in Resources */,
 				8421B06B2165BBB90041A53A /* Assets.xcassets in Resources */,
-				84AB348023149EE500C7F99A /* Scanner Logic 1.png in Resources */,
-				5C20C368230DED8F007044EE /* Scanner Logic 2.png in Resources */,
 				8421B0692165BBB80041A53A /* Main.storyboard in Resources */,
-				84AB347F23149EE500C7F99A /* Alerts.png in Resources */,
-				5C20C367230DED8F007044EE /* Scanner Logic 1.png in Resources */,
+				84AB348623149F6100C7F99A /* Alerts.png in Resources */,
 				84AA30E722356BEE00F07697 /* QRCodeImage.png in Resources */,
-				5C20C366230DED8F007044EE /* Alerts.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
