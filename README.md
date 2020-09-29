@@ -33,6 +33,7 @@ Attach iPod Touch USB cable to Mac
 Change device to device just attached
 Click Play button, app will load to device
 An Apple iCloud account must be registered on the device to edit and save records
+Install from SLAC MDM, SLAC Apps folder.
 ```
 #### Connectivity
 
@@ -41,6 +42,8 @@ An Apple iCloud account must be registered on the device to edit and save record
 #### Maintenance
 
 * Periodic review of the Apple Developer console is necessary to verify the devices are registered correctly.  Prior to loading the app to a staff member's personal device, they should change their device name to something easily identifiable (e.g., RyanFord's iPhone).  This way, devices can be de-registered from the console by the administrator if necessary for security reasons.
+
+* App is now available on devices registered with SLAC MDM, in the SLAC Apps folder on your device.
 
 
 
