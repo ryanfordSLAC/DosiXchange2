@@ -381,10 +381,12 @@ extension LocationDetails: UITextFieldDelegate {
         popupRecord.setValue(pDosimeter.text, forKey: "dosinumber")
         popupRecord.setValue(moderator, forKey: "moderator")
         if pDosimeter.text != "" {
+
             popupRecord.setValue(pCycleDate.text, forKey: "cycleDate")
             popupRecord.setValue(collected, forKey: "collectedFlag")
             popupRecord.setValue(mismatch, forKey: "mismatch")
         }
+        //not handled if dosimeter number is empty.  Therefore can't set collected flag.
         
         let operation = CKModifyRecordsOperation(recordsToSave: [popupRecord], recordIDsToDelete: nil)
         
