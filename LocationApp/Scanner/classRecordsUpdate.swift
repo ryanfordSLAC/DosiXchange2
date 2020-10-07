@@ -89,7 +89,7 @@ class recordsUpdate: UIViewController {
             return "1-1-\(dateStringYear)"
         case "June":
             return "1-1-\(dateStringYear)" //temp update to 7-1 to allow early deployment.
-                                            //rescinded 9/29/2020
+                                            //rescinded 9/29/2020 
         case "July":
             return "7-1-\(dateStringYear)"
         case "August":

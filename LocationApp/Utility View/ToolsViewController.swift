@@ -35,6 +35,7 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
     @IBOutlet weak var button1: UIButton!
     @IBOutlet weak var button2: UIButton!
     @IBOutlet weak var button3: UIButton!
+    //@IBOutlet weak var button4: UIButton!
     
     let borderColorUp = UIColor(red: 0.580723, green: 0.0667341, blue: 0, alpha: 1).cgColor
     let borderColorDown = UIColor(red: 0.580723, green: 0.0667341, blue: 0, alpha: 0.25).cgColor
@@ -86,6 +87,11 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
         //stop activityIndicator
         activityIndicator.stopAnimating()
     }
+/*
+    @IBAction func UploadtoCloud(_ sender: Any) {
+        let n:Save = Save()
+        n.uploadToCloud()
+    } */
     
     @IBAction func emailTouchUp(_ sender: Any) {
         

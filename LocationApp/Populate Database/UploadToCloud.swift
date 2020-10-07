@@ -13,6 +13,7 @@ import UIKit
 
 class Save {
 
+    
     let database = CKContainer.default().publicCloudDatabase
     
 /*  this class takes data which can be pasted into the blank file ("Populate Database")
@@ -29,7 +30,7 @@ class Save {
         
         do {
             
-            let fileName = "DosiData3" //change depending on which file
+            let fileName = "DosiData10" //change depending on which file
             let path = Bundle.main.path(forResource: fileName, ofType: "csv")
             let data = try String(contentsOfFile: path!, encoding: String.Encoding.utf8)
             let rows = data.components(separatedBy: "\r\n")
@@ -66,12 +67,12 @@ class Save {
             
             //manually populated fields
             if Int64(array[j][5]) == 1 {
-                newrecord.setValue(String("1-1-2019"), forKey: "cycleDate")
+                newrecord.setValue(String("7-1-2020"), forKey: "cycleDate")
                 newrecord.setValue(Int64(0), forKey: "collectedFlag")
             }
             
             database.save(newrecord) { (record, error) in guard record != nil else { return }
-     
+                
             } //end database save
             
             j += 1
