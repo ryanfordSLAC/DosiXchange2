@@ -473,10 +473,10 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r2c-xd-YEg" userLabel="innerView">
-                                        <rect key="frame" x="82" y="70" width="250" height="350"/>
+                                        <rect key="frame" x="32" y="70" width="350" height="350"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="250" id="54m-Zt-8lp"/>
+                                            <constraint firstAttribute="width" constant="350" id="54m-Zt-8lp"/>
                                             <constraint firstAttribute="height" constant="350" id="Z8w-9t-IdW"/>
                                         </constraints>
                                     </view>
@@ -530,7 +530,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VH6-7y-IE6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1335" y="810"/>
+            <point key="canvasLocation" x="-1336.2318840579712" y="809.59821428571422"/>
         </scene>
         <!--Map View Controller-->
         <scene sceneID="d0B-BI-iTz">
@@ -1073,9 +1073,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="K3I-ac-JBM"/>
         <segue reference="Szf-7B-3OI"/>
-        <segue reference="1iZ-uO-Z3p"/>
+        <segue reference="jLQ-01-gAR"/>
         <segue reference="1eV-Ng-UnH"/>
     </inferredMetricsTieBreakers>
     <resources>

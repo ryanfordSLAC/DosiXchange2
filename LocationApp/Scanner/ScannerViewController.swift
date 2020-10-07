@@ -15,7 +15,7 @@ import CoreLocation
 class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
     var recordsupdate = recordsUpdate()
-    
+    var zoomFactor:CGFloat = 3
     var captureSession: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!
     var counter:Int64 = 0
@@ -51,8 +51,24 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
         captureSession = AVCaptureSession()
+    
         guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else { return }
         let videoInput: AVCaptureDeviceInput
+ 
+        
+    //set zoom factor to 2x
+        do {
+            try    videoCaptureDevice.lockForConfiguration()
+            
+        } catch {
+            // handle error
+            return
+        }
+
+        // When this point is reached, we can be sure that the locking succeeded
+
+        
+    //end set zoom factor to 2X
         
         do {
             videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
@@ -63,6 +79,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         
         if (captureSession.canAddInput(videoInput)) {
             captureSession.addInput(videoInput)
+            
         }
         else {
             failed()
@@ -89,7 +106,8 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         previewLayer.frame.size = innerView.frame.size
         previewLayer.videoGravity = .resizeAspectFill
         innerView.layer.addSublayer(previewLayer)
-
+        videoCaptureDevice.videoZoomFactor = zoomFactor
+        videoCaptureDevice.unlockForConfiguration()
         captureSession.startRunning()
         
     }//end viewDidLoad()
