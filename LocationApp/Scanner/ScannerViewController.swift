@@ -56,7 +56,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         let videoInput: AVCaptureDeviceInput
  
         
-    //set zoom factor to 2x
+    //set zoom factor to 3x
         do {
             try    videoCaptureDevice.lockForConfiguration()
             
@@ -68,7 +68,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         // When this point is reached, we can be sure that the locking succeeded
 
         
-    //end set zoom factor to 2X
+    //end set zoom factor to 3X
         
         do {
             videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
@@ -104,8 +104,8 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         
         previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         previewLayer.frame.size = innerView.frame.size
-        previewLayer.videoGravity = .resizeAspectFill
         innerView.layer.addSublayer(previewLayer)
+        previewLayer.videoGravity = AVLayerVideoGravity.resize
         videoCaptureDevice.videoZoomFactor = zoomFactor
         videoCaptureDevice.unlockForConfiguration()
         captureSession.startRunning()
@@ -380,13 +380,14 @@ extension ScannerViewController {
     } //end func
     
     
-    func collect(collected: Int64, mismatch: Int64) {
+    func collect(collected: Int64, mismatch: Int64, modifiedDate: Date) {
         
         self.dispatchGroup.enter()
         
         itemRecord!.setValue(collected, forKey: "collectedFlag")
         itemRecord!.setValue(mismatch, forKey: "mismatch")
-
+        itemRecord!.setValue(modifiedDate, forKey: "modifiedDate")
+        
         let operation = CKModifyRecordsOperation(recordsToSave: [itemRecord!], recordIDsToDelete: nil)
         
         operation.modifyRecordsCompletionBlock = { (records, recordIDs, error) in
@@ -677,7 +678,7 @@ extension ScannerViewController {  //alerts
         let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: handlerCancel)
         
         let ExchangeDosimeter = UIAlertAction(title: "Exchange", style: .default) { (_) in
-            self.collect(collected: 1, mismatch: variables.mismatch ?? 0)
+            self.collect(collected: 1, mismatch: variables.mismatch ?? 0, modifiedDate: Date(timeInterval: 0, since: Date()))
             self.alert11a()
         }
 
@@ -703,7 +704,7 @@ extension ScannerViewController {  //alerts
         let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: handlerCancel)
         
         let collectDosimeter = UIAlertAction(title: "Collect", style: .default) { (_) in
-            self.collect(collected: 1, mismatch: variables.mismatch ?? 0)
+            self.collect(collected: 1, mismatch: variables.mismatch ?? 0, modifiedDate: Date(timeInterval: 0, since: Date()))
             self.alert11()
         }
         
@@ -895,9 +896,10 @@ extension ScannerViewController {  //alerts
                                           QRCode: variables.QRCode ?? "Nil QRCode",
                                           mismatch: variables.mismatch ?? 0,
                                           moderator: variables.moderator ?? 0,
-                                          active: 1)
-            
-            variables.dosiLocation = text
+                                          active: 1,
+                                          createdDate: Date(timeInterval: 0, since: Date()),
+                                          modifiedDate: Date(timeInterval: 0, since: Date()))
+                                          
             self.alert10() //Success
         }  //end let
         

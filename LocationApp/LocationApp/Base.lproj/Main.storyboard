@@ -472,13 +472,6 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GNg-Ha-38G" userLabel="outerView">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="548"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r2c-xd-YEg" userLabel="innerView">
-                                        <rect key="frame" x="43" y="70" width="234" height="350"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="350" id="Z8w-9t-IdW"/>
-                                        </constraints>
-                                    </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C6U-ya-27d">
                                         <rect key="frame" x="35" y="460" width="55" height="44"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="26"/>
@@ -499,6 +492,14 @@
                                             <segue destination="Pbj-ZR-7ZZ" kind="show" id="Szf-7B-3OI"/>
                                         </connections>
                                     </button>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r2c-xd-YEg" userLabel="innerView">
+                                        <rect key="frame" x="10" y="70" width="300" height="350"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" priority="750" constant="300" id="L9s-2u-Rtq"/>
+                                            <constraint firstAttribute="height" priority="750" constant="350" id="Z8w-9t-IdW"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" red="0.58072251080000004" green="0.066734083" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
@@ -506,13 +507,13 @@
                                     <constraint firstItem="C6U-ya-27d" firstAttribute="top" secondItem="r2c-xd-YEg" secondAttribute="bottom" constant="40" id="9uf-E1-w9w"/>
                                     <constraint firstItem="ohR-Dy-gEm" firstAttribute="top" secondItem="r2c-xd-YEg" secondAttribute="bottom" constant="40" id="CDb-FD-DrJ"/>
                                     <constraint firstItem="ohR-Dy-gEm" firstAttribute="leading" secondItem="C6U-ya-27d" secondAttribute="trailing" constant="145" id="CT5-4q-4Ke"/>
-                                    <constraint firstItem="r2c-xd-YEg" firstAttribute="top" secondItem="GNg-Ha-38G" secondAttribute="top" constant="70" id="CbQ-ue-D9m"/>
+                                    <constraint firstItem="r2c-xd-YEg" firstAttribute="top" secondItem="GNg-Ha-38G" secondAttribute="top" priority="750" constant="70" id="CbQ-ue-D9m"/>
                                     <constraint firstAttribute="centerX" secondItem="C6U-ya-27d" secondAttribute="trailing" constant="70" id="Dtf-jj-Qwn"/>
-                                    <constraint firstItem="r2c-xd-YEg" firstAttribute="leading" secondItem="GNg-Ha-38G" secondAttribute="leadingMargin" constant="35" id="Gez-tU-hTv"/>
-                                    <constraint firstItem="r2c-xd-YEg" firstAttribute="centerX" secondItem="GNg-Ha-38G" secondAttribute="centerX" id="N4o-a2-FQV"/>
-                                    <constraint firstAttribute="trailingMargin" secondItem="r2c-xd-YEg" secondAttribute="trailing" constant="35" id="TuC-NU-Rog"/>
+                                    <constraint firstAttribute="trailing" secondItem="r2c-xd-YEg" secondAttribute="trailing" priority="250" constant="70" id="HrN-bf-5B7"/>
                                     <constraint firstItem="C6U-ya-27d" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="GNg-Ha-38G" secondAttribute="leading" constant="20" symbolic="YES" id="ZEd-bg-tif"/>
                                     <constraint firstItem="ohR-Dy-gEm" firstAttribute="baseline" secondItem="C6U-ya-27d" secondAttribute="baseline" id="ddv-o8-02m"/>
+                                    <constraint firstItem="r2c-xd-YEg" firstAttribute="leading" secondItem="GNg-Ha-38G" secondAttribute="leading" priority="250" constant="70" id="gZI-C2-3uj"/>
+                                    <constraint firstItem="r2c-xd-YEg" firstAttribute="centerX" secondItem="GNg-Ha-38G" secondAttribute="centerX" id="xpb-d3-cqg"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -531,7 +532,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VH6-7y-IE6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1336.2318840579712" y="809.59821428571422"/>
+            <point key="canvasLocation" x="-1336.875" y="809.15492957746483"/>
         </scene>
         <!--Map View Controller-->
         <scene sceneID="d0B-BI-iTz">
@@ -1074,7 +1075,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="K3I-ac-JBM"/>
         <segue reference="Szf-7B-3OI"/>
         <segue reference="jLQ-01-gAR"/>
         <segue reference="1eV-Ng-UnH"/>

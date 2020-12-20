@@ -30,7 +30,7 @@ class recordsUpdate: UIViewController {
         
     }
     
-    func saveRecord(latitude:String, longitude:String, dosiNumber:String, text:String, flag:Int64, cycle:String, QRCode:String, mismatch:Int64, moderator:Int64, active:Int64) {
+    func saveRecord(latitude:String, longitude:String, dosiNumber:String, text:String, flag:Int64, cycle:String, QRCode:String, mismatch:Int64, moderator:Int64, active:Int64, createdDate:Date, modifiedDate:Date) {
                 
         //save data to database
         let newRecord = CKRecord(recordType: "Location")
@@ -43,6 +43,8 @@ class recordsUpdate: UIViewController {
         newRecord.setValue(QRCode, forKey: "QRCode")
         newRecord.setValue(moderator, forKey: "moderator")
         newRecord.setValue(active, forKey: "active")
+        newRecord.setValue(createdDate, forKey: "createdDate")
+        newRecord.setValue(modifiedDate, forKey: "modifiedDate")
         
         let operation = CKModifyRecordsOperation(recordsToSave: [newRecord], recordIDsToDelete: nil)
         
