@@ -30,6 +30,9 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
     var mismatchStr:String = ""
     var csvText = ""
     var moderator = ""
+    var mycreatedDate:Date?  //during testing the date field may contain nothing
+    var myDateModified:Date?
+
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var button1: UIButton!
@@ -149,7 +152,7 @@ extension ToolsViewController {
         //set first line of text file
         //should separate text file from query
         dispatchGroup.enter()
-        self.csvText = "LocationID (QRCode),Latitude,Longitude,Description,Moderator (0/1),Active (0/1),Dosimeter,Collected Flag (0/1),Wear Period,Date Deployed,Date Collected,Mismatch (0/1)\n"
+        self.csvText = "LocationID (QRCode),Latitude,Longitude,Description,Moderator (0/1),Active (0/1),Dosimeter,Collected Flag (0/1),Wear Period,System_Date Deployed,System_Date Collected,Mismatch (0/1), my_Date Deployed, my_Date Collected\n"
         let predicate = NSPredicate(value: true)
         let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
         let sort2 = NSSortDescriptor(key: "creationDate", ascending: false)
@@ -188,25 +191,56 @@ extension ToolsViewController {
     // to be executed for each fetched record
     func recordFetchedBlock(record: CKRecord) {
         //Careful use of optionals to prevent crashes.
+        
+        //block 1:  these fields always have a value
         QRCode = record["QRCode"]!
         latitude = record["latitude"]!
         longitude = record["longitude"]!
         loc = record["locdescription"]!
         active = record["active"]!
+        
+        //block 2:  these fields sometimes have a value
         if record["dosinumber"] != nil {dosimeter = record["dosinumber"]!}
         if record["cycleDate"] != nil {cycle = record["cycleDate"]!}
         if record["collectedFlag"] != nil {collectedFlagStr = String(describing: record["collectedFlag"]!)}
         if record["mismatch"] != nil {mismatchStr = String(describing: record["mismatch"]!)}
         if record["moderator"] != nil {moderator = String(describing: record ["moderator"]!)}
         
+        //my fields for created and modified dates:
+
         let dateFormatter = DateFormatter()
         dateFormatter.timeStyle = .none
         dateFormatter.dateFormat = "MM/dd/yyyy"
+        
+        //system dates - creationDate and modificationDate
+        //block 3: these fields always have a value and are called differently than my date fields
         let date = Date(timeInterval: 0, since: record.creationDate!)
         let formattedDate = dateFormatter.string(from: date)
         let dateModified = Date(timeInterval: 0, since: record.modificationDate!)
         let formattedDateModified = dateFormatter.string(from: dateModified)
-        let newline = "\(QRCode),\(latitude),\(longitude),\(loc),\(moderator),\(active),\(dosimeter),\(collectedFlagStr),\(cycle),\(formattedDate),\(formattedDateModified),\(mismatchStr)\n"
+        
+        //block 4: may not have a value when initially set up and tested
+        //but will eventually always have a value
+        if record["createdDate"] != nil {
+            mycreatedDate = Date(timeInterval: 0, since: record["createdDate"] as! Date)
+        } else {
+                //can't set the date as nil
+                //but if the date is old enough it populates a nil in the field.
+                //the cutoff is around -1E10 seconds ago where it stops showing dates
+            mycreatedDate = Date(timeInterval: -1E15, since: Date())
+        }
+        let myformattedCreatedDate = dateFormatter.string(from: mycreatedDate!)
+        //print("MyformattedCreatedDate: \(String(describing: myformattedCreatedDate))")
+        
+        if record["modifiedDate"] != nil {
+            myDateModified = Date(timeInterval: 0, since: record["modifiedDate"] as! Date)
+        } else {
+            myDateModified = Date(timeInterval: -1E15, since: Date())
+        }
+        let myformattedDateModified = dateFormatter.string(from: myDateModified!)
+        
+        //write the data into the file.
+        let newline = "\(QRCode),\(latitude),\(longitude),\(loc),\(moderator),\(active),\(dosimeter),\(collectedFlagStr),\(cycle),\(formattedDate),\(formattedDateModified),\(mismatchStr),\(myformattedCreatedDate),\(myformattedDateModified)\n"
         csvText.append(contentsOf: newline)
         clear()
     }
@@ -224,6 +258,7 @@ extension ToolsViewController {
         mismatch = nil
         collectedFlagStr = ""
         mismatchStr = ""
+        //not clearing date fields?
     }
     
 } //end class
