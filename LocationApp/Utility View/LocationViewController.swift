@@ -24,6 +24,12 @@ class LocationViewController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet weak var btnDist: UIButton!
 
     override func viewDidLoad() {
+        if #available(iOS 13.0, *) {
+            overrideUserInterfaceStyle = .light
+        } else {
+            // Fallback on earlier versions
+        }
+        
         
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
