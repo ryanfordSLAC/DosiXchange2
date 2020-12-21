@@ -40,11 +40,6 @@ This app was created as a major revision (complete rebuild) of the Dosimeter Man
 #### Installation
 
 ```
-Open LocationApp.xcodeproj in Xcode (Note Swift file does not match folder Title - Novice mistake)
-Attach iPod Touch USB cable to Mac
-Change device to device just attached
-Click Play button, app will load to device
-An Apple iCloud account must be registered on the device to edit and save records
 Install from SLAC MDM, SLAC Apps folder.
 ```
 #### Connectivity
