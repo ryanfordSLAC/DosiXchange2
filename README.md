@@ -17,7 +17,7 @@ Version 1.2 / January 2020:
   - Resized scanner view to fill frame
 * Briefcase mode:  outlined class for future upgrade for offline use (not visible)
 * Queries:
-  - Nearest dosimeter query no includes "Active without Dosimeter!" entries
+  - Nearest dosimeter query now includes "Active without Dosimeter!" entries and suppresses inactive ones
   - Replaced nils in this query with "" for text strings.
 
 
