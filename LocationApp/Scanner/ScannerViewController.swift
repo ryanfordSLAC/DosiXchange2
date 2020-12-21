@@ -886,11 +886,16 @@ extension ScannerViewController {  //alerts
         let saveRecord = UIAlertAction(title: "Save", style: .default) { (_) in
             var text = alert.textFields?.first?.text
             text = text?.replacingOccurrences(of: ",", with: "-")
+            //Ver 1.2 - supply default location to prevent empty string in DB.
+            //rather than alert on top of alert for field valication
+            if text == "" {
+                text = "Default Location (field left empty)"
+            }
             
             self.recordsupdate.saveRecord(latitude: variables.latitude ?? "Nil Latitude",
                                           longitude: variables.longitude ?? "Nil Longitude",
                                           dosiNumber: variables.dosiNumber ?? "Nil Dosi",
-                                          text: text ?? "Nil location",
+                                          text: text ?? "Nil Location",
                                           flag: 0,
                                           cycle: cycle,
                                           QRCode: variables.QRCode ?? "Nil QRCode",
@@ -899,7 +904,6 @@ extension ScannerViewController {  //alerts
                                           active: 1,
                                           createdDate: Date(timeInterval: 0, since: Date()),
                                           modifiedDate: Date(timeInterval: 0, since: Date()))
-                                          
             self.alert10() //Success
         }  //end let
         
