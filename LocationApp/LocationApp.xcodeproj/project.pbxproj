@@ -20,6 +20,7 @@
 		8421B0792165BBB90041A53A /* LocationAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421B0782165BBB90041A53A /* LocationAppTests.swift */; };
 		8421B0842165BBB90041A53A /* LocationAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421B0832165BBB90041A53A /* LocationAppUITests.swift */; };
 		84505D1C2231DE41009551BC /* scannerbeep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 84505D1B2231DE41009551BC /* scannerbeep.mp3 */; };
+		84571FE5258FE29C009AC936 /* BriefCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84571FE4258FE29C009AC936 /* BriefCase.swift */; };
 		845F2E5F221C62E200A48C1A /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845F2E5E221C62E200A48C1A /* Reachability.swift */; };
 		846606C121AA3CA00049814C /* ReadWriteText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846606C021AA3CA00049814C /* ReadWriteText.swift */; };
 		846606C321AA5C380049814C /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846606C221AA5C380049814C /* MapViewController.swift */; };
@@ -78,6 +79,7 @@
 		8421B0832165BBB90041A53A /* LocationAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAppUITests.swift; sourceTree = "<group>"; };
 		8421B0852165BBB90041A53A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84505D1B2231DE41009551BC /* scannerbeep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = scannerbeep.mp3; sourceTree = "<group>"; };
+		84571FE4258FE29C009AC936 /* BriefCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BriefCase.swift; sourceTree = "<group>"; };
 		845F2E5E221C62E200A48C1A /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		846606C021AA3CA00049814C /* ReadWriteText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadWriteText.swift; sourceTree = "<group>"; };
 		846606C221AA5C380049814C /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -169,9 +171,9 @@
 				8421B0672165BBB80041A53A /* Main.storyboard */,
 				8487FE2F21A8F9C700CC62E8 /* StartupViewController.swift */,
 				84F9180122211C9B00D25634 /* NearestDosimeters.swift */,
-				845F2E5E221C62E200A48C1A /* Reachability.swift */,
 				8421B0632165BBB80041A53A /* AppDelegate.swift */,
 				8409448821CC539900C4EA28 /* TODO.swift */,
+				845F2E5E221C62E200A48C1A /* Reachability.swift */,
 				8421B06C2165BBB90041A53A /* LaunchScreen.storyboard */,
 				8421B06F2165BBB90041A53A /* Info.plist */,
 				846D6B4F2170160E008E003D /* LocationApp.entitlements */,
@@ -245,6 +247,7 @@
 			children = (
 				5CF01FDD22D92F19004604BC /* ToolsViewController.swift */,
 				5C941E5422D93335008C9B3E /* LocationViewController.swift */,
+				84571FE4258FE29C009AC936 /* BriefCase.swift */,
 				5CFF888A22CAA5B700611F60 /* ActiveLocations.swift */,
 				5C7925A022DE9B1900B981B2 /* LocationDetails.swift */,
 			);
@@ -425,6 +428,7 @@
 				84F477962167173A00A63336 /* LocationApp.xcdatamodeld in Sources */,
 				84B58D4D21FD69C80013D5F3 /* UploadToCloud.swift in Sources */,
 				84A6671421E7162200FC1892 /* Artwork.swift in Sources */,
+				84571FE5258FE29C009AC936 /* BriefCase.swift in Sources */,
 				84F9180222211C9B00D25634 /* NearestDosimeters.swift in Sources */,
 				8487FE2E21A8F4E000CC62E8 /* ScannerViewController.swift in Sources */,
 				846606C121AA3CA00049814C /* ReadWriteText.swift in Sources */,

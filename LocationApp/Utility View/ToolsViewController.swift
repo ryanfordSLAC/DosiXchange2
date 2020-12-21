@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import MessageUI
 import CloudKit
+import AVFoundation
 
 class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate {
     
@@ -104,7 +105,6 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
         
         self.readwrite.writeText(someText: "\(csvText)")
         self.sendEmail()
-        
         //stop activityIndicator
         activityIndicator.stopAnimating()
         button3.layer.borderColor = borderColorUp
@@ -138,8 +138,10 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
     
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         
+        //Play email sent sound
+        let systemSoundID: SystemSoundID =  1001
+        AudioServicesPlaySystemSound(systemSoundID)
         controller.dismiss(animated: true)
-        
     } //end func mailComposeController
 }
 

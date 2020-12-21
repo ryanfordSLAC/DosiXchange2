@@ -37,7 +37,11 @@ class NearestLocations: UIViewController, UITableViewDataSource, UITableViewDele
     @IBOutlet weak var nearestTableView: UITableView!
 
     override func viewDidLoad() {
-        
+        if #available(iOS 13.0, *) {
+            overrideUserInterfaceStyle = .light
+        } else {
+            // Fallback on earlier versions
+        }
         super.viewDidLoad()
         nearestTableView.delegate = self
         nearestTableView.dataSource = self
