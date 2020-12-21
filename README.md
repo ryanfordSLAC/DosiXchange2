@@ -16,6 +16,9 @@ Version 1.2 / January 2020:
   - Added default send email sound
   - Resized scanner view to fill frame
 * Briefcase mode:  outlined class for future upgrade for offline use (not visible)
+* Queries:
+  - Nearest dosimeter query no includes "Active without Dosimeter!" entries
+  - Replaced nils in this query with "" for text strings.
 
 
 # iOS App for Exchanging Area Dosimeters
