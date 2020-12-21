@@ -162,9 +162,11 @@ extension NearestLocations {
         let cycleDate = self.recordsupdate.generateCycleDate()
         let priorCycleDate = self.recordsupdate.generatePriorCycleDate(cycleDate: cycleDate)
         let flag = 0
+        let activeFlag = 1  //ver 1.2 = suppress inactive dosimeters from lists
         let p1 = NSPredicate(format: "collectedFlag == %d", flag)
         let p2 = NSPredicate(format: "cycleDate == %@", priorCycleDate)
-        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [p1, p2])
+        let p3 = NSPredicate(format: "active == %d", activeFlag)
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [p1, p2, p3])
         let query = CKQuery(recordType: "Location", predicate: predicate)
         let operation = CKQueryOperation(query: query)
         addOperation(operation: operation)
@@ -211,12 +213,15 @@ extension NearestLocations {
     
     //to be executed for each fetched record
     func recordFetchedBlock(record: CKRecord) {
-        
-        if record["QRCode"] != nil {self.QRCode = record["QRCode"]!}
-        if record["latitude"] != nil {self.latitude = record["latitude"]!}
-        if record["longitude"] != nil {self.longitude = record["longitude"]!}
-        if record["dosinumber"] != nil {self.dosimeter = record["dosinumber"]!}
-        if record["locdescription"] != nil {self.loc = record["locdescription"]!}
+        //changed nils in string fields to "".
+        if record["QRCode"] != "" {self.QRCode = record["QRCode"]!}
+        if record["latitude"] != "" {self.latitude = record["latitude"]!}
+        if record["longitude"] != "" {self.longitude = record["longitude"]!}
+        if record["dosinumber"] != "" {self.dosimeter = record["dosinumber"]!
+        } else if record["dosinumber"] == "" {
+            self.dosimeter = "Active without Dosimeter!"  //show "active no dosimeter" in lists Ver 1.2
+        }
+        if record["locdescription"] != "" {self.loc = record["locdescription"]!}
         if record["moderator"] != nil {self.mod = record["moderator"]!}
         
         //compute distance between start location and the point
