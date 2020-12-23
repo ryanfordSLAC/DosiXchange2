@@ -17,6 +17,8 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
     let readwrite = readWriteText()  //make external class available locally
     let database = CKContainer.default().publicCloudDatabase  //establish database
     let dispatchGroup = DispatchGroup()
+    let saveToCloud = Save()
+    
     
     var QRCode:String = ""
     var latitude:String = ""
@@ -39,6 +41,8 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
     @IBOutlet weak var button1: UIButton!
     @IBOutlet weak var button2: UIButton!
     @IBOutlet weak var button3: UIButton!
+    @IBOutlet weak var uploadToCloud: UIButton!
+    
     //@IBOutlet weak var button4: UIButton!
     
     let borderColorUp = UIColor(red: 0.580723, green: 0.0667341, blue: 0, alpha: 1).cgColor
@@ -47,6 +51,7 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        activityIndicator.hidesWhenStopped = true
         
         //format buttons
         button1.layer.borderWidth = 1.5
@@ -63,6 +68,13 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
         
     }
     
+    @IBAction func uploadToCloud(_ sender: Any) {
+        activityIndicator.startAnimating()
+        saveToCloud.uploadToCloud()
+        activityIndicator.stopAnimating()
+        
+        
+    }
     @IBAction func button1down(_ sender: Any) {
         button1.layer.borderColor = borderColorDown
     }

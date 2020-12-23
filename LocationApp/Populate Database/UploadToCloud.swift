@@ -24,20 +24,21 @@ class Save {
 */
     
     
-    func uploadToCloud() -> Array<Any> {  //probably doesn't need to return anything.
+    func uploadToCloud() {  //-> Array<Any> {  //probably doesn't need to return anything.
         
         var array:[[String]] = [[""]] //initialize the array
         
         do {
             
-            let fileName = "DosiData10" //change depending on which file
+            let fileName = "Dosi_Data_Partial" //change depending on which file
             let path = Bundle.main.path(forResource: fileName, ofType: "csv")
             let data = try String(contentsOfFile: path!, encoding: String.Encoding.utf8)
-            let rows = data.components(separatedBy: "\r\n")
+            let rows = data.components(separatedBy: "\r\n")  //removed \r
 
             for row in rows {
                 let values = row.components(separatedBy: ",")
                 array.append(values)
+                print(array)
             } //end for
             
         } //end do
@@ -58,18 +59,33 @@ class Save {
             
             //csv data populated fields
             newrecord.setValue(String(array[j][0]), forKey: "QRCode") //first column, index 0
-            newrecord.setValue(String(array[j][1]), forKey: "locdescription")
-            newrecord.setValue(Int64(array[j][2]), forKey: "moderator")
-            newrecord.setValue(String(array[j][3]), forKey: "latitude")
-            newrecord.setValue(String(array[j][4]), forKey: "longitude")
+            newrecord.setValue(String(array[j][1]), forKey: "latitude")
+            newrecord.setValue(String(array[j][2]), forKey: "longitude")
+            newrecord.setValue(String(array[j][3]), forKey: "locdescription")
+            newrecord.setValue(Int64(array[j][4]), forKey: "moderator")
             newrecord.setValue(Int64(array[j][5]), forKey: "active")
-            newrecord.setValue(String(array[j][6]), forKey: "dosinumber") // seventh column, index 6
+            newrecord.setValue(String(array[j][6]), forKey: "dosinumber")
+            newrecord.setValue(Int64(array[j][7]), forKey: "collectedFlag")
+            newrecord.setValue(String(array[j][8]), forKey: "cycleDate")
+            newrecord.setValue(Int64(array[j][11]), forKey: "mismatch")
             
-            //manually populated fields
-            if Int64(array[j][5]) == 1 {
-                newrecord.setValue(String("7-1-2020"), forKey: "cycleDate")
-                newrecord.setValue(Int64(0), forKey: "collectedFlag")
-            }
+            //dates need converstion from string to Date format before writing
+            let dateformatter = DateFormatter()
+            dateformatter.dateFormat = "MM/dd/yy"
+            let stringDate = array[j][12]
+            let formattedDate = dateformatter.date(from: stringDate)
+            newrecord.setValue(formattedDate, forKey: "createdDate")
+            print(formattedDate ?? Date(timeInterval: 0, since: Date()))
+            
+            let dateformatter2 = DateFormatter()
+            dateformatter2.dateFormat = "MM/dd/yy"
+            let stringDate1 = array[j][13]
+            let formattedDate1 = dateformatter2.date(from: stringDate1)
+            newrecord.setValue(formattedDate1, forKey: "modifiedDate")
+            print(formattedDate1 ?? Date(timeInterval: 0, since: Date()))
+            
+            
+            //newrecord.setValue(NSDate(array[j][13]), forKey: "modifiedDate") //index 13 in file
             
             database.save(newrecord) { (record, error) in guard record != nil else { return }
                 
@@ -79,7 +95,7 @@ class Save {
             
         }  //end while
     
-    return array
+    //return array
 
     }//end func
     
