@@ -76,7 +76,7 @@ class Save {
             let formattedDate = dateformatter.date(from: stringDate)
             newrecord.setValue(formattedDate, forKey: "createdDate")
             
-            let stringDate1 = array[j][12]
+            let stringDate1 = array[j][13]
             let formattedDate1 = dateformatter.date(from: stringDate1)
             newrecord.setValue(formattedDate1, forKey: "modifiedDate")
             
