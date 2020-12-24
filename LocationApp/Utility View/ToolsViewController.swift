@@ -68,13 +68,13 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
         
     }
     
-    @IBAction func uploadToCloud(_ sender: Any) {
-        activityIndicator.startAnimating()
-        saveToCloud.uploadToCloud()
-        activityIndicator.stopAnimating()
+    //@IBAction func uploadToCloud(_ sender: Any) {
+     //   activityIndicator.startAnimating()
+      //  saveToCloud.uploadToCloud()
+     //   activityIndicator.stopAnimating()
         
         
-    }
+    //}
     @IBAction func button1down(_ sender: Any) {
         button1.layer.borderColor = borderColorDown
     }
@@ -169,7 +169,8 @@ extension ToolsViewController {
         self.csvText = "LocationID (QRCode),Latitude,Longitude,Description,Moderator (0/1),Active (0/1),Dosimeter,Collected Flag (0/1),Wear Period,System_Date Deployed,System_Date Collected,Mismatch (0/1), my_Date Deployed, my_Date Collected\n"
         let predicate = NSPredicate(value: true)
         let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
-        let sort2 = NSSortDescriptor(key: "creationDate", ascending: false)
+        //let sort2 = NSSortDescriptor(key: "creationDate", ascending: false)
+        let sort2 = NSSortDescriptor(key: "createdDate", ascending: false)  //Ver 1.2
         let query = CKQuery(recordType: "Location", predicate: predicate)
         query.sortDescriptors = [sort1, sort2]
         let operation = CKQueryOperation(query: query)
@@ -226,11 +227,14 @@ extension ToolsViewController {
         dateFormatter.timeStyle = .none
         dateFormatter.dateFormat = "MM/dd/yyyy"
         
-        //system dates - creationDate and modificationDate
+        //system dates - createdDate and modifiedDate Ver 1.2
+        
         //block 3: these fields always have a value and are called differently than my date fields
-        let date = Date(timeInterval: 0, since: record.creationDate!)
+        //let date = Date(timeInterval: 0, since: record.creationDate!)
+        let date = Date(timeInterval: 0, since: record["createdDate"] as! Date) //Ver 1.2
         let formattedDate = dateFormatter.string(from: date)
-        let dateModified = Date(timeInterval: 0, since: record.modificationDate!)
+        //let dateModified = Date(timeInterval: 0, since: record.modificationDate!)
+        let dateModified = Date(timeInterval: 0, since: record["modifiedDate"] as! Date)
         let formattedDateModified = dateFormatter.string(from: dateModified)
         
         //block 4: may not have a value when initially set up and tested
