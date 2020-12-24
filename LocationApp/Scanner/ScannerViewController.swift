@@ -508,7 +508,8 @@ extension ScannerViewController {  //queries
     func queryForDosiFound() {
         dispatchGroup.enter()
         let predicate = NSPredicate(format: "dosinumber == %@", variables.dosiNumber!)
-        let sort = NSSortDescriptor(key: "creationDate", ascending: false)
+        //let sort = NSSortDescriptor(key: "creationDate", ascending: false)
+        let sort = NSSortDescriptor(key: "createdDate", ascending: false) //Ver 1.2
         let query = CKQuery(recordType: "Location", predicate: predicate)
         query.sortDescriptors = [sort]
         database.perform(query, inZoneWith: nil) { (records, _) in
@@ -537,7 +538,8 @@ extension ScannerViewController {  //queries
     func queryForQRFound() {
         dispatchGroup.enter()
         let predicate = NSPredicate(format: "QRCode == %@", variables.QRCode!)
-        let sort = NSSortDescriptor(key: "creationDate", ascending: false)
+        //let sort = NSSortDescriptor(key: "creationDate", ascending: false)
+        let sort = NSSortDescriptor(key: "createdDate", ascending: false) //Ver 1.2
         let query = CKQuery(recordType: "Location", predicate: predicate)
         query.sortDescriptors = [sort]
         database.perform(query, inZoneWith: nil) { (records, _) in
@@ -581,7 +583,8 @@ extension ScannerViewController {  //queries
     func queryForQRUsed(tempQR: String) {
         dispatchGroup.enter()
         let predicate = NSPredicate(format: "QRCode == %@", tempQR)
-        let sort = NSSortDescriptor(key: "creationDate", ascending: false)
+        //let sort = NSSortDescriptor(key: "creationDate", ascending: false)
+        let sort = NSSortDescriptor(key: "createdDate", ascending: false)
         let query = CKQuery(recordType: "Location", predicate: predicate)
         query.sortDescriptors = [sort]
         database.perform(query, inZoneWith: nil) { (records, _) in

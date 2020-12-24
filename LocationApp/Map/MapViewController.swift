@@ -284,7 +284,8 @@ extension MapViewController {
         records = [CKRecord]()
         let predicate = NSPredicate(value: true)
         let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
-        let sort2 = NSSortDescriptor(key: "creationDate", ascending: false)
+        //let sort2 = NSSortDescriptor(key: "creationDate", ascending: false)
+        let sort2 = NSSortDescriptor(key: "createdDate", ascending: false)
         let query = CKQuery(recordType: "Location", predicate: predicate)
         query.sortDescriptors = [sort1, sort2]
         let operation = CKQueryOperation(query: query)

@@ -33,12 +33,13 @@ class Save {
             let fileName = "Dosi_Data_Partial" //change depending on which file
             let path = Bundle.main.path(forResource: fileName, ofType: "csv")
             let data = try String(contentsOfFile: path!, encoding: String.Encoding.utf8)
-            let rows = data.components(separatedBy: "\r\n")  //removed \r
+            let rows = data.components(separatedBy: "\n")  //removed \r
 
             for row in rows {
                 let values = row.components(separatedBy: ",")
                 array.append(values)
-                print(array)
+                //print(array)
+                //print(array)
             } //end for
             
         } //end do
@@ -53,7 +54,7 @@ class Save {
         var j = 1  //first row [0] contains ""
         let end = array.count //don't go too far or get fatal error
         
-        while j < end {
+        while j < end - 1 {
             
             let newrecord = CKRecord(recordType: "Location")
             
@@ -75,14 +76,14 @@ class Save {
             let stringDate = array[j][12]
             let formattedDate = dateformatter.date(from: stringDate)
             newrecord.setValue(formattedDate, forKey: "createdDate")
-            print(formattedDate ?? Date(timeInterval: 0, since: Date()))
+            //print(formattedDate ?? Date(timeInterval: 0, since: Date()))
             
             let dateformatter2 = DateFormatter()
             dateformatter2.dateFormat = "MM/dd/yy"
             let stringDate1 = array[j][13]
             let formattedDate1 = dateformatter2.date(from: stringDate1)
             newrecord.setValue(formattedDate1, forKey: "modifiedDate")
-            print(formattedDate1 ?? Date(timeInterval: 0, since: Date()))
+            //print(formattedDate1 ?? Date(timeInterval: 0, since: Date()))
             
             
             //newrecord.setValue(NSDate(array[j][13]), forKey: "modifiedDate") //index 13 in file
@@ -94,7 +95,7 @@ class Save {
             j += 1
             
         }  //end while
-    
+    print("Done")
     //return array
 
     }//end func

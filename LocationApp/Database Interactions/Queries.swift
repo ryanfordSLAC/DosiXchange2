@@ -33,7 +33,9 @@ class Queries {
         
         //get current Cycle Date
         let cycleDate = self.recordsupdate.generateCycleDate()
+        print(cycleDate)
         let priorCycleDate = self.recordsupdate.generatePriorCycleDate(cycleDate: cycleDate)
+        print(priorCycleDate)
         let flag = 1
         let p1 = NSPredicate(format: "collectedFlag == %d", flag)
         let p2 = NSPredicate(format: "cycleDate == %@", priorCycleDate)

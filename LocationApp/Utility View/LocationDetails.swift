@@ -292,7 +292,8 @@ extension LocationDetails: UITableViewDelegate, UITableViewDataSource {
         details = [(String, String, String, Int, Int)]()
         
         let predicate = NSPredicate(format: "QRCode == %@", QRCode)
-        let sort = NSSortDescriptor(key: "creationDate", ascending: false)
+        //let sort = NSSortDescriptor(key: "creationDate", ascending: false)
+        let sort = NSSortDescriptor(key: "createdDate", ascending: false) //Ver 1.2
         let query = CKQuery(recordType: "Location", predicate: predicate)
         query.sortDescriptors = [sort]
         
@@ -329,13 +330,14 @@ extension LocationDetails: UITableViewDelegate, UITableViewDataSource {
         //dateFormatter.dateFormat = "MM/dd/yyyy, hh:mm a"
         dateFormatter.dateFormat = "M/d/yyyy"
         
-        let creationDate = "Record Created: \(dateFormatter.string(from: record.creationDate!))"
+        //let creationDate = "Record Created: \(dateFormatter.string(from: record.creationDate!))"
+        let createdDate = "Record Created: \(dateFormatter.string(from: record["createdDate"]!))" //Ver 1.2"
         let dosimeter = record["dosinumber"] != "" ? String(describing: record["dosinumber"]!) : "n/a"
         let wearperiod = record["cycleDate"] != nil && record["cycleDate"] != "" ? String(describing: record["cycleDate"]!) : "n/a"
         let collectedFlag = record["collectedFlag"] != nil ? record["collectedFlag"]! as Int : 2
         let modFlag = record["moderator"] != nil ? record["moderator"]! as Int : 2
         
-        self.details.append((creationDate, dosimeter, wearperiod, modFlag, collectedFlag))
+        self.details.append((createdDate, dosimeter, wearperiod, modFlag, collectedFlag))
         self.records.append(record)
         
     }
@@ -421,9 +423,12 @@ extension LocationDetails: UITextFieldDelegate {
         dateFormatter.dateFormat = "M/d/yyyy, h:mm a"
         //dateFormatter.dateFormat = "MM/dd/yyyy"
         
-        let creationDate = dateFormatter.string(from: record.creationDate!)
-        let modifiedDate = dateFormatter.string(from: record.modificationDate!)
-        dateCreated.text = "Date Created: \(creationDate)"
+        //let creationDate = dateFormatter.string(from: record.creationDate!)
+        let createdDate = dateFormatter.string(from: record["createdDate"] as! Date)  //Ver 1.2
+        //let modifiedDate = dateFormatter.string(from: record.modificationDate!)
+        let modifiedDate = dateFormatter.string(from: record["modifiedDate"] as! Date)
+        //dateCreated.text = "Date Created: \(creationDate)"
+        dateCreated.text = "Date Created: \(createdDate)"
         dateModified.text = "Date Last Modified: \(modifiedDate)"
         
         pQRCode.text = record.value(forKey: "QRCode") as? String

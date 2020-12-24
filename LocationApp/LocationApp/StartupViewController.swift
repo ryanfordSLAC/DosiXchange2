@@ -164,6 +164,9 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
                 
                 default:
                     self.statusLabel.text = "Green Pins: \(Int(numberRemaining)) remaining out of \(Int(numberDeployed)) are ready for collection"
+                    print("Completed: \(numberCompleted)")
+                    print("Deployed: \(numberDeployed)")
+                    print("Progress \(progress)")
                 
             } //end switch
             
