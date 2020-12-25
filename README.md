@@ -45,7 +45,7 @@ Install from SLAC MDM, SLAC Apps folder.
 #### Version Notes
 
 Version 1.2 / January 2020:
-* Created and Modified Fields in Data Schema (preparing for Development/Production transition):
+* Created and Modified Fields in Data Schema:
   - New createdDate and modified Date fields to use in lieu of system dates
   - Auto populate these fields during Alert 8 (deploy new), 3a (collect only), 3i (exchange only)
   - Fields added to raw data output
@@ -53,11 +53,15 @@ Version 1.2 / January 2020:
   - Disabled dark mode by problematic view controllers
   - Added default send email sound
   - Resized scanner view to fill frame
+  - Cleaned up and commented code
 * Briefcase mode:  outlined class for future upgrade for offline use (not visible)
 * Queries:
   - Nearest dosimeter query now includes "Active without Dosimeter!" entries and suppresses inactive ones
   - Replaced nils in this query with "" for text strings.
 * Alerts:
   - Supply default text into Alert 8 when left empty
+* Development/Production:
+  -Migrated data from development to production in new schema
+  -Connected app to production via entitlements file
 
 
