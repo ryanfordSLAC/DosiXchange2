@@ -9,7 +9,7 @@
 import UIKit
 import CloudKit
 
-
+//MARK:  Class
 class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
     let database = CKContainer.default().publicCloudDatabase
@@ -61,7 +61,7 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
         
     } //end viewDidLoad
     
-    
+    //MARK:  Table View
     @IBAction func tableSwitch(_ sender: UISegmentedControl) {
         segment = sender.selectedSegmentIndex
         activesTableView.reloadData()
@@ -135,6 +135,7 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
 }
 
 //query and helper functions
+//MARK:  Extensions
 extension ActiveLocations {
     
     @objc func queryDatabase() {

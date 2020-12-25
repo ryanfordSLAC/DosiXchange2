@@ -26,7 +26,6 @@ class readWriteText {
             do {
                 let data = try String(contentsOf: fileURL, encoding: .utf8)
                 self.data = data
-                //print("3, readText Successful: \(self.data)")
             }
             catch {
                 print("\(error): readText()")
@@ -50,7 +49,7 @@ class readWriteText {
             //write
             do {
                 try text.write(to: fileURL, atomically: false, encoding: .utf8)
-                //print("2, writeText-Write Successful: \(text)")
+      
             }
             catch {
                 print("\(error): writeText-write")
@@ -60,7 +59,7 @@ class readWriteText {
             do {
                 let data = try String(contentsOf: fileURL, encoding: .utf8)
                 self.data = data
-                //print("2.5, writeText-Read Successful: \(data)")
+            
             }
             catch {
                 print("\(error): writeText-read")

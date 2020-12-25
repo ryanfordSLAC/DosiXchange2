@@ -9,7 +9,7 @@
 import UIKit
 import CloudKit
 
-
+//MARK:  Class
 class LocationDetails: UIViewController {
     
     var record = CKRecord(recordType: "Location")
@@ -91,7 +91,7 @@ class LocationDetails: UIViewController {
         pCycleDate.delegate = self
         
     }
-    
+    //MARK:  Show Details
     func showDetails() {
         
         //get location details from record
@@ -138,6 +138,7 @@ class LocationDetails: UIViewController {
 
 
 //active switch controls
+//MARK:  Extension
 extension LocationDetails {
     
     @IBAction func activeSwitched(_ sender: Any) {
@@ -193,7 +194,7 @@ extension LocationDetails {
                 print(error.localizedDescription)
                 return
             }
-            //print("RECORD SAVED:\n\(record)")
+
         }
         
         operation.modifyRecordsCompletionBlock = { (records, recordIDs, error) in
@@ -212,6 +213,7 @@ extension LocationDetails {
 
 
 //table view functions and helpers
+//MARK:  Extension 2
 extension LocationDetails: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -328,10 +330,11 @@ extension LocationDetails: UITableViewDelegate, UITableViewDataSource {
         
         let dateFormatter = DateFormatter()
         //dateFormatter.dateFormat = "MM/dd/yyyy, hh:mm a"
-        dateFormatter.dateFormat = "M/d/yyyy"
+        dateFormatter.dateFormat = "MM/dd/yyyy"
         
         //let creationDate = "Record Created: \(dateFormatter.string(from: record.creationDate!))"
-        let createdDate = "Record Created: \(dateFormatter.string(from: record["createdDate"]!))" //Ver 1.2"
+        //print(record["createdDate"] as! Date)
+        let createdDate = "Record Created: \(dateFormatter.string(from: record["createdDate"] as! Date))" //Ver 1.2"
         let dosimeter = record["dosinumber"] != "" ? String(describing: record["dosinumber"]!) : "n/a"
         let wearperiod = record["cycleDate"] != nil && record["cycleDate"] != "" ? String(describing: record["cycleDate"]!) : "n/a"
         let collectedFlag = record["collectedFlag"] != nil ? record["collectedFlag"]! as Int : 2
@@ -406,7 +409,7 @@ extension LocationDetails: UITextFieldDelegate {
             if let error = error {
                 print(error.localizedDescription)
             }
-            //print("RECORD SAVED:\n\(records![0])")
+         
             self.dispatchGroup.leave()
         }
         

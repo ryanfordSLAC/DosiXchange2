@@ -16,8 +16,9 @@ class Save {
     
     let database = CKContainer.default().publicCloudDatabase
     
-/*  this class takes data which can be pasted into the blank file ("Populate Database")
+/*  this class takes data which can be pasted into the blank file
     and writes it into an array
+     
     The array is then parsed and pushed up into the CloudKit as CKRecords
      
     The function can be run by revising the "btnlogdata" outlet temporarily
@@ -30,7 +31,7 @@ class Save {
         
         do {
             
-            let fileName = "Dosi_Data_Partial" //change depending on which file
+            let fileName = "Data_File" //change depending on which file
             let path = Bundle.main.path(forResource: fileName, ofType: "csv")
             let data = try String(contentsOfFile: path!, encoding: String.Encoding.utf8)
             let rows = data.components(separatedBy: "\n")  //removed \r
@@ -38,8 +39,7 @@ class Save {
             for row in rows {
                 let values = row.components(separatedBy: ",")
                 array.append(values)
-                //print(array)
-                //print(array)
+
             } //end for
             
         } //end do
@@ -76,17 +76,12 @@ class Save {
             let stringDate = array[j][12]
             let formattedDate = dateformatter.date(from: stringDate)
             newrecord.setValue(formattedDate, forKey: "createdDate")
-            //print(formattedDate ?? Date(timeInterval: 0, since: Date()))
             
             let dateformatter2 = DateFormatter()
             dateformatter2.dateFormat = "MM/dd/yy"
             let stringDate1 = array[j][13]
             let formattedDate1 = dateformatter2.date(from: stringDate1)
             newrecord.setValue(formattedDate1, forKey: "modifiedDate")
-            //print(formattedDate1 ?? Date(timeInterval: 0, since: Date()))
-            
-            
-            //newrecord.setValue(NSDate(array[j][13]), forKey: "modifiedDate") //index 13 in file
             
             database.save(newrecord) { (record, error) in guard record != nil else { return }
                 

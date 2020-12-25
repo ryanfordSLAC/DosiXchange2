@@ -11,7 +11,7 @@ import UIKit
 import CloudKit
 import CoreLocation
 
-
+//MARK:  Class
 class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
     var recordsupdate = recordsUpdate()
@@ -185,7 +185,8 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
  implement the scanner logic (see figures under "other assets")
  by Ryan M. Ford 2019
  */
-
+// MARK:  ScannerViewController
+//MARK:  Extension
 extension ScannerViewController {
     
     func scannerLogic(code: String) { //see Other Assets Scanner Logic diagrams
@@ -379,6 +380,7 @@ extension ScannerViewController {
         }
     } //end func
     
+//MARK:  Collect
     
     func collect(collected: Int64, mismatch: Int64, modifiedDate: Date) {
         
@@ -502,6 +504,8 @@ extension ScannerViewController {
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  
  */
+
+//MARK:  Extension ScannerViewController
 
 extension ScannerViewController {  //queries
     

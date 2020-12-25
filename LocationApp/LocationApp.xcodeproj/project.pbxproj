@@ -13,13 +13,14 @@
 		5CFF888B22CAA5B700611F60 /* ActiveLocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CFF888A22CAA5B700611F60 /* ActiveLocations.swift */; };
 		8409448921CC539900C4EA28 /* TODO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8409448821CC539900C4EA28 /* TODO.swift */; };
 		8409F52422022A3900B78BCC /* Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8409F52322022A3900B78BCC /* Queries.swift */; };
-		84172A252593A25200228A8F /* Dosi_Data_Partial.csv in Resources */ = {isa = PBXBuildFile; fileRef = 84172A242593A25200228A8F /* Dosi_Data_Partial.csv */; };
 		8421B0642165BBB80041A53A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421B0632165BBB80041A53A /* AppDelegate.swift */; };
 		8421B0692165BBB80041A53A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8421B0672165BBB80041A53A /* Main.storyboard */; };
 		8421B06B2165BBB90041A53A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8421B06A2165BBB90041A53A /* Assets.xcassets */; };
 		8421B06E2165BBB90041A53A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8421B06C2165BBB90041A53A /* LaunchScreen.storyboard */; };
 		8421B0792165BBB90041A53A /* LocationAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421B0782165BBB90041A53A /* LocationAppTests.swift */; };
 		8421B0842165BBB90041A53A /* LocationAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421B0832165BBB90041A53A /* LocationAppUITests.swift */; };
+		8434D57B25956DE800B2E413 /* RepairCycleDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8434D57A25956DE800B2E413 /* RepairCycleDate.swift */; };
+		8434D58025957C9300B2E413 /* Data_File.csv in Resources */ = {isa = PBXBuildFile; fileRef = 8434D57F25957C9300B2E413 /* Data_File.csv */; };
 		84505D1C2231DE41009551BC /* scannerbeep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 84505D1B2231DE41009551BC /* scannerbeep.mp3 */; };
 		84571FE5258FE29C009AC936 /* BriefCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84571FE4258FE29C009AC936 /* BriefCase.swift */; };
 		845F2E5F221C62E200A48C1A /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845F2E5E221C62E200A48C1A /* Reachability.swift */; };
@@ -67,7 +68,6 @@
 		5CFF888A22CAA5B700611F60 /* ActiveLocations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveLocations.swift; sourceTree = "<group>"; };
 		8409448821CC539900C4EA28 /* TODO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TODO.swift; sourceTree = "<group>"; };
 		8409F52322022A3900B78BCC /* Queries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queries.swift; sourceTree = "<group>"; };
-		84172A242593A25200228A8F /* Dosi_Data_Partial.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Dosi_Data_Partial.csv; sourceTree = "<group>"; };
 		8421B0602165BBB80041A53A /* LocationApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocationApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8421B0632165BBB80041A53A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8421B0682165BBB80041A53A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -80,6 +80,8 @@
 		8421B07F2165BBB90041A53A /* LocationAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LocationAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8421B0832165BBB90041A53A /* LocationAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAppUITests.swift; sourceTree = "<group>"; };
 		8421B0852165BBB90041A53A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8434D57A25956DE800B2E413 /* RepairCycleDate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepairCycleDate.swift; sourceTree = "<group>"; };
+		8434D57F25957C9300B2E413 /* Data_File.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Data_File.csv; sourceTree = "<group>"; };
 		84505D1B2231DE41009551BC /* scannerbeep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = scannerbeep.mp3; sourceTree = "<group>"; };
 		84571FE4258FE29C009AC936 /* BriefCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BriefCase.swift; sourceTree = "<group>"; };
 		845F2E5E221C62E200A48C1A /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
@@ -207,7 +209,7 @@
 		84505D1D2231DEAD009551BC /* Other Asseets */ = {
 			isa = PBXGroup;
 			children = (
-				84172A242593A25200228A8F /* Dosi_Data_Partial.csv */,
+				8434D57F25957C9300B2E413 /* Data_File.csv */,
 				84AB348323149F6100C7F99A /* Alerts.png */,
 				84AB348223149F6100C7F99A /* Scanner Logic 1.png */,
 				84AB348423149F6100C7F99A /* Scanner Logic 2.png */,
@@ -270,6 +272,7 @@
 			isa = PBXGroup;
 			children = (
 				84B58D4C21FD69C80013D5F3 /* UploadToCloud.swift */,
+				8434D57A25956DE800B2E413 /* RepairCycleDate.swift */,
 			);
 			path = "Populate Database";
 			sourceTree = "<group>";
@@ -394,12 +397,12 @@
 			files = (
 				8421B06E2165BBB90041A53A /* LaunchScreen.storyboard in Resources */,
 				84AA30E32234DE2700F07697 /* Inlight.jpg in Resources */,
+				8434D58025957C9300B2E413 /* Data_File.csv in Resources */,
 				84AB348523149F6100C7F99A /* Scanner Logic 1.png in Resources */,
 				84505D1C2231DE41009551BC /* scannerbeep.mp3 in Resources */,
 				8487FE3221A9153100CC62E8 /* DatabaseContents.rtf in Resources */,
 				84AA30E522356ABF00F07697 /* beep-5.wav in Resources */,
 				84AB348723149F6100C7F99A /* Scanner Logic 2.png in Resources */,
-				84172A252593A25200228A8F /* Dosi_Data_Partial.csv in Resources */,
 				8421B06B2165BBB90041A53A /* Assets.xcassets in Resources */,
 				8421B0692165BBB80041A53A /* Main.storyboard in Resources */,
 				84AB348623149F6100C7F99A /* Alerts.png in Resources */,
@@ -435,6 +438,7 @@
 				84571FE5258FE29C009AC936 /* BriefCase.swift in Sources */,
 				84F9180222211C9B00D25634 /* NearestDosimeters.swift in Sources */,
 				8487FE2E21A8F4E000CC62E8 /* ScannerViewController.swift in Sources */,
+				8434D57B25956DE800B2E413 /* RepairCycleDate.swift in Sources */,
 				846606C121AA3CA00049814C /* ReadWriteText.swift in Sources */,
 				5C941E5522D93335008C9B3E /* LocationViewController.swift in Sources */,
 				8487FE3021A8F9C700CC62E8 /* StartupViewController.swift in Sources */,
@@ -533,6 +537,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ALLOW_ENTITLEMENTS_MODIFICATION = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -595,6 +600,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ALLOW_ENTITLEMENTS_MODIFICATION = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";

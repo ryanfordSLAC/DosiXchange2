@@ -45,9 +45,19 @@ class Artwork: NSObject, MKAnnotation {
             //deployed dosimeter
             if self.collected == 0 {
                 //current cycle (stop)
-                if self.cycleDate == cycle { color = .red }
+                if self.cycleDate == cycle { color = .red
+                    //print("Cycle Date: \(String(describing: self.cycleDate!))")
+                    //print(cycle)
+                    //print("red")
+                }
+                
                 //any other cycle (exchange)
-                else { color = .green }
+                else { color = .green
+                    //print("Cycle Date: \(String(describing: self.cycleDate!))")
+                    //print(cycle)
+                    //print("green")
+                }
+                
             }
             //no dosimeter (deploy)
             else { color = .orange }

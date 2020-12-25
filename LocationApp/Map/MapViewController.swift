@@ -12,7 +12,7 @@ import MapKit
 import CloudKit
 //import Contacts
 
-
+//MARK:  Class
 class MapViewController: UIViewController {
     
     @IBOutlet weak var MapView: MKMapView!
@@ -67,6 +67,7 @@ class MapViewController: UIViewController {
 }
 
 //MapView and locationmanager delegate methods
+//MARK:  Extension
 extension MapViewController: MKMapViewDelegate, CLLocationManagerDelegate {
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -134,6 +135,7 @@ extension MapViewController: MKMapViewDelegate, CLLocationManagerDelegate {
 }
 
 //filters and switches
+//MARK:  Extension 2
 extension MapViewController {
     
     //runs when filters button is clicked
@@ -276,6 +278,7 @@ extension MapViewController {
 }
 
 //query functions
+//MARK:  Extension 3
 extension MapViewController {
     
     //query active locations

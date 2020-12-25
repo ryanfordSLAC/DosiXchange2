@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+//MARK:  Class
 class BriefCase {
     /*requires field in data schema for briefCase as integer
     1 = record was changed (set in briefcase load and sent to server during sync
@@ -18,7 +18,7 @@ class BriefCase {
     changes from 1 to 0 during upload
     
     */
-    
+    //MARK:  synchronize
     func synchronize() {
         //check if briefcase is active
         //check if briefcase is empty or full
