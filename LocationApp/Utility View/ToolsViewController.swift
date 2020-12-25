@@ -11,14 +11,15 @@ import UIKit
 import MessageUI
 import CloudKit
 import AVFoundation
-
+//MARK:  Class
 class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate {
     
     let readwrite = readWriteText()  //make external class available locally
     let database = CKContainer.default().publicCloudDatabase  //establish database
     let dispatchGroup = DispatchGroup()
     let saveToCloud = Save()
-    
+    let queries = Queries()
+    let repair = RepairCycleDate()
     
     var QRCode:String = ""
     var latitude:String = ""
@@ -41,9 +42,7 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
     @IBOutlet weak var button1: UIButton!
     @IBOutlet weak var button2: UIButton!
     @IBOutlet weak var button3: UIButton!
-    @IBOutlet weak var uploadToCloud: UIButton!
-    
-    //@IBOutlet weak var button4: UIButton!
+
     
     let borderColorUp = UIColor(red: 0.580723, green: 0.0667341, blue: 0, alpha: 1).cgColor
     let borderColorDown = UIColor(red: 0.580723, green: 0.0667341, blue: 0, alpha: 0.25).cgColor
@@ -122,7 +121,7 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
         button3.layer.borderColor = borderColorUp
     }
     
-    
+    //MARK:  Send Email
     func sendEmail() {
         
         let URL =  readwrite.messageURL
@@ -159,6 +158,7 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
 
 
 //query and helper functions
+//MARK:  Extension
 extension ToolsViewController {
     
     func queryDatabaseForCSV() {
@@ -166,7 +166,7 @@ extension ToolsViewController {
         //set first line of text file
         //should separate text file from query
         dispatchGroup.enter()
-        self.csvText = "LocationID (QRCode),Latitude,Longitude,Description,Moderator (0/1),Active (0/1),Dosimeter,Collected Flag (0/1),Wear Period,System_Date Deployed,System_Date Collected,Mismatch (0/1), my_Date Deployed, my_Date Collected\n"
+        self.csvText = "LocationID (QRCode),Latitude,Longitude,Description,Moderator (0/1),Active (0/1),Dosimeter,Collected Flag (0/1),Wear Period,System_Date Deployed,System_Date Collected,Mismatch (0/1), my_Date Deployed, my_Date Collected, recordID\n"
         let predicate = NSPredicate(value: true)
         let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
         //let sort2 = NSSortDescriptor(key: "creationDate", ascending: false)
@@ -248,7 +248,6 @@ extension ToolsViewController {
             mycreatedDate = Date(timeInterval: -1E15, since: Date())
         }
         let myformattedCreatedDate = dateFormatter.string(from: mycreatedDate!)
-        //print("MyformattedCreatedDate: \(String(describing: myformattedCreatedDate))")
         
         if record["modifiedDate"] != nil {
             myDateModified = Date(timeInterval: 0, since: record["modifiedDate"] as! Date)
@@ -256,9 +255,10 @@ extension ToolsViewController {
             myDateModified = Date(timeInterval: -1E15, since: Date())
         }
         let myformattedDateModified = dateFormatter.string(from: myDateModified!)
+        let recordID = record.recordID.recordName
         
         //write the data into the file.
-        let newline = "\(QRCode),\(latitude),\(longitude),\(loc),\(moderator),\(active),\(dosimeter),\(collectedFlagStr),\(cycle),\(formattedDate),\(formattedDateModified),\(mismatchStr),\(myformattedCreatedDate),\(myformattedDateModified)\n"
+        let newline = "\(QRCode),\(latitude),\(longitude),\(loc),\(moderator),\(active),\(dosimeter),\(collectedFlagStr),\(cycle),\(formattedDate),\(formattedDateModified),\(mismatchStr),\(myformattedCreatedDate),\(myformattedDateModified), \(recordID)\n"
         csvText.append(contentsOf: newline)
         clear()
     }

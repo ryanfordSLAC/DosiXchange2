@@ -23,6 +23,7 @@ class Queries {
     let dispatchGroup = DispatchGroup()
     var records = [CKRecord]()
     let database = CKContainer.default().publicCloudDatabase
+    var itemRecord:CKRecord?
     
     func getPriorCycleCountCFYes() {
         
@@ -33,13 +34,14 @@ class Queries {
         
         //get current Cycle Date
         let cycleDate = self.recordsupdate.generateCycleDate()
-        print(cycleDate)
+        //print(cycleDate)
         let priorCycleDate = self.recordsupdate.generatePriorCycleDate(cycleDate: cycleDate)
-        print(priorCycleDate)
+        //print(priorCycleDate)
         let flag = 1
+        let active = 1
         let p1 = NSPredicate(format: "collectedFlag == %d", flag)
         let p2 = NSPredicate(format: "cycleDate == %@", priorCycleDate)
-        let p3 = NSPredicate(format: "active == %d", 1)
+        let p3 = NSPredicate(format: "active == %d", active)
         let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [p1, p2, p3])
         
         //  Query fields in Location to set up the artwork on the drop pins
@@ -61,9 +63,10 @@ class Queries {
         let cycleDate = self.recordsupdate.generateCycleDate()
         let priorCycleDate = self.recordsupdate.generatePriorCycleDate(cycleDate: cycleDate)
         let flag = 0
+        let active = 1
         let p1 = NSPredicate(format: "collectedFlag == %d", flag)
         let p2 = NSPredicate(format: "cycleDate == %@", priorCycleDate)
-        let p3 = NSPredicate(format: "active == %d", 1)
+        let p3 = NSPredicate(format: "active == %d", active)
         let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [p1, p2, p3])
 
         //  Query fields in Location to set up the artwork on the drop pins
@@ -86,6 +89,7 @@ class Queries {
     // to be executed for each fetched record
     func recordFetchedBlock(record: CKRecord) {
         self.count += 1
+        //print(self.count)
     }
     
     
@@ -123,6 +127,5 @@ class Queries {
         self.count = 0
         self.dispatchGroup.leave()
     }
-    
-    
+
 } //end class

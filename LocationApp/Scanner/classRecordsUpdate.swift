@@ -29,7 +29,7 @@ class recordsUpdate: UIViewController {
         svController.captureSession.startRunning()
         
     }
-    
+    //MARK:  Save Record
     func saveRecord(latitude:String, longitude:String, dosiNumber:String, text:String, flag:Int64, cycle:String, QRCode:String, mismatch:Int64, moderator:Int64, active:Int64, createdDate:Date, modifiedDate:Date) {
                 
         //save data to database
@@ -58,7 +58,7 @@ class recordsUpdate: UIViewController {
         
     }  //end saveRecord
     
-    
+    //MARK:  Cycle Date
     func generateCycleDate() -> String {
 
         //return the dosimeter wear date for the CKRecord as a string (date format not necessary - will be converted in excel)
@@ -110,14 +110,12 @@ class recordsUpdate: UIViewController {
         } //end switch
         
     } //end generateCycleDate
-    
+    //MARK:  Prior Cycle Date
     func generatePriorCycleDate(cycleDate: String) -> String {
         
         let year = Int64(cycleDate.suffix(4))!
-        //print("year: \(year)")
         
         let lastYear:Int64 = year - 1
-        //print("lastYear: \(lastYear)")
         
         switch cycleDate.first {
             
