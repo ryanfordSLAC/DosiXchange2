@@ -26,6 +26,8 @@
 		845F2E5F221C62E200A48C1A /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845F2E5E221C62E200A48C1A /* Reachability.swift */; };
 		846606C121AA3CA00049814C /* ReadWriteText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846606C021AA3CA00049814C /* ReadWriteText.swift */; };
 		846606C321AA5C380049814C /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846606C221AA5C380049814C /* MapViewController.swift */; };
+		84712D582597C874006F31E4 /* Briefcase.csv in Resources */ = {isa = PBXBuildFile; fileRef = 84712D572597C874006F31E4 /* Briefcase.csv */; };
+		84712D622597C9FA006F31E4 /* Version 1.2 Briefcase Flowchart.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 84712D612597C9FA006F31E4 /* Version 1.2 Briefcase Flowchart.pdf */; };
 		8487FE2E21A8F4E000CC62E8 /* ScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8487FE2D21A8F4E000CC62E8 /* ScannerViewController.swift */; };
 		8487FE3021A8F9C700CC62E8 /* StartupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8487FE2F21A8F9C700CC62E8 /* StartupViewController.swift */; };
 		8487FE3221A9153100CC62E8 /* DatabaseContents.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 8487FE3121A9153100CC62E8 /* DatabaseContents.rtf */; };
@@ -88,6 +90,8 @@
 		846606C021AA3CA00049814C /* ReadWriteText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadWriteText.swift; sourceTree = "<group>"; };
 		846606C221AA5C380049814C /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		846D6B4F2170160E008E003D /* LocationApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LocationApp.entitlements; sourceTree = "<group>"; };
+		84712D572597C874006F31E4 /* Briefcase.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = Briefcase.csv; sourceTree = "<group>"; };
+		84712D612597C9FA006F31E4 /* Version 1.2 Briefcase Flowchart.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "Version 1.2 Briefcase Flowchart.pdf"; sourceTree = "<group>"; };
 		8487FE2D21A8F4E000CC62E8 /* ScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerViewController.swift; sourceTree = "<group>"; };
 		8487FE2F21A8F9C700CC62E8 /* StartupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupViewController.swift; sourceTree = "<group>"; };
 		8487FE3121A9153100CC62E8 /* DatabaseContents.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = DatabaseContents.rtf; sourceTree = "<group>"; };
@@ -209,6 +213,7 @@
 		84505D1D2231DEAD009551BC /* Other Asseets */ = {
 			isa = PBXGroup;
 			children = (
+				84712D612597C9FA006F31E4 /* Version 1.2 Briefcase Flowchart.pdf */,
 				8434D57F25957C9300B2E413 /* Data_File.csv */,
 				84AB348323149F6100C7F99A /* Alerts.png */,
 				84AB348223149F6100C7F99A /* Scanner Logic 1.png */,
@@ -216,6 +221,7 @@
 				84505D1B2231DE41009551BC /* scannerbeep.mp3 */,
 				84AA30E422356ABE00F07697 /* beep-5.wav */,
 				84AA30E622356BEE00F07697 /* QRCodeImage.png */,
+				84712D572597C874006F31E4 /* Briefcase.csv */,
 				84AA30E22234DE2700F07697 /* Inlight.jpg */,
 			);
 			path = "Other Asseets";
@@ -395,6 +401,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84712D582597C874006F31E4 /* Briefcase.csv in Resources */,
 				8421B06E2165BBB90041A53A /* LaunchScreen.storyboard in Resources */,
 				84AA30E32234DE2700F07697 /* Inlight.jpg in Resources */,
 				8434D58025957C9300B2E413 /* Data_File.csv in Resources */,
@@ -405,6 +412,7 @@
 				84AB348723149F6100C7F99A /* Scanner Logic 2.png in Resources */,
 				8421B06B2165BBB90041A53A /* Assets.xcassets in Resources */,
 				8421B0692165BBB80041A53A /* Main.storyboard in Resources */,
+				84712D622597C9FA006F31E4 /* Version 1.2 Briefcase Flowchart.pdf in Resources */,
 				84AB348623149F6100C7F99A /* Alerts.png in Resources */,
 				84AA30E722356BEE00F07697 /* QRCodeImage.png in Resources */,
 			);
