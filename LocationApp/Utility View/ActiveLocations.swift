@@ -223,11 +223,6 @@ extension ActiveLocations {
             self.checkQR = currentQR
         
         }
-        
-        
-
-        
-        
     } //end func
 //MARK:  Alert 12
     
@@ -237,18 +232,8 @@ extension ActiveLocations {
             
         let alert = UIAlertController(title: "Contact Administrator", message: "Incomplete records were suppressed from this view. \n You can continue using the app.", preferredStyle: .alert)
         let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        
-        //let deployDosimeter = UIAlertAction(title: "Deploy", style: .default) { (_) in
-            //variables.QRCode = nil
-            //self.deploy()
-            //self.alert4()
-        //} //end let
-        
-        
         alert.addAction(cancel)
-        
-        
-            self.present(alert, animated: true, completion: nil)
+        self.present(alert, animated: true, completion: nil)
         
         }
     } //end alert12
