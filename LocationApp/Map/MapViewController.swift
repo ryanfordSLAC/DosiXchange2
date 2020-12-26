@@ -337,31 +337,54 @@ extension MapViewController {
         if QRCode == self.checkQR { return }
         
         //run whole thing on main thread to prevent "let artwork" line from producing error
-        DispatchQueue.main.async {
+        switch record["active"] {
+        //handle rare cases when active is nil.  Notify administrator.
+        case nil:
+            alert13()
+            print("record skipped")
             
-            let active:Int64 = record["active"]!
-            let latitude:String = record["latitude"]!
-            let longitude:String = record["longitude"]!
-            let description:String = record["locdescription"]!
-            
-            let dosimeter = record["dosinumber"] as? String
-            let cycleDate = record["cycleDate"] as? String
-            let collected = record["collectedFlag"] as? Int64
-            
-            var fullTitle = "\(QRCode)"
-            if collected == 0 && dosimeter != "" {
-                fullTitle.append(contentsOf: "\n\(dosimeter ?? "Dosi Nil")")
+            return
+        default:
+            DispatchQueue.main.async {
+                
+                let active:Int64 = record["active"]!
+                let latitude:String = record["latitude"]!
+                let longitude:String = record["longitude"]!
+                let description:String = record["locdescription"]!
+                
+                let dosimeter = record["dosinumber"] as? String
+                let cycleDate = record["cycleDate"] as? String
+                let collected = record["collectedFlag"] as? Int64
+                
+                var fullTitle = "\(QRCode)"
+                if collected == 0 && dosimeter != "" {
+                    fullTitle.append(contentsOf: "\n\(dosimeter ?? "Dosi Nil")")
+                }
+                
+                let dosiLocations = CLLocationCoordinate2D(latitude: CLLocationDegrees(latitude)!, longitude: CLLocationDegrees(longitude)!)
+                let artwork = Artwork(title: fullTitle, locDescription: description, active: active, coordinate: dosiLocations, cycleDate: cycleDate, collected: collected) //this has a location manager and needs main thread.
+                if(self.filters[artwork.markerTintColor]!) {
+                    self.MapView.addAnnotation(artwork)
+                }
             }
             
-            let dosiLocations = CLLocationCoordinate2D(latitude: CLLocationDegrees(latitude)!, longitude: CLLocationDegrees(longitude)!)
-            let artwork = Artwork(title: fullTitle, locDescription: description, active: active, coordinate: dosiLocations, cycleDate: cycleDate, collected: collected) //this has a location manager and needs main thread.
-            if(self.filters[artwork.markerTintColor]!) {
-                self.MapView.addAnnotation(artwork)
-            }
+            self.checkQR = QRCode
         }
-        
-        self.checkQR = QRCode
+
     }
+    
+    //MARK:  Alert 13
+        
+        //Handle nils in active field (rare - set by system)
+        func alert13() {
+            DispatchQueue.main.async { //UIAlerts need to be shown on the main thread.
+                
+            let alert = UIAlertController(title: "Contact Administrator", message: "Incomplete records were suppressed from this view. \n You can continue using the app.", preferredStyle: .alert)
+            let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+                alert.addAction(cancel)
+                self.present(alert, animated: true, completion: nil)
+            }
+        } //end alert12
 }
 
 

@@ -191,25 +191,66 @@ extension ActiveLocations {
     
     
     //to be executed for each fetched record
+    //MARK:  Loading Tableview
     func recordFetchedBlock(record: CKRecord) {
         
         //if record is active ("active" = 1), record is appended to the first array (flag = 0)
         //else record is appended to the second array (flag = 1)
-        let flag = record["active"]! == 1 ? 0 : 1
         
-        //fetch QRCode and locdescription
-        let currentQR:String = record["QRCode"]!
-        let currentLoc:String = record["locdescription"]!
+        switch record["active"] {
         
-        //if QRCode is not the same as previous record
-        if currentQR != self.checkQR {
-            //append (QRCode, locdescription) tuple displayInfo
-            displayInfo[flag].append((record, currentQR, currentLoc))
+        case nil:
+            //handle rare cases where active is nil, prevent app crashes.
+            print("record skipped")
+            alert12()
+            return
+            
+            
+        default:
+            //Original
+            let flag = record["active"]! == 1 ? 0 : 1
+            
+            //fetch QRCode and locdescription
+            let currentQR:String = record["QRCode"]!
+            let currentLoc:String = record["locdescription"]!
+            
+            //if QRCode is not the same as previous record
+            if currentQR != self.checkQR {
+                //append (QRCode, locdescription) tuple displayInfo
+                displayInfo[flag].append((record, currentQR, currentLoc))
+            }
+            
+            self.checkQR = currentQR
+        
         }
         
-        self.checkQR = currentQR
+        
+
         
         
     } //end func
+//MARK:  Alert 12
+    
+    //Handle nils in active field (rare - set by system)
+    func alert12() {
+        DispatchQueue.main.async { //UIAlerts need to be shown on the main thread.
+            
+        let alert = UIAlertController(title: "Contact Administrator", message: "Incomplete records were suppressed from this view. \n You can continue using the app.", preferredStyle: .alert)
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        //let deployDosimeter = UIAlertAction(title: "Deploy", style: .default) { (_) in
+            //variables.QRCode = nil
+            //self.deploy()
+            //self.alert4()
+        //} //end let
+        
+        
+        alert.addAction(cancel)
+        
+        
+            self.present(alert, animated: true, completion: nil)
+        
+        }
+    } //end alert12
     
 }
