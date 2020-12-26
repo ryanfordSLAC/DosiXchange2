@@ -52,7 +52,7 @@ Version 1.2 / January 2020:
   - Alert 8:  prevent save if location field is blank
   - New alerts 12 and 13:  Notification when Active field is nil and prevents crashes in Map View and List View
 * Development/Production:
-  -Migrated data from development to production in new schema
-  -Connected app to production via entitlements file
+  - Migrated data from development to production in new schema
+  - Connected app to production via entitlements file
 
 
