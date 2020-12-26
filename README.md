@@ -12,20 +12,8 @@
 
 Created by Ryan Ford (Feat. Helen Choi)
 
-This app was created as a major revision (complete rebuild) of the Dosimeter Manager app.  Issues overcome in this version are:
-* Data is now centrally managed in CloudKit
-* Dosimeters can be scanned by either Location Code (QRCode) or Dosimeter Number
-* Dosimeters are mapped out in 'Map View' using MapKit
-  - Users can navigate to dosimeters and see how many are nearby visually
-  - Users can filter pins displayed on the map based on the status of the location
-* Dosimeters ready to be exchanged/collected are listed in 'List View'
-  - List can be sorted by distance from user location or alphabetically
-* All locations are listed by status (active/inactive) in 'All Locations'
-  - Users can search for a location by QR Code or location description
-  - Users can activate/deactivate locations and edit dosimeter records
-* User location detail is available in 'Coordinates'
-* 'Email Data' allows user to email complete data set as a .csv file attachment
-
+Replaces "Dosimeter Manager" (2017)
+See version notes below
 
 #### Installation
 
@@ -38,7 +26,7 @@ Install from SLAC MDM, SLAC Apps folder.
 
 #### Maintenance
 
-* Periodic review of the Apple Developer console is necessary to verify the devices are registered correctly.  Prior to loading the app to a staff member's personal device, they should change their device name to something easily identifiable (e.g., RyanFord's iPhone).  This way, devices can be de-registered from the console by the administrator if necessary for security reasons.
+* Periodic review of the Apple Developer console is necessary to verify the devices are registered correctly. 
 
 * App is now available on devices registered with SLAC MDM, in the SLAC Apps folder on your device.
 
