@@ -26,7 +26,8 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     var tempRecords = [CKRecord]()
     var locationManager = CLLocationManager()
     let database = CKContainer.default().publicCloudDatabase
-
+    var alertTextField: UITextField!
+    
     @IBOutlet weak var innerView: UIView!
     
     struct variables {  //key variables needed in other classes
@@ -677,7 +678,7 @@ extension ScannerViewController {  //alerts
             self.present(alert, animated: true, completion: nil)
         }
     }
-    
+    //MARK:  Alert 3a Exchange
     func alert3a() {
         
         let message = "\nCycle Date: \(variables.cycle ?? "Nil Cycle")"
@@ -703,7 +704,7 @@ extension ScannerViewController {  //alerts
         }
     } //end alert3a
     
-    
+    //MARK:  Alert 3i Collect
     func alert3i() {
         
         let message = "\nCycle Date: \(variables.cycle ?? "Nil Cycle")"
@@ -877,7 +878,7 @@ extension ScannerViewController {  //alerts
         }
     } //end alert7b
     
-    
+//MARK:  Alert8
     func alert8() {
 
         let cycle = recordsupdate.generateCycleDate()
@@ -891,27 +892,43 @@ extension ScannerViewController {  //alerts
         }
         
         let saveRecord = UIAlertAction(title: "Save", style: .default) { (_) in
-            var text = alert.textFields?.first?.text
-            text = text?.replacingOccurrences(of: ",", with: "-")
+            if let text = alert.textFields?.first?.text {
+                let label = UILabel(frame: CGRect(x: 0, y: 97, width: 270, height:18))
+                label.textAlignment = .center
+                label.textColor = .red
+                //label.font = label.font.withSize(12)
+                label.font = .boldSystemFont(ofSize: 14)
+                alert.view.addSubview(label)
+                label.isHidden = true
+                if text == ""{
+                    label.text = "Please enter a location"
+                    label.isHidden = false
+                    self.present(alert, animated: true, completion: nil)
+                } else {
+                    self.recordsupdate.saveRecord(latitude: variables.latitude ?? "Nil Latitude",
+                                                  longitude: variables.longitude ?? "Nil Longitude",
+                                                  dosiNumber: variables.dosiNumber ?? "Nil Dosi",
+                                                  text: text,
+                                                  flag: 0,
+                                                  cycle: cycle,
+                                                  QRCode: variables.QRCode ?? "Nil QRCode",
+                                                  mismatch: variables.mismatch ?? 0,
+                                                  moderator: variables.moderator ?? 0,
+                                                  active: 1,
+                                                  createdDate: Date(timeInterval: 0, since: Date()),
+                                                  modifiedDate: Date(timeInterval: 0, since: Date()))
+                    self.alert10() //Succes
+                }
+    
+            //text = text?.replacingOccurrences(of: ",", with: "-")
             //Ver 1.2 - supply default location to prevent empty string in DB.
             //rather than alert on top of alert for field valication
-            if text == "" {
-                text = "Default Location (field left empty)"
-            }
+            //if text == "" {
+             //   text = "Default Location (field left empty)"
+        
+        } //end if let
+
             
-            self.recordsupdate.saveRecord(latitude: variables.latitude ?? "Nil Latitude",
-                                          longitude: variables.longitude ?? "Nil Longitude",
-                                          dosiNumber: variables.dosiNumber ?? "Nil Dosi",
-                                          text: text ?? "Nil Location",
-                                          flag: 0,
-                                          cycle: cycle,
-                                          QRCode: variables.QRCode ?? "Nil QRCode",
-                                          mismatch: variables.mismatch ?? 0,
-                                          moderator: variables.moderator ?? 0,
-                                          active: 1,
-                                          createdDate: Date(timeInterval: 0, since: Date()),
-                                          modifiedDate: Date(timeInterval: 0, since: Date()))
-            self.alert10() //Success
         }  //end let
         
         let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: handlerCancel)
