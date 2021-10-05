@@ -336,7 +336,11 @@ extension MapViewController {
     func recordFetchedBlock(record: CKRecord) {
         
         //fetch QRCode
-        let QRCode:String = record["QRCode"]!
+        guard let QRCode:String = record["QRCode"] else {
+            alert13()
+            print("record skipped")
+            return
+        }
         
         //if record has the same QRCode as the previous record, skip record
         if QRCode == self.checkQR { return }
