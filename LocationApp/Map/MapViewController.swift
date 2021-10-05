@@ -39,10 +39,15 @@ class MapViewController: UIViewController {
         locationmanager.delegate = self
         locationmanager.requestAlwaysAuthorization()
         locationmanager.startUpdatingLocation()
+        #if false       // testing
         let latitude = locationmanager.location?.coordinate.latitude
         let longitude = locationmanager.location?.coordinate.longitude
+        #else
+        let latitude: Double? = 37.428230            // SLAC location
+        let longitude: Double? = -122.168861
+        #endif
         self.MapView.delegate = self
-        
+
         //format filters button
         filtersButton.layer.cornerRadius = 5
         

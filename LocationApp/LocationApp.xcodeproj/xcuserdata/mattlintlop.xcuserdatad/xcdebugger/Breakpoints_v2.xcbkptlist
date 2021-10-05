@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "7173D069-2B26-4F28-9853-D563520E5C7A"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "01348F3F-D556-482E-AB6D-B4A20159CE6F"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Utility View/LocationDetails.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "78"
+            endingLineNumber = "78"
+            landmarkName = "viewDidLoad()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.ExceptionBreakpoint">
+         <BreakpointContent
+            uuid = "E0D18919-FBA9-477B-9791-CF0C3A2201F6"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            breakpointStackSelectionBehavior = "1"
+            scope = "1"
+            stopOnStyle = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B8813D5F-DC9D-48DD-B608-E34D9BA4D007"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Utility View/ToolsViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "18"
+            endingLineNumber = "18"
+            landmarkName = "ToolsViewController"
+            landmarkType = "3">
+            <Locations>
+               <Location
+                  uuid = "B8813D5F-DC9D-48DD-B608-E34D9BA4D007 - 601456e727db0877"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "LocationApp.ToolsViewController.database.getter : __C.CKDatabase"
+                  moduleName = "LocationApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mattlintlop/Documents/Development/Projects/DosiXchange2/LocationApp/Utility%20View/ToolsViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "18"
+                  endingLineNumber = "18"
+                  offsetFromSymbolStart = "44">
+               </Location>
+               <Location
+                  uuid = "B8813D5F-DC9D-48DD-B608-E34D9BA4D007 - 9808b0a2a1857e91"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "LocationApp.ToolsViewController.init(nibName: Swift.Optional&lt;Swift.String&gt;, bundle: Swift.Optional&lt;__C.NSBundle&gt;) -&gt; LocationApp.ToolsViewController"
+                  moduleName = "LocationApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mattlintlop/Documents/Development/Projects/DosiXchange2/LocationApp/Utility%20View/ToolsViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "18"
+                  endingLineNumber = "18"
+                  offsetFromSymbolStart = "340">
+               </Location>
+               <Location
+                  uuid = "B8813D5F-DC9D-48DD-B608-E34D9BA4D007 - 25193e293bce839a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "LocationApp.ToolsViewController.init(coder: __C.NSCoder) -&gt; Swift.Optional&lt;LocationApp.ToolsViewController&gt;"
+                  moduleName = "LocationApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mattlintlop/Documents/Development/Projects/DosiXchange2/LocationApp/Utility%20View/ToolsViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "18"
+                  endingLineNumber = "18"
+                  offsetFromSymbolStart = "316">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6357E12E-477B-4EFA-B64E-019E53BC75C8"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Utility View/ActiveLocations.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "15"
+            endingLineNumber = "15"
+            landmarkName = "ActiveLocations"
+            landmarkType = "3">
+            <Locations>
+               <Location
+                  uuid = "6357E12E-477B-4EFA-B64E-019E53BC75C8 - ab459fe498b5bec9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "LocationApp.ActiveLocations.database.getter : __C.CKDatabase"
+                  moduleName = "LocationApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mattlintlop/Documents/Development/Projects/DosiXchange2/LocationApp/Utility%20View/ActiveLocations.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "15"
+                  endingLineNumber = "15"
+                  offsetFromSymbolStart = "44">
+               </Location>
+               <Location
+                  uuid = "6357E12E-477B-4EFA-B64E-019E53BC75C8 - 8da56d4f0bb6b24b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "LocationApp.ActiveLocations.init(nibName: Swift.Optional&lt;Swift.String&gt;, bundle: Swift.Optional&lt;__C.NSBundle&gt;) -&gt; LocationApp.ActiveLocations"
+                  moduleName = "LocationApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mattlintlop/Documents/Development/Projects/DosiXchange2/LocationApp/Utility%20View/ActiveLocations.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "15"
+                  endingLineNumber = "15"
+                  offsetFromSymbolStart = "152">
+               </Location>
+               <Location
+                  uuid = "6357E12E-477B-4EFA-B64E-019E53BC75C8 - 1311b3291cf7787d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "LocationApp.ActiveLocations.init(coder: __C.NSCoder) -&gt; Swift.Optional&lt;LocationApp.ActiveLocations&gt;"
+                  moduleName = "LocationApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mattlintlop/Documents/Development/Projects/DosiXchange2/LocationApp/Utility%20View/ActiveLocations.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "15"
+                  endingLineNumber = "15"
+                  offsetFromSymbolStart = "128">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BD91065A-5960-4226-AE1C-31AC87440FA7"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Populate Database/UploadToCloud.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "17"
+            endingLineNumber = "17"
+            landmarkName = "Save"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "DDE1B853-7B94-42B7-B833-317651E43178"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Populate Database/RepairCycleDate.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "21"
+            endingLineNumber = "21"
+            landmarkName = "RepairCycleDate"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
