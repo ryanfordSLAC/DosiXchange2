@@ -335,10 +335,21 @@ extension MapViewController {
     //to be executed for each fetched record
     func recordFetchedBlock(record: CKRecord) {
         
+        var showErrorAlert = false
+        
+        defer {
+            //handle rare cases when active is nil.  Notify administrator.
+            if showErrorAlert {
+                DispatchQueue.main.async {
+                    self.alert13()
+                    print("record skipped")
+                }
+            }
+         }
+        
         //fetch QRCode
         guard let QRCode:String = record["QRCode"] else {
-            alert13()
-            print("record skipped")
+            showErrorAlert = true
             return
         }
         
@@ -349,17 +360,18 @@ extension MapViewController {
         switch record["active"] {
         //handle rare cases when active is nil.  Notify administrator.
         case nil:
-            alert13()
-            print("record skipped")
-            
+            showErrorAlert = true
             return
         default:
+            guard let active:Int64 = record["active"],
+                  let latitude:String = record["latitude"],
+                  let longitude:String = record["longitude"],
+                  let description:String = record["locdescription"] else {
+                      showErrorAlert = true
+                      return
+            }
+
             DispatchQueue.main.async {
-                
-                let active:Int64 = record["active"]!
-                let latitude:String = record["latitude"]!
-                let longitude:String = record["longitude"]!
-                let description:String = record["locdescription"]!
                 
                 let dosimeter = record["dosinumber"] as? String
                 let cycleDate = record["cycleDate"] as? String
