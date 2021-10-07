@@ -340,10 +340,8 @@ extension MapViewController {
         defer {
             //handle rare cases when active is nil.  Notify administrator.
             if showErrorAlert {
-                DispatchQueue.main.async {
-                    self.alert13()
-                    print("record skipped")
-                }
+                self.alert13()
+                print("record skipped")
             }
          }
         
