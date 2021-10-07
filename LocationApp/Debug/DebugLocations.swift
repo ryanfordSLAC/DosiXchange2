@@ -8,24 +8,28 @@
 
 import UIKit
 
+
 class DebugLocations {
     
+    static let shared = DebugLocations()
+
     var presentingViewController: UIViewController?
     
     var startTime: Date?
     var endTime: Date?
     var fetchedRecordsCount: Int
-    let descreption: String
+    var descreption: String?
     var elapsed: DateInterval?
     
-    init(descreption: String) {
-        self.descreption = descreption
-        self.fetchedRecordsCount = 0
+    init() {
+        fetchedRecordsCount = 0
         startTime = nil
         endTime = nil
+        descreption = nil
     }
     
-    func start() {
+    func start(descreption: String) {
+        self.descreption = descreption
         self.startTime = Date()
         self.endTime = nil
         self.fetchedRecordsCount = 0
