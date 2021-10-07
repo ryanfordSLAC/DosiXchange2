@@ -328,7 +328,7 @@ extension MapViewController {
             self.activityIndicator.stopAnimating()
             self.filtersButton.isHidden = false
         }
-        
+        DebugLocations.shared.logMessage("MapViewController: did fetch 200 records")   // TESTING
     } //end func
     
     
@@ -342,6 +342,9 @@ extension MapViewController {
             if showErrorAlert {
                 self.alert13()
                 print("record skipped")
+            }
+            else {
+                DebugLocations.shared.didFetchRecordsFromCloudKit(1)
             }
          }
         

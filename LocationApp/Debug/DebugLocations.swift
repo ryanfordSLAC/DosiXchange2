@@ -17,12 +17,12 @@ class DebugLocations {
     
     var startTime: Date?
     var endTime: Date?
-    var fetchedRecordsCount: Int
+    var didFetchRecordsFromCloudKitCount: Int
     var descreption: String?
     var elapsed: DateInterval?
     
     init() {
-        fetchedRecordsCount = 0
+        didFetchRecordsFromCloudKitCount = 0
         startTime = nil
         endTime = nil
         descreption = nil
@@ -32,7 +32,7 @@ class DebugLocations {
         self.descreption = descreption
         self.startTime = Date()
         self.endTime = nil
-        self.fetchedRecordsCount = 0
+        self.didFetchRecordsFromCloudKitCount = 0
     }
     
     func finish() {
@@ -43,8 +43,9 @@ class DebugLocations {
         showDebugStats()
     }
  
-    func fetchedRecords(_ count: Int = 1) {
-        fetchedRecordsCount += count
+    func didFetchRecordsFromCloudKit(_ count: Int = 1) {
+        didFetchRecordsFromCloudKitCount += count
+        print("DebugLocation did fetch \(count) records")
     }
     
     func showDebugStats() {
@@ -52,11 +53,15 @@ class DebugLocations {
             presentingViewController = UIViewController()
         }
         DispatchQueue.main.async {
-            let alert = UIAlertController(title: "Debug Location View", message: "Fetched \(self.fetchedRecordsCount) records in \(self.elapsed) seconds.",
+            let alert = UIAlertController(title: "Debug Location View", message: "Fetched \(self.didFetchRecordsFromCloudKitCount) records in \(self.elapsed) seconds.",
                 preferredStyle: .alert)
             let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
             alert.addAction(cancel)
             self.presentingViewController!.present(alert, animated: true, completion: nil)
         }
+    }
+    
+    func logMessage(_ message: String) {
+        print("DebugLocatons: \(message)")
     }
 }
