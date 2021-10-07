@@ -347,7 +347,7 @@ extension MapViewController {
                 print("record skipped")
             }
             else {
-                DebugLocations.shared.didFetchRecordsFromCloudKit(1)
+                DebugLocations.shared.didFetchRecord()
             }
          }
         

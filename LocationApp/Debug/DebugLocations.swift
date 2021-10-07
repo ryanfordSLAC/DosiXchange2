@@ -15,12 +15,12 @@ class DebugLocations {
     static let shared = DebugLocations()
     var startTime: Date?
     var endTime: Date?
-    var didFetchRecordsFromCloudKitCount: Int
+    var fetchedRecordCount: Int
     var description: String?
     var presentingViewController: UIViewController?
 
     init() {
-        didFetchRecordsFromCloudKitCount = 0
+        fetchedRecordCount = 0
         startTime = nil
         endTime = nil
         description = nil
@@ -31,7 +31,7 @@ class DebugLocations {
         self.description = description
         self.startTime = Date()
         self.endTime = nil
-        self.didFetchRecordsFromCloudKitCount = 0
+        self.fetchedRecordCount = 0
     }
     
     func finish() {
@@ -39,8 +39,8 @@ class DebugLocations {
         showDebugStats()
     }
  
-    func didFetchRecordsFromCloudKit(_ count: Int = 1) {
-        didFetchRecordsFromCloudKitCount += count
+    func didFetchRecord() {
+        fetchedRecordCount += 1
     }
     
     func showDebugStats() {
@@ -52,7 +52,7 @@ class DebugLocations {
         DispatchQueue.main.async {
             let elapsed = endTime.timeIntervalSince(startTime)
             let elapsedString = self.stringFromTimeInterval(interval: elapsed)
-            let message = "Fetched \(self.didFetchRecordsFromCloudKitCount) records in \(elapsedString) seconds."
+            let message = "Fetched \(self.fetchedRecordCount) records in \(elapsedString) seconds."
             print(message)
             let alert = UIAlertController(title: "Debug Location View", message: message,
                 preferredStyle: .alert)

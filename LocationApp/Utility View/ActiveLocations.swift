@@ -140,6 +140,9 @@ extension ActiveLocations {
     
     @objc func queryDatabase() {
         
+        DebugLocations.shared.start(presentingViewController: self,
+                                    description: "All Locations View")       // TESTING
+
         dispatchGroup.enter()
         //reset array
         displayInfo = [[(CKRecord, String, String)]]()
@@ -170,6 +173,7 @@ extension ActiveLocations {
     
     //to be executed after each query (query fetches 200 records at a time)
     func queryCompletionBlock(cursor: CKQueryOperation.Cursor?, error: Error?) {
+ 
         if let error = error {
             print(error.localizedDescription)
             return
@@ -179,6 +183,8 @@ extension ActiveLocations {
             addOperation(operation: operation)
             return
         }
+
+        DebugLocations.shared.finish()       // TESTING
 
         DispatchQueue.main.async {
             if self.activesTableView != nil {
@@ -219,6 +225,8 @@ extension ActiveLocations {
                 //append (QRCode, locdescription) tuple displayInfo
                 displayInfo[flag].append((record, currentQR, currentLoc))
             }
+            
+            DebugLocations.shared.didFetchRecord()
             
             self.checkQR = currentQR
         
