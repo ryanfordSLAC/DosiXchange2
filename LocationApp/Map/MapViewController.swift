@@ -289,7 +289,8 @@ extension MapViewController {
     //query active locations
     func queryForMap() {
         
-        DebugLocations.shared.start("MapViewController")           // TESTING
+        DebugLocations.shared.start(presentingViewController: self,
+                                    description: "MapViewController")       // TESTING
         
         records = [CKRecord]()
         let predicate = NSPredicate(value: true)
