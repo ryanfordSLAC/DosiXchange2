@@ -12,15 +12,13 @@ import UIKit
 class DebugLocations {
     
     static let shared = DebugLocations()
-
-    var presentingViewController: UIViewController?
-    
     var startTime: Date?
     var endTime: Date?
     var didFetchRecordsFromCloudKitCount: Int
     var description: String?
     var elapsed: DateInterval?
-    
+    let presentingViewController = UIViewController()
+
     init() {
         didFetchRecordsFromCloudKitCount = 0
         startTime = nil
@@ -48,10 +46,10 @@ class DebugLocations {
     }
     
     func showDebugStats() {
-        if presentingViewController == nil {
-            presentingViewController = UIViewController()
-        }
         DispatchQueue.main.async {
+            if presentingViewController == nil {
+                presentingViewController = UIViewController()
+            }
             let alert = UIAlertController(title: "Debug Location View", message: "Fetched \(self.didFetchRecordsFromCloudKitCount) records in \(self.elapsed) seconds.",
                 preferredStyle: .alert)
             let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
