@@ -10,10 +10,11 @@ import Foundation
 
 class DebugLocations {
     
-    var startTime: Double?
-    var endTime: Double?
+    var startTime: Date?
+    var endTime: Date?
     var fetchedRecordsCount: Int
     let descreption: String
+    var elapsed: DateInterval?
     
     init(descreption: String) {
         self.descreption = descreption
@@ -22,4 +23,25 @@ class DebugLocations {
         endTime = nil
     }
     
+    func start() {
+        self.startTime = Date()
+        self.endTime = nil
+        self.fetchedRecordsCount = 0
+    }
+    
+    func finish() {
+        self.endTime = Date()
+        if let startTime = self.startTime {
+            self.elapsed = DateInterval(start: startTime, end: endTime!)
+        }
+    }
+ 
+    func fetchedRecords(_ count: Int = 1) {
+        fetchedRecordsCount += count
+    }
+    func showDebugStats() {
+        DispatchQueue.main.async {
+            // TODO
+        }
+    }
 }
