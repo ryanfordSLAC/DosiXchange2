@@ -18,18 +18,18 @@ class DebugLocations {
     var startTime: Date?
     var endTime: Date?
     var didFetchRecordsFromCloudKitCount: Int
-    var descreption: String?
+    var description: String?
     var elapsed: DateInterval?
     
     init() {
         didFetchRecordsFromCloudKitCount = 0
         startTime = nil
         endTime = nil
-        descreption = nil
+        description = nil
     }
     
-    func start(descreption: String) {
-        self.descreption = descreption
+    func start(_ description: String) {
+        self.description = description
         self.startTime = Date()
         self.endTime = nil
         self.didFetchRecordsFromCloudKitCount = 0
@@ -45,7 +45,6 @@ class DebugLocations {
  
     func didFetchRecordsFromCloudKit(_ count: Int = 1) {
         didFetchRecordsFromCloudKitCount += count
-        print("DebugLocation did fetch \(count) records")
     }
     
     func showDebugStats() {
