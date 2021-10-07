@@ -289,6 +289,9 @@ extension MapViewController {
     //query active locations
     func queryForMap() {
         
+        DebugLocations.shared.start(descreption: "MapViewController")           // TESTING
+        DebugLocations.shared.logMessage("Started queryForMap() in MapViewController")  // TESTING
+        
         records = [CKRecord]()
         let predicate = NSPredicate(value: true)
         let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
@@ -328,6 +331,7 @@ extension MapViewController {
             self.activityIndicator.stopAnimating()
             self.filtersButton.isHidden = false
         }
+        DebugLocations.shared.finish()      // TESTING
         DebugLocations.shared.logMessage("MapViewController: did fetch 200 records")   // TESTING
     } //end func
     
