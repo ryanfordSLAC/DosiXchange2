@@ -11,14 +11,31 @@
 import Foundation
 import CloudKit
 
+ 
+/*
+ record["QRCode"]
+ record["latitude"]
+ record["longitude"]
+ record["locdescription"]
+ record["active"]
+ record["dosinumber"]
+ record["cycleDate"]
+ record["collectedFlag"]
+ record["mismatch"
+ record["moderator"
+ record["createdDate”]
+ record["modifiedDate"]
+ */
+
 // Location Cache Item CloudKit Record Keys
-enum LocationCacheItemReecordKeys {
-    
-}
+enum LocationCacheItemRecordKeys {
+    case QRCode(code:String)
+    case latitutude
+    case longitude
+ }
 
 // Location Cache Item stores all of the properties of a dosimeter CloudKit record
 struct LocationCacheItem {
-    
     var QRCode:String = ""
     var latitude:String = ""
     var longitude:String = ""
