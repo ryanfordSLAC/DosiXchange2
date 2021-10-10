@@ -43,7 +43,8 @@ class MapViewController: UIViewController {
         let latitude = locationmanager.location?.coordinate.latitude
         let longitude = locationmanager.location?.coordinate.longitude
         #else
-        let latitude: Double? = 37.428230            // SLAC location
+        // Use the SLAC Geolocation as the map origin
+        let latitude: Double? = 37.428230
         let longitude: Double? = -122.168861
         #endif
         self.MapView.delegate = self
