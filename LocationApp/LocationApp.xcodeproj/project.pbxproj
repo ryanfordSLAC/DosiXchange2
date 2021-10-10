@@ -143,6 +143,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		449A7E9E27135171005AF1F7 /* Location Cache */ = {
+			isa = PBXGroup;
+			children = (
+				449A7E9A271337E6005AF1F7 /* LocationCache.swift */,
+				449A7E9C271341B2005AF1F7 /* LocationCacheItem.swift */,
+			);
+			path = "Location Cache";
+			sourceTree = "<group>";
+		};
 		79A5CB13270E7788007309EF /* Debug */ = {
 			isa = PBXGroup;
 			children = (
@@ -197,8 +206,7 @@
 				8421B0632165BBB80041A53A /* AppDelegate.swift */,
 				8409448821CC539900C4EA28 /* TODO.swift */,
 				845F2E5E221C62E200A48C1A /* Reachability.swift */,
-				449A7E9A271337E6005AF1F7 /* LocationCache.swift */,
-				449A7E9C271341B2005AF1F7 /* LocationCacheItem.swift */,
+				449A7E9E27135171005AF1F7 /* Location Cache */,
 				8421B06C2165BBB90041A53A /* LaunchScreen.storyboard */,
 				8421B06F2165BBB90041A53A /* Info.plist */,
 				846D6B4F2170160E008E003D /* LocationApp.entitlements */,
