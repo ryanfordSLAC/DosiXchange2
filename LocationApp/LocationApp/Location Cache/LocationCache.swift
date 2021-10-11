@@ -9,6 +9,10 @@
 import Foundation
 import CloudKit
 
+enum LocationCacheError: Error {
+    case recordDataError                // a dosimeter record fied is nil
+}
+
 class LocationCache: Codable {
     
     static let shared = LocationCache()
@@ -17,22 +21,35 @@ class LocationCache: Codable {
     var recordsCache: [LocationCacheItem]?     //
 
     private init() {
-    }
+        recordNames = [String]()
+        recordsCache = [LocationCacheItem]()
+   }
     
     func didFetchRecords(_ records: [CKRecord]) {
-        if self.recordNames == nil {
-            self.recordNames = [String]()
-        }
+        print("Did Fetch \(records.count) records")
+
         for record in records {
             self.recordNames!.append(record.recordID.recordName)
         }
     }
     
     func didStartFetchingRecords() {
-        print("Started fetching records")
+        print("Started Fetching records")
     }
     
     func didFinishFetchingRecords(_ records: [CKRecord]) {
-        print("Finshed fetching \(records.count) records")
+        print("Finshed Fetching \(records.count) records")
+    }
+    
+    // Load the dosimeter CloudKit records from disk.
+    // Throws a LocationCacheError is a required record field is nil.
+    func loadCache() throws {
+        
+    }
+
+    // Save the dosimeter CloudKit records from disk.
+    // Throws a LocationCacheError is a required record field is nil.
+     func savedCache() throws {
+        
     }
 }

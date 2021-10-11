@@ -293,6 +293,8 @@ extension MapViewController {
         DebugLocations.shared.start(presentingViewController: self,
                                     description: "MapViewController")       // TESTING
         
+        LocationCache.shared.didStartFetchingRecords()                      // TESTING
+        
         records = [CKRecord]()
         let predicate = NSPredicate(value: true)
         let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)

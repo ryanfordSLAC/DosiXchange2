@@ -89,7 +89,7 @@ struct LocationCacheItem: Codable{
             self.collectedFlag = collectedFlag
         }
 
-        // set the cyclebdate
+        // set the cycle date
         if let cycleDate = record["cycleDate"] as? NSString {
             self.cycleDate = cycleDate as String
         }
