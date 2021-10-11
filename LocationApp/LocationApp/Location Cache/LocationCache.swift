@@ -9,21 +9,21 @@
 import Foundation
 import CloudKit
 
-class LocationCache {
+class LocationCache: Codable {
     
     static let shared = LocationCache()
     
-    var dosimeterRecordIDs: [CKRecord.ID]?
+    var dosimeterRecordNames: [String]?
     
     private init() {
     }
     
     func didFetchRecords(_ records: [CKRecord]) {
-        if self.dosimeterRecordIDs == nil {
-            self.dosimeterRecordIDs = [CKRecord.ID]()
+        if self.dosimeterRecordNames == nil {
+            self.dosimeterRecordNames = [String]()
         }
         for record in records {
-            self.dosimeterRecordIDs!.append(record.recordID)
+            self.dosimeterRecordNames!.append(record.recordID.recordName)
         }
     }
     
