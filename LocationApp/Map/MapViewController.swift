@@ -323,6 +323,8 @@ extension MapViewController {
             return
         }
         if let cursor = cursor {
+            LocationCache.shared.didFetchRecords(self.records)     // TESTING
+
             let operation = CKQueryOperation(cursor: cursor)
             addOperation(operation: operation)
             return
@@ -331,21 +333,17 @@ extension MapViewController {
         DispatchQueue.main.async {
             self.activityIndicator.stopAnimating()
             self.filtersButton.isHidden = false
+            
+            LocationCache.shared.didFinishFetchingRecords(self.records)     // TESTING
+            DebugLocations.shared.finish()      // TESTING
         }
-        DebugLocations.shared.finish()      // TESTING
     } //end func
     
     
     //to be executed for each fetched record
     func recordFetchedBlock(record: CKRecord) {
         
-        // TESTING
-        if let locationCacheItem = LocationCacheItem(withRecord: record) {
-            print("Success! Created LocationCacheItem")
-        }
-        else {
-            print("Error! LocationCacheItem = NULL")
-        }
+        self.records.append(record)         // TESTING
         
         var showErrorAlert = false
         

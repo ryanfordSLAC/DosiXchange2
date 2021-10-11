@@ -19,7 +19,7 @@ class DebugLocations {
     var description: String?
     var presentingViewController: UIViewController?
 
-    init() {
+    private init() {
         fetchedRecordCount = 0
         startTime = nil
         endTime = nil
