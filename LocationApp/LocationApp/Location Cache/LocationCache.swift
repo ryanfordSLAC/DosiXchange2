@@ -13,17 +13,18 @@ class LocationCache: Codable {
     
     static let shared = LocationCache()
     
-    var dosimeterRecordNames: [String]?
-    
+    var recordNames: [String]?     //
+    var recordsCache: [LocationCacheItem]?     //
+
     private init() {
     }
     
     func didFetchRecords(_ records: [CKRecord]) {
-        if self.dosimeterRecordNames == nil {
-            self.dosimeterRecordNames = [String]()
+        if self.recordNames == nil {
+            self.recordNames = [String]()
         }
         for record in records {
-            self.dosimeterRecordNames!.append(record.recordID.recordName)
+            self.recordNames!.append(record.recordID.recordName)
         }
     }
     
