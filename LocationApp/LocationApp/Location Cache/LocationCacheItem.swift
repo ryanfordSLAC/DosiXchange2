@@ -47,10 +47,10 @@ enum LocationCacheItemRecordKeys:NSString {
 
 // Location Cache Item stores all of the properties of a dosimeter CloudKit record
 struct LocationCacheItem {
-    var QRCode:NSString?
+    var QRCode:NSString = ""
     var latitude:NSString = ""
     var longitude:NSString = ""
-    var loc:NSString = ""
+    var description:NSString = ""
     var active:Int64 = 0
     var dosimeter:NSString = ""
     var collectedFlag:Int64?
@@ -64,10 +64,32 @@ struct LocationCacheItem {
 
     // Initialize with a CloudKit Record
     init?(record: CKRecord) {
+        // init the QRCode
         guard let QRCode = record["QRCode"] as? NSString else {
-            print("QRCode = nil in LocationCacheItem init?(record: CKRecord)")
+            print("ERROR: LocationCacheItem QRCode = nil")
             return nil
         }
         self.QRCode = QRCode
+
+        // init the latitude
+        guard let latitude = record["latitude"] as? NSString else {
+            print("ERROR: LocationCacheItem QRCode = nil")
+            return nil
+        }
+        self.latitude = latitude
+        
+        // init the longitude
+        guard let longitude = record["longitude"] as? NSString else {
+            print("ERROR: LocationCacheItem QRCode = nil")
+            return nil
+        }
+        self.longitude = longitude
+        
+        // init the description
+        guard let description = record["description"] as? NSString else {
+            print("ERROR: LocationCacheItem QRCode = nil")
+            return nil
+        }
+        self.description = description
     }
 }
