@@ -339,6 +339,14 @@ extension MapViewController {
     //to be executed for each fetched record
     func recordFetchedBlock(record: CKRecord) {
         
+        // TESTING
+        if let locationCacheItem = LocationCacheItem(withRecord: record) {
+            print("Success! Created LocationCacheItem")
+        }
+        else {
+            print("Error! LocationCacheItem = NULL")
+        }
+        
         var showErrorAlert = false
         
         defer {

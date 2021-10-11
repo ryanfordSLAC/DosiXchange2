@@ -34,16 +34,16 @@ struct LocationCacheItem {
     var longitude:NSString = ""
     var description:NSString = ""
     var active:Int64 = 0
-    var dosimeter:NSString = ""
-    var collectedFlag:Int64?
-    var cycle:NSString = ""
-    var mismatch:Int64?
-    var moderator:NSString = ""
-    var createdDate:Date?  //during testing the date field may contain nothing
+    var dosimeter:NSString?     // dosimeter field may contain nothing
+    var collectedFlag:Int64?    // collectedFlag field may contain nothing
+    var cycleDate:NSString?     // cycleDate field may contain nothing
+    var mismatch:NSString?      // mismatch field may contain nothing
+    var moderator:NSString?     // moderator field may contain nothing
+    var createdDate:Date?       //during testing the date field may contain nothing
     var modifiedDate:Date?
 
     // Initialize with a CloudKit Record
-    init?(record: CKRecord) {
+    init?(withRecord record: CKRecord) {
         // set the QRCode
         guard let QRCode = record["QRCode"] as? NSString else {
             print("ERROR: LocationCacheItem QRCode = nil")
@@ -80,39 +80,29 @@ struct LocationCacheItem {
         self.active = active
         
         // set the dosimeter
-        guard let dosimeter = record["dosinumber"] as? NSString else {
-            print("ERROR: LocationCacheItem dosimeter = nil")
-            return nil
-        }
-        self.dosimeter = dosimeter
+        if let dosimeter = record["dosinumber"] as? NSString {
+            self.dosimeter = dosimeter
+       }
         
         // set the collected flag
-        guard let collectedFlag = record["collectedFlag"] as? Int64 else {
-            print("ERROR: LocationCacheItem collectedFlag = nil")
-            return nil
+        if let collectedFlag = record["collectedFlag"] as? Int64 {
+            self.collectedFlag = collectedFlag
         }
-        self.collectedFlag = collectedFlag
 
-        // set the cycle
-        guard let cycle = record["cycle"] as? NSString else {
-            print("ERROR: LocationCacheItem cycle = nil")
-            return nil
+        // set the cyclebdate
+        if let cycleDate = record["cycleDate"] as? NSString {
+            self.cycleDate = cycleDate
         }
-        self.cycle = cycle
         
         // set the mismatch flag
-        guard let mismatch = record["mismatch"] as? Int64 else {
-            print("ERROR: LocationCacheItem mismatch = nil")
-            return nil
-        }
-        self.mismatch = mismatch
+        if let mismatch = record["mismatch"] as? NSString  {
+            self.mismatch = mismatch
+       }
         
         // set the moderator
-        guard let moderator = record["moderator"] as? NSString else {
-            print("ERROR: LocationCacheItem moderator = nil")
-            return nil
+        if let moderator = record["moderator"] as? NSString {
+            self.moderator = moderator
         }
-        self.moderator = moderator
 
         // set the creation date
         if let createdDate = record["createdDate"] as? NSString {
