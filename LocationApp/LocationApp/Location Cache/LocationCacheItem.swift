@@ -66,7 +66,7 @@ struct LocationCacheItem {
         self.longitude = longitude
         
         // set the description
-        guard let description = record["description"] as? NSString else {
+        guard let description = record["locdescription"] as? NSString else {
             print("ERROR: LocationCacheItem description = nil")
             return nil
         }
@@ -80,7 +80,7 @@ struct LocationCacheItem {
         self.active = active
         
         // set the dosimeter
-        guard let dosimeter = record["dosimeter"] as? NSString else {
+        guard let dosimeter = record["dosinumber"] as? NSString else {
             print("ERROR: LocationCacheItem dosimeter = nil")
             return nil
         }
