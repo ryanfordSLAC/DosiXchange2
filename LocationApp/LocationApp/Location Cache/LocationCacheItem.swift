@@ -23,37 +23,51 @@ import CloudKit
  record["collectedFlag"]
  record["mismatch"
  record["moderator"
- record["createdDate”]
+ record["                                                                                                                                                                                                                                                                                                                                                                                                                                         ”]
  record["modifiedDate"]
  */
 
 // Location Cache Item CloudKit Record Keys
-enum LocationCacheItemRecordKeys {
-    case QRCode(code:String)
+enum LocationCacheItemRecordKeys:NSString {
+    case QRCode
     case latitutude
     case longitude
+    case description
+    case active
+    case dosimeter
+    case collectedFlag
+    case cycle
+    case mismatch
+    case collectedFlagStr
+    case mismatchStr
+    case moderator
+    case createdDate
+    case modifiedDate
  }
 
 // Location Cache Item stores all of the properties of a dosimeter CloudKit record
 struct LocationCacheItem {
-    var QRCode:String = ""
-    var latitude:String = ""
-    var longitude:String = ""
-    var loc:String = ""
+    var QRCode:NSString?
+    var latitude:NSString = ""
+    var longitude:NSString = ""
+    var loc:NSString = ""
     var active:Int64 = 0
-    var dosimeter:String = ""
+    var dosimeter:NSString = ""
     var collectedFlag:Int64?
-    var cycle:String = ""
+    var cycle:NSString = ""
     var mismatch:Int64?
-    var collectedFlagStr:String = ""
-    var mismatchStr:String = ""
-    var csvText = ""
+    var collectedFlagStr:NSString = ""
+    var mismatchStr:NSString = ""
     var moderator = ""
     var createdDate:Date?  //during testing the date field may contain nothing
-    var dateModified:Date?
+    var modifiedDate:Date?
 
     // Initialize with a CloudKit Record
     init?(record: CKRecord) {
-   
+        guard let QRCode = record["QRCode"] as? NSString else {
+            print("QRCode = nil in LocationCacheItem init?(record: CKRecord)")
+            return nil
+        }
+        self.QRCode = QRCode
     }
 }
