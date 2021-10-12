@@ -61,14 +61,19 @@ class LocationCache: Codable {
 
     // Save the dosimeter CloudKit records from disk.
     // Throws a LocationCacheError is a required record field is nil.
-     func savedCache() throws {
+     func savedCache() {
          DispatchQueue.global().async {
              print("Saving the Locations Cache")
-             let cacheData = try JSONEncoder().encode(self)
-             let cacheFileURL = URL(fileURLWithPath: cacheFilePath())
-             let file = try cacheData.write(to: cacheFileURL)
-             print("SUCCESS! Saved the Locations Cache")
-             
+             guard let cacheData = try? JSONEncoder().encode(self) else {
+                 print("Error encoding LocationCache data")
+                 return
+             }
+             guard let cacheFileURL = try? URL(fileURLWithPath: self.cacheFilePath()),
+                   let file = try? cacheData.write(to: cacheFileURL) else {
+                       
+                 return
+             }
+             print("Saved \(self.recordNames!.count) IDs & \(self.recordsCache!.count) records")
          }
     }
 
