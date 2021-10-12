@@ -40,16 +40,7 @@ class LocationCache: Codable {
     
     func didFinishFetchingRecords(_ records: [CKRecord]) {
         print("Finshed Fetching \(records.count) records")
-        
-        do {
-            try savedCache()
-        }
-        catch(let error as LocationCacheError) {
-            print("Error savinglocations cache: \(error)")
-        }
-        catch(let error) {
-            print("Error savinglocations cache: \(error)")
-        }
+        savedCache()
     }
     
     // Load the dosimeter CloudKit records from disk.
@@ -68,9 +59,8 @@ class LocationCache: Codable {
                  print("Error encoding LocationCache data")
                  return
              }
-             guard let cacheFileURL = try? URL(fileURLWithPath: self.cacheFilePath()),
-                   let file = try? cacheData.write(to: cacheFileURL) else {
-                       
+             let cacheFileURL = URL(fileURLWithPath: self.cacheFilePath())
+             guard let file = try? cacheData.write(to: cacheFileURL) else {
                  return
              }
              print("Saved \(self.recordNames!.count) IDs & \(self.recordsCache!.count) records")
