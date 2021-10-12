@@ -17,9 +17,10 @@ class LocationCache: Codable {
     
     static var shared = LocationCache()
     
-    var cacheCycleDateString: String?           // cache cycle date string
-    var recordNames: [String]?                  // list of all cache record nanes
-    var recordsCache: [LocationCacheItem]?      // list of al cache records
+    var cacheCycleDateString: String?                              // cache cycle date string
+   
+    // cache records dictionary. [key = CloudKit  Record ID, value = LocationCacheItem]
+    var locationItemCacheDict: [String: LocationCacheItem]?
 
     private init() {
    }
@@ -30,8 +31,6 @@ class LocationCache: Codable {
     
     func didStartFetchingRecords() {
         print("Started Fetching records")
-        recordNames = [String]()
-        recordsCache = [LocationCacheItem]()
     }
     
     func didFinishFetchingRecords(_ records: [CKRecord]) {
@@ -45,12 +44,11 @@ class LocationCache: Codable {
     }
     
     func makeCache(withRecords records: [CKRecord]) {
-        self.recordsCache = [LocationCacheItem]()
-        self.recordNames = [String]()
+        locationItemCacheDict = [String: LocationCacheItem]()
+
         for record in records {
-            self.recordNames?.append(record.recordID.recordName)
             if let locationCacheItem = LocationCacheItem(withRecord: record) {
-                self.recordsCache?.append(locationCacheItem)
+                locationItemCacheDict![record.recordID.recordName] = locationCacheItem
             }
         }
     }
@@ -64,7 +62,11 @@ class LocationCache: Codable {
         }
         DispatchQueue.global().async {
             print("Loading the Locations Cache")
-            let startTime = Date()
+            
+            
+            let startTime = Date()      // TESTING
+            
+            
             let cacheFileURL = URL(fileURLWithPath: path)
             guard let cacheData = try? Data(contentsOf: cacheFileURL) else {
                 print("Error loading LocationCache data")
@@ -75,12 +77,14 @@ class LocationCache: Codable {
                 print("Error decoding LocationCache from data")
                 return
             }
+            
+            // TESTING
             let endTime = Date()
             let elapsed = endTime.timeIntervalSince(startTime)
-  
-            print("Loaded \(locationsCache.recordNames!.count) IDs & \(locationsCache.recordsCache!.count) records")
-            print("Loaded LocationCache in \(elapsed) seconds")
- 
+            if let recordNames = self.locationItemCacheDict?.keys {
+                print("Loaded \(recordNames.count) LocationCacheItems in \(elapsed) seconds")
+            }
+           
             LocationCache.shared = locationsCache
         }
     }
@@ -88,7 +92,10 @@ class LocationCache: Codable {
     // Save the dosimeter CloudKit records from disk.
     // Throws a LocationCacheError is a required record field is nil.
     func saveCache() {
-         guard let count = self.recordsCache?.count, (count > 0) else {
+        
+        let startTime = Date()          // testing
+        
+        guard let count = self.locationItemCacheDict?.keys.count, (count > 0) else {
              return
          }
         print("Saving the Locations Cache")
@@ -102,7 +109,16 @@ class LocationCache: Codable {
         guard let file = try? cacheData.write(to: cacheFileURL) else {
             return
         }
-        print("Saved \(self.recordNames!.count) IDs & \(self.recordsCache!.count) records")
+        
+        
+        // TESTING
+        if let recordNames = self.locationItemCacheDict?.keys {
+            let endTime = Date()          // testing
+            let elapsed = endTime.timeIntervalSince(startTime)
+            print("Saved \(recordNames.count) LocationItems in \(elapsed) seconds")
+        }
+        
+        
     }
     
     // Path to the locations cache file

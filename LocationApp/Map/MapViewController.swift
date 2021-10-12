@@ -289,14 +289,6 @@ extension MapViewController {
     
     //query active locations
     func queryForMap() {
-        
-        DebugLocations.shared.start(presentingViewController: self,
-                                    description: "MapViewController")       // TESTING
-        
-        LocationCache.shared.didStartFetchingRecords()                      // TESTING
-        
-        try? LocationCache.shared.loadCache()                               // TESTING
-        
         records = [CKRecord]()
         let predicate = NSPredicate(value: true)
         let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
@@ -306,8 +298,12 @@ extension MapViewController {
         query.sortDescriptors = [sort1, sort2]
         let operation = CKQueryOperation(query: query)
         addOperation(operation: operation)
-    
-    } //end func
+ 
+        DebugLocations.shared.start(presentingViewController: self,
+                                    description: "MapViewController")       // TESTING
+
+        //       LocationCache.shared.didStartFetchingRecords()                      // TESTING
+   } //end func
     
     
     //add query operation
@@ -322,6 +318,7 @@ extension MapViewController {
     
     //to be executed after each query (query fetches 200 records at a time)
     func queryCompletionBlock(cursor: CKQueryOperation.Cursor?, error: Error?) {
+
         if let error = error {
             print(error.localizedDescription)
             return
@@ -335,9 +332,10 @@ extension MapViewController {
         DispatchQueue.main.async {
             self.activityIndicator.stopAnimating()
             self.filtersButton.isHidden = false
-            
-            LocationCache.shared.didFinishFetchingRecords(self.records)     // TESTING
+         
             DebugLocations.shared.finish()      // TESTING
+
+            LocationCache.shared.didFinishFetchingRecords(self.records)     // TESTING
         }
     } //end func
     
@@ -345,7 +343,8 @@ extension MapViewController {
     //to be executed for each fetched record
     func recordFetchedBlock(record: CKRecord) {
         
-        self.records.append(record)         // TESTING
+        DebugLocations.shared.didFetchRecord()      // TESTING
+ //       self.records.append(record)         // TESTING
         
         var showErrorAlert = false
         
@@ -354,9 +353,6 @@ extension MapViewController {
             if showErrorAlert {
                 self.alert13()
                 print("record skipped")
-            }
-            else {
-                DebugLocations.shared.didFetchRecord()
             }
          }
         
