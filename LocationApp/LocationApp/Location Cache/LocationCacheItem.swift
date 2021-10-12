@@ -12,7 +12,11 @@ import Foundation
 import CloudKit
 
 protocol LocationCacheRecord {
-    subscript(key: String) -> Any? {get}
+    subscript(key: String) -> CKRecordValue? {get}
+}
+
+extension CKRecord: LocationCacheRecord{
+    
 }
 
 // Location Cache Item CloudKit Record Keys
@@ -121,44 +125,79 @@ struct LocationCacheItem: Codable, LocationCacheRecord{
     }
     
     // Subscript operator overload used to access properties.
-    subscript(key: String) -> Any? {
+    subscript(key: String) -> CKRecordValue? {
         get {
             switch key {
                 case "QRCode":
-                    return QRCode
+                    return QRCode as CKRecordValue
                    
                 case "active":
-                  return active
+                  return active as CKRecordValue
                    
                 case "latitude":
-                  return latitude
+                  return latitude as CKRecordValue
                
                 case "longitude":
-                   return longitude
+                   return longitude as CKRecordValue
                    
                 case "locdescription":
-                   return description
+                   return description as CKRecordValue
 
                 case "dosinumber":
-                   return dosimeter
+                    if dosimeter != nil {
+                        return dosimeter! as CKRecordValue
+                    }
+                    else {
+                        return nil
+                    }
 
                 case "collectedFlag":
-                   return collectedFlag
+                    if collectedFlag != nil {
+                        return collectedFlag! as CKRecordValue
+                    }
+                    else {
+                        return nil
+                    }
 
-               case "cycleDate":
-                   return cycleDate
+                case "cycleDate":
+                    if cycleDate != nil {
+                        return cycleDate! as CKRecordValue
+                    }
+                    else {
+                        return nil
+                    }
 
                case "mismatch":
-                   return mismatch
+                    if mismatch != nil {
+                        return mismatch! as CKRecordValue
+                    }
+                    else {
+                        return nil
+                    }
 
                case "moderator":
-                   return moderator
+                    if moderator != nil {
+                        return moderator! as CKRecordValue
+                    }
+                    else {
+                        return nil
+                    }
 
                case "createdDate":
-                   return createdDate
+                    if createdDate != nil {
+                        return createdDate! as CKRecordValue
+                    }
+                    else {
+                        return nil
+                    }
 
                case "modifiedDate":
-                   return modifiedDate
+                    if modifiedDate != nil {
+                        return modifiedDate! as CKRecordValue
+                    }
+                    else {
+                        return nil
+                    }
 
                default:
                   return nil
