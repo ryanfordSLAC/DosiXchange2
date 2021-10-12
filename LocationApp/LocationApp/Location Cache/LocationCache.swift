@@ -15,15 +15,13 @@ enum LocationCacheError: Error {
 
 class LocationCache: Codable {
     
-    static let shared = LocationCache()
+    static var shared = LocationCache()
     
     var cacheCycleDateString: String?           // cache cycle date string
     var recordNames: [String]?                  // list of all cache record nanes
     var recordsCache: [LocationCacheItem]?      // list of al cache records
 
     private init() {
-        recordNames = [String]()
-        recordsCache = [LocationCacheItem]()
    }
     
     func didFetchRecords(_ records: [CKRecord]) {
@@ -32,6 +30,8 @@ class LocationCache: Codable {
     
     func didStartFetchingRecords() {
         print("Started Fetching records")
+        recordNames = [String]()
+        recordsCache = [LocationCacheItem]()
     }
     
     func didFinishFetchingRecords(_ records: [CKRecord]) {
@@ -39,13 +39,14 @@ class LocationCache: Codable {
         DispatchQueue.global().async {
             self.makeCache(withRecords: records)
             self.saveCache()
-       }
+          
+            try? self.loadCache()
+      }
     }
     
     func makeCache(withRecords records: [CKRecord]) {
-        if self.recordsCache == nil {
-            self.recordsCache = [LocationCacheItem]()
-        }
+        self.recordsCache = [LocationCacheItem]()
+        self.recordNames = [String]()
         for record in records {
             self.recordNames?.append(record.recordID.recordName)
             if let locationCacheItem = LocationCacheItem(withRecord: record) {
@@ -63,6 +64,7 @@ class LocationCache: Codable {
         }
         DispatchQueue.global().async {
             print("Loading the Locations Cache")
+            let startTime = Date()
             let cacheFileURL = URL(fileURLWithPath: path)
             guard let cacheData = try? Data(contentsOf: cacheFileURL) else {
                 print("Error loading LocationCache data")
@@ -73,8 +75,13 @@ class LocationCache: Codable {
                 print("Error decoding LocationCache from data")
                 return
             }
-                    
+            let endTime = Date()
+            let elapsed = endTime.timeIntervalSince(startTime)
+  
             print("Loaded \(locationsCache.recordNames!.count) IDs & \(locationsCache.recordsCache!.count) records")
+            print("Loaded LocationCache in \(elapsed) seconds")
+ 
+            LocationCache.shared = locationsCache
         }
     }
 
@@ -89,7 +96,9 @@ class LocationCache: Codable {
             print("Error encoding LocationCache data")
             return
         }
+        
         let cacheFileURL = URL(fileURLWithPath: self.cacheFilePath())
+        try? FileManager.default.removeItem(at: cacheFileURL)
         guard let file = try? cacheData.write(to: cacheFileURL) else {
             return
         }

@@ -327,8 +327,6 @@ extension MapViewController {
             return
         }
         if let cursor = cursor {
-            LocationCache.shared.didFetchRecords(self.records)     // TESTING
-
             let operation = CKQueryOperation(cursor: cursor)
             addOperation(operation: operation)
             return
