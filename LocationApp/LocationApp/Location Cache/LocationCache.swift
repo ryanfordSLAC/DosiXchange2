@@ -46,20 +46,25 @@ class LocationCache: Codable {
     // Load the dosimeter CloudKit records from disk.
     // Throws a LocationCacheError is a required record field is nil.
     func loadCache() throws {
+        let path = self.cacheFilePath()
+        guard FileManager.default.fileExists(atPath: path) else {
+            return
+        }
+
         DispatchQueue.global().async {
-            print("Loading the Locations Cache")
-            let cacheFileURL = URL(fileURLWithPath: self.cacheFilePath())
-            guard let cacheData = try? Data(contentsOf: cacheFileURL) else {
-                print("Error loading LocationCache data")
-                return
-            }
-            guard let locationsCache = try? JSONDecoder().decode(LocationCache.self,
-                                                                 from: cacheData) else {
-                print("Error decoding LocationCache from data")
-                return
-            }
-                    
-            print("Loaded \(locationsCache.recordNames!.count) IDs & \(locationsCache.recordsCache!.count) records")
+        print("Loading the Locations Cache")
+        let cacheFileURL = URL(fileURLWithPath: path)
+        guard let cacheData = try? Data(contentsOf: cacheFileURL) else {
+            print("Error loading LocationCache data")
+            return
+        }
+        guard let locationsCache = try? JSONDecoder().decode(LocationCache.self,
+                                                             from: cacheData) else {
+            print("Error decoding LocationCache from data")
+            return
+        }
+                
+        print("Loaded \(locationsCache.recordNames!.count) IDs & \(locationsCache.recordsCache!.count) records")
         }
     }
 
@@ -83,6 +88,9 @@ class LocationCache: Codable {
     
     // Path to the locations cache file
     func cacheFilePath() -> String {
-        return "~/Library/Cache/LocationsCache.txt"
+        let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
+        let url = cachesDirectory.appendingPathComponent("LocationsCache.txt")
+        print("Cache file path = \(url.path).")
+        return url.path
     }
 }

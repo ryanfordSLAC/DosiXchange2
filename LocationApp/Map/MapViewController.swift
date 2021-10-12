@@ -295,6 +295,8 @@ extension MapViewController {
         
         LocationCache.shared.didStartFetchingRecords()                      // TESTING
         
+        try? LocationCache.shared.loadCache()                               // TESTING
+        
         records = [CKRecord]()
         let predicate = NSPredicate(value: true)
         let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
