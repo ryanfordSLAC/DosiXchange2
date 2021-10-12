@@ -28,10 +28,6 @@ class LocationCache: Codable {
     
     func didFetchRecords(_ records: [CKRecord]) {
         print("Did Fetch \(records.count) records")
-
-        for record in records {
-            self.recordNames!.append(record.recordID.recordName)
-        }
     }
     
     func didStartFetchingRecords() {
@@ -40,7 +36,22 @@ class LocationCache: Codable {
     
     func didFinishFetchingRecords(_ records: [CKRecord]) {
         print("Finshed Fetching \(records.count) records")
-        savedCache()
+        DispatchQueue.global().async {
+            self.makeCache(withRecords: records)
+            self.saveCache()
+       }
+    }
+    
+    func makeCache(withRecords records: [CKRecord]) {
+        if self.recordsCache == nil {
+            self.recordsCache = [LocationCacheItem]()
+        }
+        for record in records {
+            self.recordNames?.append(record.recordID.recordName)
+            if let locationCacheItem = LocationCacheItem(withRecord: record) {
+                self.recordsCache?.append(locationCacheItem)
+            }
+        }
     }
     
     // Load the dosimeter CloudKit records from disk.
@@ -50,41 +61,40 @@ class LocationCache: Codable {
         guard FileManager.default.fileExists(atPath: path) else {
             return
         }
-
         DispatchQueue.global().async {
-        print("Loading the Locations Cache")
-        let cacheFileURL = URL(fileURLWithPath: path)
-        guard let cacheData = try? Data(contentsOf: cacheFileURL) else {
-            print("Error loading LocationCache data")
-            return
-        }
-        guard let locationsCache = try? JSONDecoder().decode(LocationCache.self,
-                                                             from: cacheData) else {
-            print("Error decoding LocationCache from data")
-            return
-        }
-                
-        print("Loaded \(locationsCache.recordNames!.count) IDs & \(locationsCache.recordsCache!.count) records")
+            print("Loading the Locations Cache")
+            let cacheFileURL = URL(fileURLWithPath: path)
+            guard let cacheData = try? Data(contentsOf: cacheFileURL) else {
+                print("Error loading LocationCache data")
+                return
+            }
+            guard let locationsCache = try? JSONDecoder().decode(LocationCache.self,
+                                                                 from: cacheData) else {
+                print("Error decoding LocationCache from data")
+                return
+            }
+                    
+            print("Loaded \(locationsCache.recordNames!.count) IDs & \(locationsCache.recordsCache!.count) records")
         }
     }
 
     // Save the dosimeter CloudKit records from disk.
     // Throws a LocationCacheError is a required record field is nil.
-     func savedCache() {
-         DispatchQueue.global().async {
-             print("Saving the Locations Cache")
-             guard let cacheData = try? JSONEncoder().encode(self) else {
-                 print("Error encoding LocationCache data")
-                 return
-             }
-             let cacheFileURL = URL(fileURLWithPath: self.cacheFilePath())
-             guard let file = try? cacheData.write(to: cacheFileURL) else {
-                 return
-             }
-             print("Saved \(self.recordNames!.count) IDs & \(self.recordsCache!.count) records")
+    func saveCache() {
+         guard let count = self.recordsCache?.count, (count > 0) else {
+             return
          }
+        print("Saving the Locations Cache")
+        guard let cacheData = try? JSONEncoder().encode(self) else {
+            print("Error encoding LocationCache data")
+            return
+        }
+        let cacheFileURL = URL(fileURLWithPath: self.cacheFilePath())
+        guard let file = try? cacheData.write(to: cacheFileURL) else {
+            return
+        }
+        print("Saved \(self.recordNames!.count) IDs & \(self.recordsCache!.count) records")
     }
-
     
     // Path to the locations cache file
     func cacheFilePath() -> String {
