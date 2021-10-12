@@ -21,7 +21,10 @@ class LocationCache: Codable {
    
     // cache records dictionary. [key = CloudKit  Record ID, value = LocationCacheItem]
     var locationItemCacheDict: [String: LocationCacheItem]?
-
+ 
+    // location items in same order as sorted CloudKit records
+    var sortedLocationCacheItems: [LocationCacheItem]?
+    
     private init() {
    }
     
@@ -38,24 +41,29 @@ class LocationCache: Codable {
         DispatchQueue.global().async {
             self.makeCache(withRecords: records)
             self.saveCache()
-          
-            try? self.loadCache()
       }
     }
     
     func makeCache(withRecords records: [CKRecord]) {
         locationItemCacheDict = [String: LocationCacheItem]()
-
+        sortedLocationCacheItems = [LocationCacheItem]()
+        
         for record in records {
             if let locationCacheItem = LocationCacheItem(withRecord: record) {
+                sortedLocationCacheItems!.append(locationCacheItem)
                 locationItemCacheDict![record.recordID.recordName] = locationCacheItem
             }
         }
     }
     
+    // Test if the locations cache file exists.
+    func locationCacheFileExists() -> Bool {
+        return FileManager.default.fileExists(atPath: cacheFilePath())
+    }
+    
     // Load the dosimeter CloudKit records from disk.
     // Throws a LocationCacheError is a required record field is nil.
-    func loadCache() throws {
+    func loadCache() {
         let path = self.cacheFilePath()
         guard FileManager.default.fileExists(atPath: path) else {
             return
@@ -82,7 +90,7 @@ class LocationCache: Codable {
             let endTime = Date()
             let elapsed = endTime.timeIntervalSince(startTime)
             if let recordNames = self.locationItemCacheDict?.keys {
-                print("Loaded \(recordNames.count) LocationCacheItems in \(elapsed) seconds")
+                print("*** Loaded \(recordNames.count) LocationCacheItems in \(elapsed) seconds")
             }
            
             LocationCache.shared = locationsCache
@@ -115,7 +123,7 @@ class LocationCache: Codable {
         if let recordNames = self.locationItemCacheDict?.keys {
             let endTime = Date()          // testing
             let elapsed = endTime.timeIntervalSince(startTime)
-            print("Saved \(recordNames.count) LocationItems in \(elapsed) seconds")
+            print("*** Saved \(recordNames.count) LocationItems in \(elapsed) seconds")
         }
         
         

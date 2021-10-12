@@ -11,6 +11,10 @@
 import Foundation
 import CloudKit
 
+protocol LocationCacheRecord {
+    subscript(key: String) -> Any? {get}
+}
+
 // Location Cache Item CloudKit Record Keys
 enum LocationCacheItemRecordKeys:NSString {
     case QRCode
@@ -28,7 +32,7 @@ enum LocationCacheItemRecordKeys:NSString {
  }
 
 // Location Cache Item stores all of the properties of a dosimeter CloudKit record
-struct LocationCacheItem: Codable{
+struct LocationCacheItem: Codable, LocationCacheRecord{
     var QRCode:String = ""
     var latitude:String = ""
     var longitude:String = ""
@@ -41,9 +45,10 @@ struct LocationCacheItem: Codable{
     var moderator:String?     // moderator field may contain nothing
     var createdDate:Date?       //during testing the date field may contain nothing
     var modifiedDate:Date?
-
+    
     // Initialize with a CloudKit Record
     init?(withRecord record: CKRecord) {
+                
         // set the QRCode
         guard let QRCode = record["QRCode"] as? String else {
             print("ERROR: LocationCacheItem QRCode = nil")
@@ -113,5 +118,51 @@ struct LocationCacheItem: Codable{
         if let modifiedDate = record["modifiedDate"] as? NSString {
             print("TODO: Handle modifiedDate = \(modifiedDate)")
         }
+    }
+    
+    // Subscript operator overload used to access properties.
+    subscript(key: String) -> Any? {
+        get {
+            switch key {
+                case "QRCode":
+                    return QRCode
+                   
+                case "active":
+                  return active
+                   
+                case "latitude":
+                  return latitude
+               
+                case "longitude":
+                   return longitude
+                   
+                case "locdescription":
+                   return description
+
+                case "dosinumber":
+                   return dosimeter
+
+                case "collectedFlag":
+                   return collectedFlag
+
+               case "cycleDate":
+                   return cycleDate
+
+               case "mismatch":
+                   return mismatch
+
+               case "moderator":
+                   return moderator
+
+               case "createdDate":
+                   return createdDate
+
+               case "modifiedDate":
+                   return modifiedDate
+
+               default:
+                  return nil
+               }
+           }
     }
 }

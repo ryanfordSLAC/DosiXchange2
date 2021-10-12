@@ -289,6 +289,13 @@ extension MapViewController {
     
     //query active locations
     func queryForMap() {
+        
+        // try to load the records from the cache
+        if LocationCache.shared.locationCacheFileExists() {
+            LocationCache.shared.loadCache() 
+        }
+        
+        
         records = [CKRecord]()
         let predicate = NSPredicate(value: true)
         let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
@@ -302,7 +309,7 @@ extension MapViewController {
         DebugLocations.shared.start(presentingViewController: self,
                                     description: "MapViewController")       // TESTING
 
-        //       LocationCache.shared.didStartFetchingRecords()                      // TESTING
+        LocationCache.shared.didStartFetchingRecords()                      // TESTING
    } //end func
     
     
@@ -344,7 +351,7 @@ extension MapViewController {
     func recordFetchedBlock(record: CKRecord) {
         
         DebugLocations.shared.didFetchRecord()      // TESTING
- //       self.records.append(record)         // TESTING
+        self.records.append(record)                 // TESTING
         
         var showErrorAlert = false
         
