@@ -39,7 +39,7 @@ class DebugLocations {
         showDebugStats()
     }
  
-    func didFetchRecord() {
+    func didFetchDosimeterRecord() {
         fetchedRecordCount += 1
     }
     

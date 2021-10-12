@@ -1,5 +1,5 @@
 //
-//  LocationCacheItem.swift
+//  DosimeterRecordCacheItem.swift
 //  LocationApp
 //
 // Used to cache Location Cloudit records to disk.
@@ -11,16 +11,17 @@
 import Foundation
 import CloudKit
 
-protocol LocationCacheRecord {
+protocol DosimeterRecordDelegate {
     subscript(key: String) -> CKRecordValue? {get}
 }
 
-extension CKRecord: LocationCacheRecord{
-    
+extension CKRecord: DosimeterRecordDelegate{
+    // CKRecord already implements the DosimeterRecordDelegate protocol
+    // to access properties with a subscript so this protocol is empty.
 }
 
-// Location Cache Item CloudKit Record Keys
-enum LocationCacheItemRecordKeys:NSString {
+// Dosimetr Cache Item CloudKit Record Keys
+enum DosimeterRecordCacheItemRecordKeys:NSString {
     case QRCode
     case latitutude
     case longitude
@@ -35,55 +36,54 @@ enum LocationCacheItemRecordKeys:NSString {
     case modifiedDate
  }
 
-// Location Cache Item stores all of the properties of a dosimeter CloudKit record
-struct LocationCacheItem: Codable, LocationCacheRecord{
-    var QRCode:String = ""
-    var latitude:String = ""
-    var longitude:String = ""
-    var description:String = ""
-    var active:Int64 = 0
-    var dosimeter:String?     // dosimeter field may contain nothing
+// Dosimetr Cache Item stores all of the properties of a dosimeter CloudKit record
+struct DosimeterRecordCacheItem: Codable, DosimeterRecordDelegate{
+    var QRCode:String = ""      // QR Code
+    var latitude:String = ""    // latitude
+    var longitude:String = ""   // longitude
+    var description:String = "" // location Description
+    var active:Int64 = 0        // active
+    var dosimeter:String?       // dosimeter field may contain nothing
     var collectedFlag:Int64?    // collectedFlag field may contain nothing
-    var cycleDate:String?     // cycleDate field may contain nothing
-    var mismatch:String?      // mismatch field may contain nothing
-    var moderator:String?     // moderator field may contain nothing
-    var createdDate:Date?       //during testing the date field may contain nothing
-    var modifiedDate:Date?
+    var cycleDate:String?       // cycleDate field may contain nothing
+    var mismatch:String?        // mismatch field may contain nothing
+    var moderator:String?       // moderator field may contain nothing
+    var createdDate:Date?       // creation date
+    var modifiedDate:Date?      // modified date
     
     // Initialize with a CloudKit Record
     init?(withRecord record: CKRecord) {
-                
         // set the QRCode
         guard let QRCode = record["QRCode"] as? String else {
-            print("ERROR: LocationCacheItem QRCode = nil")
+            print("ERROR: DosimeterRecordCacheItem QRCode = nil")
             return nil
         }
         self.QRCode = QRCode
 
         // set the latitude
         guard let latitude = record["latitude"] as? String else {
-            print("ERROR: LocationCacheItem latitude = nil")
+            print("ERROR: DosimeterRecordCacheItem latitude = nil")
             return nil
         }
         self.latitude = latitude
         
         // set the longitude
         guard let longitude = record["longitude"] as? String else {
-            print("ERROR: LocationCacheItem longitude = nil")
+            print("ERROR: DosimeterRecordCacheItem longitude = nil")
             return nil
         }
         self.longitude = longitude
         
         // set the description
         guard let description = record["locdescription"] as? NSString else {
-            print("ERROR: LocationCacheItem description = nil")
+            print("ERROR: DosimeterRecordCacheItem description = nil")
             return nil
         }
         self.description = description as String
         
         // set the active state
         guard let active = record["active"] as? Int64 else {
-            print("ERROR: LocationCacheItem active = nil")
+            print("ERROR: DosimeterRecordCacheItem active = nil")
             return nil
         }
         self.active = active

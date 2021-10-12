@@ -44,8 +44,8 @@ class MapViewController: UIViewController {
         let longitude = locationmanager.location?.coordinate.longitude
         #else
         // Use the SLAC Geolocation as the map origin
-        let latitude: Double? = 37.428230
-        let longitude: Double? = -122.168861
+        let latitude: Double? = 37.4236943
+        let longitude: Double? = -122.197171
         #endif
         self.MapView.delegate = self
 
@@ -289,13 +289,20 @@ extension MapViewController {
     
     //query active locations
     func queryForMap() {
-        
         // try to load the records from the cache
-        if LocationCache.shared.locationCacheFileExists() {
-            LocationCache.shared.loadCache() 
+        if DosimeterRecordCache.shared.cacheFileExists() {
+            DosimeterRecordCache.shared.loadCache() { dosimeterRecords in
+                guard let records = dosimeterRecords else {
+                    return
+                }
+                // Process the dosimeter records loaded from the local cache file
+                for dosimeterRecord in records {
+                    self.didFetchDosimeterRecord(dosimeterRecord)
+                }
+            }
+            return
         }
-        
-        
+
         records = [CKRecord]()
         let predicate = NSPredicate(value: true)
         let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
@@ -309,7 +316,7 @@ extension MapViewController {
         DebugLocations.shared.start(presentingViewController: self,
                                     description: "MapViewController")       // TESTING
 
-        LocationCache.shared.didStartFetchingRecords()                      // TESTING
+        DosimeterRecordCache.shared.didStartFetchingRecords()                      // TESTING
    } //end func
     
     
@@ -342,17 +349,13 @@ extension MapViewController {
          
             DebugLocations.shared.finish()      // TESTING
 
-            LocationCache.shared.didFinishFetchingRecords(self.records)     // TESTING
+            DosimeterRecordCache.shared.didFinishFetchingRecords(self.records)     // TESTING
         }
     } //end func
     
     
-    //to be executed for each fetched record
-    func recordFetchedBlock(record: CKRecord) {
-        
-        DebugLocations.shared.didFetchRecord()      // TESTING
-        self.records.append(record)                 // TESTING
-        
+    // A Dosimeter record was fetched from CloudKit or a local cache
+    func didFetchDosimeterRecord( _ record: DosimeterRecordDelegate) {
         var showErrorAlert = false
         
         defer {
@@ -364,7 +367,7 @@ extension MapViewController {
          }
         
         //fetch QRCode
-        guard let QRCode:String = record["QRCode"] else {
+        guard let QRCode:String = record["QRCode"] as? String else {
             showErrorAlert = true
             return
         }
@@ -379,10 +382,10 @@ extension MapViewController {
             showErrorAlert = true
             return
         default:
-            guard let active:Int64 = record["active"],
-                  let latitude:String = record["latitude"],
-                  let longitude:String = record["longitude"],
-                  let description:String = record["locdescription"] else {
+            guard let active:Int64 = record["active"] as? Int64,
+                  let latitude:String = record["latitude"] as? String,
+                  let longitude:String = record["longitude"] as? String,
+                  let description:String = record["locdescription"] as? String else {
                       showErrorAlert = true
                       return
             }
@@ -407,7 +410,13 @@ extension MapViewController {
             
             self.checkQR = QRCode
         }
-
+    }
+    
+    //to be executed for each fetched record
+    func recordFetchedBlock(record: CKRecord) {
+        DebugLocations.shared.didFetchDosimeterRecord()      // TESTING
+        self.records.append(record)                 // TESTING
+        didFetchDosimeterRecord(record)
     }
     
     //MARK:  Alert 13

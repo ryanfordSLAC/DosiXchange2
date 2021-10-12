@@ -226,7 +226,7 @@ extension ActiveLocations {
                 displayInfo[flag].append((record, currentQR, currentLoc))
             }
             
-            DebugLocations.shared.didFetchRecord()
+            DebugLocations.shared.didFetchDosimeterRecord()
             
             self.checkQR = currentQR
         

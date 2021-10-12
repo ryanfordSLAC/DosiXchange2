@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		449A7E9B271337E6005AF1F7 /* LocationCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449A7E9A271337E6005AF1F7 /* LocationCache.swift */; };
-		449A7E9D271341B2005AF1F7 /* LocationCacheItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449A7E9C271341B2005AF1F7 /* LocationCacheItem.swift */; };
+		449A7E9B271337E6005AF1F7 /* DosimeterRecordCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449A7E9A271337E6005AF1F7 /* DosimeterRecordCache.swift */; };
+		449A7E9D271341B2005AF1F7 /* DosimeterRecordCacheItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449A7E9C271341B2005AF1F7 /* DosimeterRecordCacheItem.swift */; };
 		5C7925A122DE9B1900B981B2 /* LocationDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C7925A022DE9B1900B981B2 /* LocationDetails.swift */; };
 		5C941E5522D93335008C9B3E /* LocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C941E5422D93335008C9B3E /* LocationViewController.swift */; };
 		5CF01FDE22D92F19004604BC /* ToolsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CF01FDD22D92F19004604BC /* ToolsViewController.swift */; };
@@ -67,8 +67,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		449A7E9A271337E6005AF1F7 /* LocationCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationCache.swift; sourceTree = "<group>"; };
-		449A7E9C271341B2005AF1F7 /* LocationCacheItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationCacheItem.swift; sourceTree = "<group>"; };
+		449A7E9A271337E6005AF1F7 /* DosimeterRecordCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DosimeterRecordCache.swift; sourceTree = "<group>"; };
+		449A7E9C271341B2005AF1F7 /* DosimeterRecordCacheItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DosimeterRecordCacheItem.swift; sourceTree = "<group>"; };
 		5C7925A022DE9B1900B981B2 /* LocationDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetails.swift; sourceTree = "<group>"; };
 		5C941E5422D93335008C9B3E /* LocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationViewController.swift; sourceTree = "<group>"; };
 		5CF01FDD22D92F19004604BC /* ToolsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsViewController.swift; sourceTree = "<group>"; };
@@ -143,13 +143,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		449A7E9E27135171005AF1F7 /* Location Cache */ = {
+		449A7E9E27135171005AF1F7 /* Dosimeter Cache */ = {
 			isa = PBXGroup;
 			children = (
-				449A7E9A271337E6005AF1F7 /* LocationCache.swift */,
-				449A7E9C271341B2005AF1F7 /* LocationCacheItem.swift */,
+				449A7E9A271337E6005AF1F7 /* DosimeterRecordCache.swift */,
+				449A7E9C271341B2005AF1F7 /* DosimeterRecordCacheItem.swift */,
 			);
-			path = "Location Cache";
+			path = "Dosimeter Cache";
 			sourceTree = "<group>";
 		};
 		79A5CB13270E7788007309EF /* Debug */ = {
@@ -175,6 +175,7 @@
 				8409F52522022A4300B78BCC /* Database Interactions */,
 				84673C5521FF864C00680EAB /* Utility View */,
 				8421B0622165BBB80041A53A /* LocationApp */,
+				449A7E9E27135171005AF1F7 /* Dosimeter Cache */,
 				845D9FAE21E7F6CF00A11C0B /* Scanner */,
 				845D9FAF21E7F71A00A11C0B /* Text File */,
 				845D9FAD21E7F66F00A11C0B /* Map */,
@@ -206,7 +207,6 @@
 				8421B0632165BBB80041A53A /* AppDelegate.swift */,
 				8409448821CC539900C4EA28 /* TODO.swift */,
 				845F2E5E221C62E200A48C1A /* Reachability.swift */,
-				449A7E9E27135171005AF1F7 /* Location Cache */,
 				8421B06C2165BBB90041A53A /* LaunchScreen.storyboard */,
 				8421B06F2165BBB90041A53A /* Info.plist */,
 				846D6B4F2170160E008E003D /* LocationApp.entitlements */,
@@ -467,14 +467,14 @@
 				5CF01FDE22D92F19004604BC /* ToolsViewController.swift in Sources */,
 				84F477962167173A00A63336 /* LocationApp.xcdatamodeld in Sources */,
 				84B58D4D21FD69C80013D5F3 /* UploadToCloud.swift in Sources */,
-				449A7E9B271337E6005AF1F7 /* LocationCache.swift in Sources */,
+				449A7E9B271337E6005AF1F7 /* DosimeterRecordCache.swift in Sources */,
 				84A6671421E7162200FC1892 /* Artwork.swift in Sources */,
 				84571FE5258FE29C009AC936 /* BriefCase.swift in Sources */,
 				84F9180222211C9B00D25634 /* NearestDosimeters.swift in Sources */,
 				79A5CB15270E77E9007309EF /* DebugLocations.swift in Sources */,
 				8487FE2E21A8F4E000CC62E8 /* ScannerViewController.swift in Sources */,
 				8434D57B25956DE800B2E413 /* RepairCycleDate.swift in Sources */,
-				449A7E9D271341B2005AF1F7 /* LocationCacheItem.swift in Sources */,
+				449A7E9D271341B2005AF1F7 /* DosimeterRecordCacheItem.swift in Sources */,
 				846606C121AA3CA00049814C /* ReadWriteText.swift in Sources */,
 				5C941E5522D93335008C9B3E /* LocationViewController.swift in Sources */,
 				8487FE3021A8F9C700CC62E8 /* StartupViewController.swift in Sources */,
