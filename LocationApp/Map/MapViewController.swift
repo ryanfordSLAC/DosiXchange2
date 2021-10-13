@@ -290,8 +290,8 @@ extension MapViewController {
     //query active locations
     func queryForMap() {
         // try to load the records from the cache
-        if DosimeterRecordCache.shared.cacheFileExists() {
-            DosimeterRecordCache.shared.loadCache() { dosimeterRecords in
+        if LocationRecordCache.shared.cacheFileExists() {
+            LocationRecordCache.shared.loadCache() { dosimeterRecords in
                 guard let records = dosimeterRecords else {
                     return
                 }
@@ -316,7 +316,7 @@ extension MapViewController {
         DebugLocations.shared.start(presentingViewController: self,
                                     description: "MapViewController")       // TESTING
 
-        DosimeterRecordCache.shared.didStartFetchingRecords()                      // TESTING
+        LocationRecordCache.shared.didStartFetchingRecords()                      // TESTING
    } //end func
     
     
@@ -349,13 +349,13 @@ extension MapViewController {
          
             DebugLocations.shared.finish()      // TESTING
 
-            DosimeterRecordCache.shared.didFinishFetchingRecords(self.records)     // TESTING
+            LocationRecordCache.shared.didFinishFetchingRecords(self.records)     // TESTING
         }
     } //end func
     
     
     // A Dosimeter record was fetched from CloudKit or a local cache
-    func didFetchDosimeterRecord( _ record: DosimeterRecordDelegate) {
+    func didFetchDosimeterRecord( _ record: LocationRecordDelegate) {
         var showErrorAlert = false
         
         defer {

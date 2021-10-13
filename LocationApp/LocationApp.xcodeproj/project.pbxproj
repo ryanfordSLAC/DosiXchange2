@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		449A7E9B271337E6005AF1F7 /* DosimeterRecordCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449A7E9A271337E6005AF1F7 /* DosimeterRecordCache.swift */; };
+		449A7E9B271337E6005AF1F7 /* LocationRecordCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449A7E9A271337E6005AF1F7 /* LocationRecordCache.swift */; };
 		449A7E9D271341B2005AF1F7 /* DosimeterRecordCacheItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449A7E9C271341B2005AF1F7 /* DosimeterRecordCacheItem.swift */; };
 		5C7925A122DE9B1900B981B2 /* LocationDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C7925A022DE9B1900B981B2 /* LocationDetails.swift */; };
 		5C941E5522D93335008C9B3E /* LocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C941E5422D93335008C9B3E /* LocationViewController.swift */; };
@@ -67,7 +67,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		449A7E9A271337E6005AF1F7 /* DosimeterRecordCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DosimeterRecordCache.swift; sourceTree = "<group>"; };
+		449A7E9A271337E6005AF1F7 /* LocationRecordCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationRecordCache.swift; sourceTree = "<group>"; };
 		449A7E9C271341B2005AF1F7 /* DosimeterRecordCacheItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DosimeterRecordCacheItem.swift; sourceTree = "<group>"; };
 		5C7925A022DE9B1900B981B2 /* LocationDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetails.swift; sourceTree = "<group>"; };
 		5C941E5422D93335008C9B3E /* LocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationViewController.swift; sourceTree = "<group>"; };
@@ -143,13 +143,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		449A7E9E27135171005AF1F7 /* Dosimeter Cache */ = {
+		449A7E9E27135171005AF1F7 /* Location Cache */ = {
 			isa = PBXGroup;
 			children = (
-				449A7E9A271337E6005AF1F7 /* DosimeterRecordCache.swift */,
+				449A7E9A271337E6005AF1F7 /* LocationRecordCache.swift */,
 				449A7E9C271341B2005AF1F7 /* DosimeterRecordCacheItem.swift */,
 			);
-			path = "Dosimeter Cache";
+			path = "Location Cache";
 			sourceTree = "<group>";
 		};
 		79A5CB13270E7788007309EF /* Debug */ = {
@@ -175,7 +175,7 @@
 				8409F52522022A4300B78BCC /* Database Interactions */,
 				84673C5521FF864C00680EAB /* Utility View */,
 				8421B0622165BBB80041A53A /* LocationApp */,
-				449A7E9E27135171005AF1F7 /* Dosimeter Cache */,
+				449A7E9E27135171005AF1F7 /* Location Cache */,
 				845D9FAE21E7F6CF00A11C0B /* Scanner */,
 				845D9FAF21E7F71A00A11C0B /* Text File */,
 				845D9FAD21E7F66F00A11C0B /* Map */,
@@ -467,7 +467,7 @@
 				5CF01FDE22D92F19004604BC /* ToolsViewController.swift in Sources */,
 				84F477962167173A00A63336 /* LocationApp.xcdatamodeld in Sources */,
 				84B58D4D21FD69C80013D5F3 /* UploadToCloud.swift in Sources */,
-				449A7E9B271337E6005AF1F7 /* DosimeterRecordCache.swift in Sources */,
+				449A7E9B271337E6005AF1F7 /* LocationRecordCache.swift in Sources */,
 				84A6671421E7162200FC1892 /* Artwork.swift in Sources */,
 				84571FE5258FE29C009AC936 /* BriefCase.swift in Sources */,
 				84F9180222211C9B00D25634 /* NearestDosimeters.swift in Sources */,

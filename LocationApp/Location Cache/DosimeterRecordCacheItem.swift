@@ -11,46 +11,47 @@
 import Foundation
 import CloudKit
 
-protocol DosimeterRecordDelegate {
+protocol LocationRecordDelegate {
     subscript(key: String) -> CKRecordValue? {get}
 }
 
-extension CKRecord: DosimeterRecordDelegate{
+extension CKRecord: LocationRecordDelegate{
     // CKRecord already implements the DosimeterRecordDelegate protocol
     // to access properties with a subscript so this protocol is empty.
 }
 
-// Dosimetr Cache Item CloudKit Record Keys
-enum DosimeterRecordCacheItemRecordKeys:NSString {
-    case QRCode
-    case latitutude
-    case longitude
-    case description
-    case active
-    case dosimeter
-    case collectedFlag
-    case cycle
-    case mismatch
-    case moderator
-    case createdDate
-    case modifiedDate
- }
-
 // Dosimetr Cache Item stores all of the properties of a dosimeter CloudKit record
-struct DosimeterRecordCacheItem: Codable, DosimeterRecordDelegate{
-    var QRCode:String = ""      // QR Code
-    var latitude:String = ""    // latitude
-    var longitude:String = ""   // longitude
-    var description:String = "" // location Description
-    var active:Int64 = 0        // active
-    var dosimeter:String?       // dosimeter field may contain nothing
-    var collectedFlag:Int64?    // collectedFlag field may contain nothing
-    var cycleDate:String?       // cycleDate field may contain nothing
-    var mismatch:String?        // mismatch field may contain nothing
-    var moderator:String?       // moderator field may contain nothing
-    var createdDate:Date?       // creation date
-    var modifiedDate:Date?      // modified date
+struct LocationRecordCacheItem: Codable, LocationRecordDelegate{
     
+    /* CloudKit Location Scheme
+     active          INT64 QUERYABLE SORTABLE,
+     collectedFlag   INT64 QUERYABLE SORTABLE,
+     createdDate     TIMESTAMP QUERYABLE SORTABLE,
+     cycleDate       STRING QUERYABLE SORTABLE,
+     dosinumber      STRING QUERYABLE SEARCHABLE SORTABLE,
+     latitude        STRING QUERYABLE SORTABLE,
+     locdescription  STRING QUERYABLE SEARCHABLE SORTABLE,
+     longitude       STRING QUERYABLE SORTABLE,
+     mismatch        INT64 QUERYABLE SORTABLE,
+     moderator       INT64 QUERYABLE SORTABLE,
+     modifiedDate    TIMESTAMP QUERYABLE SORTABLE,
+     */
+
+    // Properties to cache the CloidKit Location Record
+    
+    var QRCode:String = ""              // QR Code
+    var latitude:String = ""            // latitude
+    var longitude:String = ""           // longitude
+    var locdescription:String = ""      // location Description
+    var active:Int64 = 0                // active
+    var dosinumber:String?              // dosinumber field may contain nothing
+    var collectedFlag:Int64?            // collectedFlag field may contain nothing
+    var cycleDate:String?               // cycleDate field may contain nothing
+    var mismatch:Int64?                 // mismatch field may contain nothing
+    var moderator:Int64?                // moderator field may contain nothing
+    var createdDate:Date?               // creation date
+    var modifiedDate:Date?              // modified date
+  
     // Initialize with a CloudKit Record
     init?(withRecord record: CKRecord) {
         // set the QRCode
@@ -79,7 +80,7 @@ struct DosimeterRecordCacheItem: Codable, DosimeterRecordDelegate{
             print("ERROR: DosimeterRecordCacheItem description = nil")
             return nil
         }
-        self.description = description as String
+        self.locdescription = description as String
         
         // set the active state
         guard let active = record["active"] as? Int64 else {
@@ -90,7 +91,7 @@ struct DosimeterRecordCacheItem: Codable, DosimeterRecordDelegate{
         
         // set the dosimeter
         if let dosimeter = record["dosinumber"] as? NSString {
-            self.dosimeter = dosimeter as String
+            self.dosinumber = dosimeter as String
        }
         
         // set the collected flag
@@ -104,13 +105,13 @@ struct DosimeterRecordCacheItem: Codable, DosimeterRecordDelegate{
         }
         
         // set the mismatch flag
-        if let mismatch = record["mismatch"] as? NSString  {
-            self.mismatch = mismatch as String
+        if let mismatch = record["mismatch"] as? Int64  {
+            self.mismatch = mismatch as Int64
        }
         
         // set the moderator
-        if let moderator = record["moderator"] as? NSString {
-            self.moderator = moderator as String
+        if let moderator = record["moderator"] as? Int64 {
+            self.moderator = moderator as Int64
         }
 
         // set the creation date
@@ -141,11 +142,11 @@ struct DosimeterRecordCacheItem: Codable, DosimeterRecordDelegate{
                    return longitude as CKRecordValue
                    
                 case "locdescription":
-                   return description as CKRecordValue
+                   return locdescription as CKRecordValue
 
                 case "dosinumber":
-                    if dosimeter != nil {
-                        return dosimeter! as CKRecordValue
+                    if dosinumber != nil {
+                        return dosinumber! as CKRecordValue
                     }
                     else {
                         return nil
