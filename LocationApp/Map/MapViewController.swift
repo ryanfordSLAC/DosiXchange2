@@ -284,6 +284,7 @@ extension MapViewController {
     //query active locations
     func queryForMap() {
         
+        DebugLocations.shared.start(presentingViewController: self, description: "Master Branch Map View")
         records = [CKRecord]()
         let predicate = NSPredicate(value: true)
         let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
@@ -322,6 +323,8 @@ extension MapViewController {
         DispatchQueue.main.async {
             self.activityIndicator.stopAnimating()
             self.filtersButton.isHidden = false
+            DebugLocations.shared.finish()      // TESTING
+            
         }
         
     } //end func
@@ -329,6 +332,9 @@ extension MapViewController {
     
     //to be executed for each fetched record
     func recordFetchedBlock(record: CKRecord) {
+        
+     
+        DebugLocations.shared.didFetchRecord()      // TESTING
         
         //fetch QRCode
         let QRCode:String = record["QRCode"]!
