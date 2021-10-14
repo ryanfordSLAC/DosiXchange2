@@ -28,7 +28,7 @@ class LocationRecordCache: Codable {
     var sortedDosimeterRecordCacheItems: [LocationRecordCacheItem]?
     
     private init() {
-        deleteCacheFile()       // delete the cache file (TESTING)
+//        deleteCacheFile()       // delete the cache file (TESTING)
    }
     
     func didFetchDosimeterRecords(_ records: [CKRecord]) {

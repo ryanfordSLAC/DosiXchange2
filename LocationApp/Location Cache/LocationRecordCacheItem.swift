@@ -54,76 +54,109 @@ struct LocationRecordCacheItem: Codable, LocationRecordDelegate{
   
     // Initialize with a CloudKit Record
     init?(withRecord record: CKRecord) {
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeStyle = .none
+        dateFormatter.dateFormat = "MM/dd/yyyy"
+  
         // set the QRCode
         guard let QRCode = record["QRCode"] as? String else {
-            print("ERROR: DosimeterRecordCacheItem QRCode = nil")
+            print("ERROR: Location record QRCode is empty")
             return nil
         }
         self.QRCode = QRCode
 
         // set the latitude
         guard let latitude = record["latitude"] as? String else {
-            print("ERROR: DosimeterRecordCacheItem latitude = nil")
+            print("ERROR: Location record latitude is empty")
             return nil
         }
         self.latitude = latitude
         
         // set the longitude
         guard let longitude = record["longitude"] as? String else {
-            print("ERROR: DosimeterRecordCacheItem longitude = nil")
+            print("ERROR: Location record longitude is empty")
             return nil
         }
         self.longitude = longitude
         
         // set the description
-        guard let description = record["locdescription"] as? NSString else {
-            print("ERROR: DosimeterRecordCacheItem description = nil")
+        guard let locdescription = record["locdescription"] as? NSString else {
+            print("ERROR: Location record locdescription is empty")
             return nil
         }
-        self.locdescription = description as String
+        self.locdescription = locdescription as String
         
         // set the active state
         guard let active = record["active"] as? Int64 else {
-            print("ERROR: DosimeterRecordCacheItem active = nil")
+            print("ERROR: Location record active is empty")
             return nil
         }
         self.active = active
         
         // set the dosimeter
-        if let dosimeter = record["dosinumber"] as? NSString {
-            self.dosinumber = dosimeter as String
-       }
-        
-        // set the collected flag
-        if let collectedFlag = record["collectedFlag"] as? Int64 {
-            self.collectedFlag = collectedFlag
+        guard let dosinumber = record["dosinumber"] as? NSString else {
+            print("ERROR: Location record dosinumber is empty")
+           return nil
         }
+        self.dosinumber = dosinumber as String
+
+        // set the collected flag
+        guard let collectedFlag = record["collectedFlag"] as? Int64 else {
+            print("ERROR: Location record collectedFlag is empty")
+            return nil
+        }
+        self.collectedFlag = collectedFlag
 
         // set the cycle date
-        if let cycleDate = record["cycleDate"] as? NSString {
-            self.cycleDate = cycleDate as String
+        guard let cycleDate = record["cycleDate"] as? NSString else {
+            print("ERROR: Location record cycleDate is empty")
+            return nil
         }
-        
+        self.cycleDate = cycleDate as String
+
         // set the mismatch flag
-        if let mismatch = record["mismatch"] as? Int64  {
-            self.mismatch = mismatch as Int64
-       }
+        guard let mismatch = record["mismatch"] as? Int64  else {
+            print("ERROR: Location record mismatch is empty")
+            return nil
+        }
+        self.mismatch = mismatch
         
         // set the moderator
-        if let moderator = record["moderator"] as? Int64 {
-            self.moderator = moderator as Int64
-        }
+        guard let moderator = record["moderator"] as? Int64 else {
+            print("ERROR: Location record moderator is empty")
+            return nil
+       }
+        self.moderator = moderator
 
         // set the creation date
-        if let createdDate = record["createdDate"] as? NSString {
-            print("TODO: Handle createdDate = \(createdDate)")
+        // Note: createdDate can be null while debugging
+        let createdDate = record["createdDate"] as? NSString
+
+//      Deugging: Uncomment code for Production
+//        guard let createdDate = record["createdDate"] as? NSString else {
+//            print("ERROR: Location record createdDate is empty")
+//            return nil
+//        }
+        if createdDate != nil {
+            print("Location: \(self.locdescription) : createDate = \(createdDate!)")
         }
+//        self.createdDate = createdDate
 
         // set the modified date
-        if let modifiedDate = record["modifiedDate"] as? NSString {
-            print("TODO: Handle modifiedDate = \(modifiedDate)")
+        // Note: modifiedDate can be null while debugging
+        let modifiedDate = record["modifiedDate"] as? NSString
+        
+//      Deugging: Uncomment code for Production
+//        guard let modifiedDate = record["modifiedDate"] as? NSString else {
+//            print("ERROR: Location record modifiedDate is empty")
+//            return nil
+//       }
+        if modifiedDate != nil {
+            print("Location: \(self.locdescription) : modifiedDate = \(modifiedDate!)")
         }
-    }
+//        self.modifiedDate = modifiedDate
+   }
     
     // Subscript operator overload used to access properties.
     subscript(key: String) -> CKRecordValue? {
