@@ -124,40 +124,10 @@ struct LocationRecordCacheItem: Codable, LocationRecordDelegate{
         self.moderator = moderator
 
         // set the creation date
-        // Note: createdDate can be null while debugging
-        let createdDate = record["createdDate"] as? NSString
-
-//      Deugging: Uncomment code for Production
-//        guard let createdDate = record["createdDate"] as? NSString else {
-//            print("ERROR: Location record createdDate is empty")
-//            return nil
-//        }
-        if createdDate != nil {
-            print("Location: \(self.locdescription) : createDate = \(createdDate!)")
- 
-            let dateFormatter = DateFormatter()
-            dateFormatter.timeStyle = .none
-            dateFormatter.dateFormat = "MM/dd/yyyy"
-        }
-//        self.createdDate = createdDate
+        self.createdDate = record["createdDate"] as? Date
 
         // set the modified date
-        // Note: modifiedDate can be null while debugging
-        let modifiedDate = record["modifiedDate"] as? NSString
-        
-//      Deugging: Uncomment code for Production
-//        guard let modifiedDate = record["modifiedDate"] as? NSString else {
-//            print("ERROR: Location record modifiedDate is empty")
-//            return nil
-//       }
-        if modifiedDate != nil {
-            print("Location: \(self.locdescription) : modifiedDate = \(modifiedDate!)")
-
-            let dateFormatter = DateFormatter()
-            dateFormatter.timeStyle = .none
-            dateFormatter.dateFormat = "MM/dd/yyyy"
-        }
-//        self.modifiedDate = modifiedDate
+        self.modifiedDate = record["modifiedDate"] as? Date
    }
     
     // Subscript operator overload used to access properties.

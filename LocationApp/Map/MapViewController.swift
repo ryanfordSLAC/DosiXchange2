@@ -39,7 +39,7 @@ class MapViewController: UIViewController {
         locationmanager.delegate = self
         locationmanager.requestAlwaysAuthorization()
         locationmanager.startUpdatingLocation()
-        #if false       // testing
+        #if true       // testing
         let latitude = locationmanager.location?.coordinate.latitude
         let longitude = locationmanager.location?.coordinate.longitude
         #else
@@ -419,6 +419,9 @@ extension MapViewController {
     
     //to be executed for each fetched Locationrecord
     func recordFetchedBlock(record: CKRecord) {
+        
+//        print(">> Fetched CloudKit record modifiedDate: \(record["modifiedDate"])")        // TESTING
+        
         DebugLocations.shared.didFetchRecord()      // TESTING
         self.records.append(record)                 // TESTING
         processLocationRecord(record)

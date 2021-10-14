@@ -28,7 +28,7 @@ class LocationRecordCache: Codable {
     var sortedLocationRecordCacheItems: [LocationRecordCacheItem]?
     
     private init() {
-//        deleteLocationRecordCache()       // delete the cache file (TESTING)
+        deleteLocationRecordCache()       // delete the cache file (TESTING)
    }
     
     func didStartFetchingRecords() {
