@@ -12,9 +12,9 @@ import MapKit
 import CloudKit
 //import Contacts
 
+
 //MARK:  Class
 class MapViewController: UIViewController {
-    
     @IBOutlet weak var MapView: MKMapView!
     @IBOutlet weak var filtersButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -303,6 +303,11 @@ extension MapViewController {
             return
         }
 
+        LocationRecordCache.shared.didStartFetchingRecords()                      // TESTING
+        
+        DebugLocations.shared.start(presentingViewController: self,
+                                    description: "MapViewController")       // TESTING
+
         records = [CKRecord]()
         let predicate = NSPredicate(value: true)
         let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
@@ -312,11 +317,6 @@ extension MapViewController {
         query.sortDescriptors = [sort1, sort2]
         let operation = CKQueryOperation(query: query)
         addOperation(operation: operation)
- 
-        DebugLocations.shared.start(presentingViewController: self,
-                                    description: "MapViewController")       // TESTING
-
-        LocationRecordCache.shared.didStartFetchingRecords()                      // TESTING
    } //end func
     
     
@@ -357,7 +357,7 @@ extension MapViewController {
     // A Dosimeter record was fetched from CloudKit or a local cache
     func didFetchDosimeterRecord( _ record: LocationRecordDelegate) {
         var showErrorAlert = false
-        
+                
         defer {
             //handle rare cases when active is nil.  Notify administrator.
             if showErrorAlert {

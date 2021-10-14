@@ -116,11 +116,9 @@ struct LocationRecordCacheItem: Codable, LocationRecordDelegate{
         self.cycleDate = cycleDate as String
 
         // set the mismatch flag
-        guard let mismatch = record["mismatch"] as? Int64  else {
-            print("ERROR: Location record mismatch is empty")
-            return nil
+        if let mismatch = record["mismatch"] as? Int64 {
+            self.mismatch = mismatch
         }
-        self.mismatch = mismatch
         
         // set the moderator
         guard let moderator = record["moderator"] as? Int64 else {

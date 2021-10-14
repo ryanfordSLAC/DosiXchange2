@@ -31,10 +31,6 @@ class LocationRecordCache: Codable {
 //        deleteCacheFile()       // delete the cache file (TESTING)
    }
     
-    func didFetchDosimeterRecords(_ records: [CKRecord]) {
-        print("Did Fetch \(records.count) records")
-    }
-    
     func didStartFetchingRecords() {
         print("Started Fetching records")
     }
@@ -100,7 +96,7 @@ class LocationRecordCache: Codable {
             // TESTING
             let endTime = Date()
             let elapsed = endTime.timeIntervalSince(startTime)
-            if let recordNames = self.locationItemCacheDict?.keys {
+            if let recordNames = locationsCache.locationItemCacheDict?.keys {
                 print("*** Loaded \(recordNames.count) DosimeterRecordCacheItems in \(elapsed) seconds")
             }
             LocationRecordCache.shared = locationsCache
@@ -120,7 +116,7 @@ class LocationRecordCache: Codable {
         guard let count = self.locationItemCacheDict?.keys.count, (count > 0) else {
              return
          }
-        print("Saving the Locations Cache")
+        print("Saving the Locations Cache: \(count) records")
         guard let cacheData = try? JSONEncoder().encode(self) else {
             print("Error encoding DosimeterRecordCache data")
             return
