@@ -290,28 +290,16 @@ extension MapViewController {
     //query active locations
     func queryForMap() {
         // try to load the records from the cache
-        if LocationRecordCache.shared.cacheFileExists() {
+        if LocationRecordCache.shared.doesLocationRecordCacheExist() {
 
             DebugLocations.shared.start(presentingViewController: self,
                                         description: "Map View Cache")       // TESTING
 
-            LocationRecordCache.shared.loadCache() { dosimeterRecords in
-                guard let records = dosimeterRecords else {
-                    return
-                }
-                // Process the dosimeter records loaded from the local cache file
-                for dosimeterRecord in records {
-                    self.didFetchRecord(dosimeterRecord)
-                }
-                DispatchQueue.main.async {
-                    self.activityIndicator.stopAnimating()
-                    self.filtersButton.isHidden = false
-                }
-                DebugLocations.shared.finish()       // TESTING
-            }
+            LocationRecordCache.shared.loadLocationsRecordCache(processLocationRecord: processLocationRecord,
+                                                 completion: finishedLoadingCachedLocationRecords)
             return
         }
-
+        
         LocationRecordCache.shared.didStartFetchingRecords()                      // TESTING
         
         DebugLocations.shared.start(presentingViewController: self,
@@ -328,6 +316,13 @@ extension MapViewController {
         addOperation(operation: operation)
    } //end func
     
+    func finishedLoadingCachedLocationRecords(_ records: [LocationRecordCacheItem]?) {
+        DispatchQueue.main.async {
+            self.activityIndicator.stopAnimating()
+            self.filtersButton.isHidden = false
+        }
+        DebugLocations.shared.finish()      // TESTING
+    }
     
     //add query operation
     func addOperation(operation: CKQueryOperation) {
@@ -363,11 +358,9 @@ extension MapViewController {
     } //end func
     
     
-    // A Dosimeter record was fetched from CloudKit or a local cache
-    func didFetchRecord( _ record: LocationRecordDelegate) {
+    // A Location record was fetched from CloudKit or a local cache
+    func processLocationRecord( _ record: LocationRecordDelegate) {
    
-        DebugLocations.shared.didFetchRecord()       // TESTING
-
         var showErrorAlert = false
                 
         defer {
@@ -424,11 +417,11 @@ extension MapViewController {
         }
     }
     
-    //to be executed for each fetched record
+    //to be executed for each fetched Locationrecord
     func recordFetchedBlock(record: CKRecord) {
         DebugLocations.shared.didFetchRecord()      // TESTING
         self.records.append(record)                 // TESTING
-        didFetchRecord(record)
+        processLocationRecord(record)
     }
     
     //MARK:  Alert 13

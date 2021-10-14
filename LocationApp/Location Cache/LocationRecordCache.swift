@@ -24,11 +24,11 @@ class LocationRecordCache: Codable {
     // cache records dictionary. [key = CloudKit  Record ID, value = DosimeterRecordCacheItem]
     var locationItemCacheDict: [String: LocationRecordCacheItem]?
  
-    // location items in same order as sorted CloudKit records
-    var sortedDosimeterRecordCacheItems: [LocationRecordCacheItem]?
+    // sorted location items in same order as sorted CloudKit records
+    var sortedLocationRecordCacheItems: [LocationRecordCacheItem]?
     
     private init() {
- //       deleteCacheFile()       // delete the cache file (TESTING)
+//        deleteLocationRecordCache()       // delete the cache file (TESTING)
    }
     
     func didStartFetchingRecords() {
@@ -36,30 +36,30 @@ class LocationRecordCache: Codable {
     
     func didFinishFetchingRecords(_ records: [CKRecord]) {
         DispatchQueue.global().async {
-            self.makeCache(withRecords: records)
-            self.saveCache()
+            self.makeLocationRecordCache(withRecords: records)
+            self.saveLocationRecordCache()
       }
     }
     
-    func makeCache(withRecords records: [CKRecord]) {
+    func makeLocationRecordCache(withRecords records: [CKRecord]) {
         locationItemCacheDict = [String: LocationRecordCacheItem]()
-        sortedDosimeterRecordCacheItems = [LocationRecordCacheItem]()
+        sortedLocationRecordCacheItems = [LocationRecordCacheItem]()
         
         for record in records {
             if let DosimeterRecordCacheItem = LocationRecordCacheItem(withRecord: record) {
-                sortedDosimeterRecordCacheItems!.append(DosimeterRecordCacheItem)
+                sortedLocationRecordCacheItems!.append(DosimeterRecordCacheItem)
                 locationItemCacheDict![record.recordID.recordName] = DosimeterRecordCacheItem
             }
         }
     }
     
     // Test if the locations cache file exists.
-    func cacheFileExists() -> Bool {
-        return FileManager.default.fileExists(atPath: cacheFilePath())
+    func doesLocationRecordCacheExist() -> Bool {
+        return FileManager.default.fileExists(atPath: pathToLocationRecordCache())
     }
     
-    func deleteCacheFile() {
-        let path = self.cacheFilePath()
+    func deleteLocationRecordCache() {
+        let path = self.pathToLocationRecordCache()
         guard FileManager.default.fileExists(atPath: path) else {
             return
         }
@@ -68,33 +68,48 @@ class LocationRecordCache: Codable {
     
     // Load the dosimeter CloudKit records from disk.
     // Throws a DosimeterRecordCacheError is a required record field is nil.
-    func loadCache(completion: @escaping ([LocationRecordCacheItem]?) -> Void) {
-        let path = self.cacheFilePath()
+    func loadLocationsRecordCache(processLocationRecord: @escaping (LocationRecordCacheItem) -> Void,
+                                  completion: @escaping ([LocationRecordCacheItem]?) -> Void) {
+        let path = self.pathToLocationRecordCache()
         guard FileManager.default.fileExists(atPath: path) else {
             return
         }
         DispatchQueue.global().async {
               let cacheFileURL = URL(fileURLWithPath: path)
             guard let cacheData = try? Data(contentsOf: cacheFileURL) else {
-                print("Error loading DosimeterRecordCache data")
+                print("Error loading LocationRecordCache data")
                 return
             }
             guard let locationsCache = try? JSONDecoder().decode(LocationRecordCache.self,
                                                                  from: cacheData) else {
-                print("Error decoding DosimeterRecordCache from data")
+                print("Error decoding LocationRecordCache from data")
                 return
             }
+            
+            
+            if let locationsDict = locationsCache.locationItemCacheDict {
+                print("Loaded \(locationsDict.keys.count) LocationRecordCacheItem records")
+            }
+            else {
+                print("Loaded 0 LocationRecordCacheItem records")
+            }
+            
             LocationRecordCache.shared = locationsCache
    
-            if let dosimeterRecords = locationsCache.sortedDosimeterRecordCacheItems {
-                completion(dosimeterRecords)
+            // Pass the records in the cache back to the completion handler
+            if let locationRecords = locationsCache.sortedLocationRecordCacheItems {
+                for record in locationRecords{
+                    DebugLocations.shared.didFetchRecord()      // TESTING
+                    processLocationRecord(record)
+                }
+                completion(locationRecords)
             }
         }
     }
 
     // Save the dosimeter CloudKit records from disk.
     // Throws a DosimeterRecordCacheError is a required record field is nil.
-    func saveCache() {
+    func saveLocationRecordCache() {
         guard let count = self.locationItemCacheDict?.keys.count, (count > 0) else {
              return
          }
@@ -103,7 +118,7 @@ class LocationRecordCache: Codable {
             return
         }
         
-        let cacheFileURL = URL(fileURLWithPath: self.cacheFilePath())
+        let cacheFileURL = URL(fileURLWithPath: self.pathToLocationRecordCache())
         try? FileManager.default.removeItem(at: cacheFileURL)
         guard let _ = try? cacheData.write(to: cacheFileURL) else {
             return
@@ -111,7 +126,7 @@ class LocationRecordCache: Codable {
     }
     
     // Path to the locations cache file
-    func cacheFilePath() -> String {
+    func pathToLocationRecordCache() -> String {
         let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
         let url = cachesDirectory.appendingPathComponent("LocationsCache.txt")
         return url.path
