@@ -85,7 +85,7 @@ class LocationRecordCache: Codable {
                 return
             }
             LocationRecordCache.shared = locationsCache
-            
+   
             if let dosimeterRecords = locationsCache.sortedDosimeterRecordCacheItems {
                 completion(dosimeterRecords)
             }

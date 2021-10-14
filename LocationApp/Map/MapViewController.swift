@@ -301,10 +301,12 @@ extension MapViewController {
                 }
                 // Process the dosimeter records loaded from the local cache file
                 for dosimeterRecord in records {
-                    DebugLocations.shared.didFetchDosimeterRecord()       // TESTING
-                    self.didFetchDosimeterRecord(dosimeterRecord)
+                    self.didFetchRecord(dosimeterRecord)
                 }
- 
+                DispatchQueue.main.async {
+                    self.activityIndicator.stopAnimating()
+                    self.filtersButton.isHidden = false
+                }
                 DebugLocations.shared.finish()       // TESTING
             }
             return
@@ -362,7 +364,10 @@ extension MapViewController {
     
     
     // A Dosimeter record was fetched from CloudKit or a local cache
-    func didFetchDosimeterRecord( _ record: LocationRecordDelegate) {
+    func didFetchRecord( _ record: LocationRecordDelegate) {
+   
+        DebugLocations.shared.didFetchRecord()       // TESTING
+
         var showErrorAlert = false
                 
         defer {
@@ -421,9 +426,9 @@ extension MapViewController {
     
     //to be executed for each fetched record
     func recordFetchedBlock(record: CKRecord) {
-        DebugLocations.shared.didFetchDosimeterRecord()      // TESTING
+        DebugLocations.shared.didFetchRecord()      // TESTING
         self.records.append(record)                 // TESTING
-        didFetchDosimeterRecord(record)
+        didFetchRecord(record)
     }
     
     //MARK:  Alert 13
