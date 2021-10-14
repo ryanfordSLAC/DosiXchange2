@@ -293,7 +293,7 @@ extension MapViewController {
         if LocationRecordCache.shared.cacheFileExists() {
 
             DebugLocations.shared.start(presentingViewController: self,
-                                        description: "Map View Cache Fetch")       // TESTING
+                                        description: "Map View Cache")       // TESTING
 
             LocationRecordCache.shared.loadCache() { dosimeterRecords in
                 guard let records = dosimeterRecords else {
@@ -313,7 +313,7 @@ extension MapViewController {
         LocationRecordCache.shared.didStartFetchingRecords()                      // TESTING
         
         DebugLocations.shared.start(presentingViewController: self,
-                                    description: "Map View Cloudkit Fetch")       // TESTING
+                                    description: "Map View")       // TESTING
 
         records = [CKRecord]()
         let predicate = NSPredicate(value: true)

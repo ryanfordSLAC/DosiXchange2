@@ -51,7 +51,7 @@ class DebugLocations {
         
         DispatchQueue.main.async {
             let elapsed = endTime.timeIntervalSince(startTime)
-            let message = "Fetched \(self.fetchedRecordCount) records in \(elapsed) seconds: "
+            let message = "Loaded \(self.fetchedRecordCount) records in \(elapsed) seconds: "
             let alert = UIAlertController(title: "\(String(describing: self.description!))",
                                           message: message,
                 preferredStyle: .alert)

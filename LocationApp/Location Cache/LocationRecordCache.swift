@@ -28,7 +28,7 @@ class LocationRecordCache: Codable {
     var sortedDosimeterRecordCacheItems: [LocationRecordCacheItem]?
     
     private init() {
-//        deleteCacheFile()       // delete the cache file (TESTING)
+ //       deleteCacheFile()       // delete the cache file (TESTING)
    }
     
     func didStartFetchingRecords() {
@@ -95,9 +95,6 @@ class LocationRecordCache: Codable {
     // Save the dosimeter CloudKit records from disk.
     // Throws a DosimeterRecordCacheError is a required record field is nil.
     func saveCache() {
-        
-        let startTime = Date()          // testing
-        
         guard let count = self.locationItemCacheDict?.keys.count, (count > 0) else {
              return
          }
@@ -111,15 +108,6 @@ class LocationRecordCache: Codable {
         guard let _ = try? cacheData.write(to: cacheFileURL) else {
             return
         }
-        
-        // TESTING
-        if let recordNames = self.locationItemCacheDict?.keys {
-            let endTime = Date()          // testing
-            let elapsed = endTime.timeIntervalSince(startTime)
-            print("Saved \(recordNames.count) LocationItems in \(elapsed) seconds")
-        }
-        
-        
     }
     
     // Path to the locations cache file
