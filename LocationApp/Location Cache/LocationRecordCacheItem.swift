@@ -54,11 +54,7 @@ struct LocationRecordCacheItem: Codable, LocationRecordDelegate{
   
     // Initialize with a CloudKit Record
     init?(withRecord record: CKRecord) {
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.timeStyle = .none
-        dateFormatter.dateFormat = "MM/dd/yyyy"
-  
+          
         // set the QRCode
         guard let QRCode = record["QRCode"] as? String else {
             print("ERROR: Location record QRCode is empty")
@@ -138,6 +134,10 @@ struct LocationRecordCacheItem: Codable, LocationRecordDelegate{
 //        }
         if createdDate != nil {
             print("Location: \(self.locdescription) : createDate = \(createdDate!)")
+ 
+            let dateFormatter = DateFormatter()
+            dateFormatter.timeStyle = .none
+            dateFormatter.dateFormat = "MM/dd/yyyy"
         }
 //        self.createdDate = createdDate
 
@@ -152,6 +152,10 @@ struct LocationRecordCacheItem: Codable, LocationRecordDelegate{
 //       }
         if modifiedDate != nil {
             print("Location: \(self.locdescription) : modifiedDate = \(modifiedDate!)")
+
+            let dateFormatter = DateFormatter()
+            dateFormatter.timeStyle = .none
+            dateFormatter.dateFormat = "MM/dd/yyyy"
         }
 //        self.modifiedDate = modifiedDate
    }

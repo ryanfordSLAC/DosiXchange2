@@ -32,11 +32,9 @@ class LocationRecordCache: Codable {
    }
     
     func didStartFetchingRecords() {
-        print("Started Fetching records")
     }
     
     func didFinishFetchingRecords(_ records: [CKRecord]) {
-        print("Finshed Fetching \(records.count) records")
         DispatchQueue.global().async {
             self.makeCache(withRecords: records)
             self.saveCache()
@@ -76,13 +74,7 @@ class LocationRecordCache: Codable {
             return
         }
         DispatchQueue.global().async {
-            print("Loading the Locations Cache")
-            
-            
-            let startTime = Date()      // TESTING
-            
-            
-            let cacheFileURL = URL(fileURLWithPath: path)
+              let cacheFileURL = URL(fileURLWithPath: path)
             guard let cacheData = try? Data(contentsOf: cacheFileURL) else {
                 print("Error loading DosimeterRecordCache data")
                 return
@@ -91,13 +83,6 @@ class LocationRecordCache: Codable {
                                                                  from: cacheData) else {
                 print("Error decoding DosimeterRecordCache from data")
                 return
-            }
-            
-            // TESTING
-            let endTime = Date()
-            let elapsed = endTime.timeIntervalSince(startTime)
-            if let recordNames = locationsCache.locationItemCacheDict?.keys {
-                print("*** Loaded \(recordNames.count) DosimeterRecordCacheItems in \(elapsed) seconds")
             }
             LocationRecordCache.shared = locationsCache
             
@@ -116,7 +101,6 @@ class LocationRecordCache: Codable {
         guard let count = self.locationItemCacheDict?.keys.count, (count > 0) else {
              return
          }
-        print("Saving the Locations Cache: \(count) records")
         guard let cacheData = try? JSONEncoder().encode(self) else {
             print("Error encoding DosimeterRecordCache data")
             return
@@ -124,16 +108,15 @@ class LocationRecordCache: Codable {
         
         let cacheFileURL = URL(fileURLWithPath: self.cacheFilePath())
         try? FileManager.default.removeItem(at: cacheFileURL)
-        guard let file = try? cacheData.write(to: cacheFileURL) else {
+        guard let _ = try? cacheData.write(to: cacheFileURL) else {
             return
         }
-        
         
         // TESTING
         if let recordNames = self.locationItemCacheDict?.keys {
             let endTime = Date()          // testing
             let elapsed = endTime.timeIntervalSince(startTime)
-            print("*** Saved \(recordNames.count) LocationItems in \(elapsed) seconds")
+            print("Saved \(recordNames.count) LocationItems in \(elapsed) seconds")
         }
         
         
@@ -143,7 +126,6 @@ class LocationRecordCache: Codable {
     func cacheFilePath() -> String {
         let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
         let url = cachesDirectory.appendingPathComponent("LocationsCache.txt")
-        print("Cache file path = \(url.path).")
         return url.path
     }
 }

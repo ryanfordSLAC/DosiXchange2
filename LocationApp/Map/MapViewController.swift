@@ -291,14 +291,21 @@ extension MapViewController {
     func queryForMap() {
         // try to load the records from the cache
         if LocationRecordCache.shared.cacheFileExists() {
+
+            DebugLocations.shared.start(presentingViewController: self,
+                                        description: "Map View Cache Fetch")       // TESTING
+
             LocationRecordCache.shared.loadCache() { dosimeterRecords in
                 guard let records = dosimeterRecords else {
                     return
                 }
                 // Process the dosimeter records loaded from the local cache file
                 for dosimeterRecord in records {
+                    DebugLocations.shared.didFetchDosimeterRecord()       // TESTING
                     self.didFetchDosimeterRecord(dosimeterRecord)
                 }
+ 
+                DebugLocations.shared.finish()       // TESTING
             }
             return
         }
@@ -306,7 +313,7 @@ extension MapViewController {
         LocationRecordCache.shared.didStartFetchingRecords()                      // TESTING
         
         DebugLocations.shared.start(presentingViewController: self,
-                                    description: "MapViewController")       // TESTING
+                                    description: "Map View Cloudkit Fetch")       // TESTING
 
         records = [CKRecord]()
         let predicate = NSPredicate(value: true)

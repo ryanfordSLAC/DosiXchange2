@@ -51,28 +51,13 @@ class DebugLocations {
         
         DispatchQueue.main.async {
             let elapsed = endTime.timeIntervalSince(startTime)
-            let elapsedString = self.stringFromTimeInterval(interval: elapsed)
-            let message = "Fetched \(self.fetchedRecordCount) records in \(elapsedString) seconds."
-            print(message)
-            let alert = UIAlertController(title: "Debug Location View", message: message,
+            let message = "Fetched \(self.fetchedRecordCount) records in \(elapsed) seconds: "
+            let alert = UIAlertController(title: "\(String(describing: self.description!))",
+                                          message: message,
                 preferredStyle: .alert)
             let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
             alert.addAction(cancel)
             presentingViewController.present(alert, animated: true, completion: nil)
         }
     }
-    
-    func logMessage(_ message: String) {
-        print("DebugLocatons: \(message)")
-    }
-    
-    func stringFromTimeInterval(interval:TimeInterval) -> NSString {
-        let ti = NSInteger(interval)
-        let ms = ti * 1000
-        print("time interval = \(ms) ms")
-        let seconds = ti % 60
-        let minutes = (ti / 60) % 60
-        let hours = (ti / 3600)
-        return NSString(format: "%0.2d:%0.2d:%0.2d.%0.2d",hours,minutes,seconds,(ms % 1000))
-    }
-}
+ }
