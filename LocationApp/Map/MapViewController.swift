@@ -38,7 +38,7 @@ class MapViewController: UIViewController {
         locationmanager.delegate = self
         locationmanager.requestAlwaysAuthorization()
         locationmanager.startUpdatingLocation()
-        #if true       // testing
+        #if false       // testing
         let latitude = locationmanager.location?.coordinate.latitude
         let longitude = locationmanager.location?.coordinate.longitude
         #else

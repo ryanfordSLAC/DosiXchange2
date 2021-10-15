@@ -15,8 +15,8 @@ enum LocationRecordCacheError: Error {
 
 class LocationRecordCache: Codable {
     
-    static var fetchedLocationRecords: [CKRecord]?
-    
+    static private var fetchedLocationRecords: [CKRecord]?
+    static private let group = DispatchGroup()
     static var shared = LocationRecordCache()
     
     var version = 1                                             // location cache file version #
@@ -43,14 +43,23 @@ class LocationRecordCache: Codable {
         // process the fetched CloudKit records in the background and
         // initialize  the cached location record items.
         DispatchQueue.global().async {
+            LocationRecordCache.group.wait()
+            LocationRecordCache.group.enter()
+
             if let locationRecordCacheItem = LocationRecordCacheItem(withRecord: locationRecord) {
-                if var locationItemRecords = self.locationItemCacheDict?[locationRecord.recordID.recordName] {
-                    locationItemRecords.append(locationRecordCacheItem)
+                let QRCode = locationRecordCacheItem.QRCode
+                if let locationRecordItems = self.locationItemCacheDict?[QRCode] {
+                    print("Found locationRecordItems with \(locationRecordItems.count) items")
+                    var mutableLocationRecordItems = locationRecordItems
+                    mutableLocationRecordItems.append(locationRecordCacheItem)
+ //                   self.locationItemCacheDict?[QRCode] = mutableLocationRecordItems
+ 
                 }
                 else {
-                    self.locationItemCacheDict![locationRecord.recordID.recordName] = [locationRecordCacheItem]
-                }
+                    self.locationItemCacheDict?[QRCode] = [locationRecordCacheItem]
+               }
             }
+            LocationRecordCache.group.leave()
         }
     }
     
