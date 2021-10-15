@@ -295,8 +295,9 @@ extension MapViewController {
             DebugLocations.shared.start(presentingViewController: self,
                                         description: "Map View Cache")       // TESTING
 
-            LocationRecordCache.shared.loadLocationsRecordCache(processLocationRecord: processLocationRecord,
-                                                 completion: finishedLoadingCachedLocationRecords)
+//            LocationRecordCache.shared.loadLocationsRecordCache(recordNames: nil,
+//                                                                processLocationRecord,
+//                                                                completion: finishedLoadingCachedLocationRecords)
             return
         }
         
@@ -316,7 +317,7 @@ extension MapViewController {
         addOperation(operation: operation)
    } //end func
     
-    func finishedLoadingCachedLocationRecords(_ records: [LocationRecordCacheItem]?) {
+    func finishedLoadingCachedLocationRecords(_ didLoad: Bool) {
         DispatchQueue.main.async {
             self.activityIndicator.stopAnimating()
             self.filtersButton.isHidden = false
@@ -359,7 +360,7 @@ extension MapViewController {
     
     
     // A Location record was fetched from CloudKit or a local cache
-    func processLocationRecord( _ record: LocationRecordDelegate) {
+    func processLocationRecord(_ record: LocationRecordDelegate) {
    
         var showErrorAlert = false
                 
@@ -419,20 +420,9 @@ extension MapViewController {
     
     //to be executed for each fetched Locationrecord
     func recordFetchedBlock(record: CKRecord) {
-        
-        // TESTING
-        if let QRCode = record["QRCode"] as? String,
-           QRCode == "BLG 015-002",// TESTING
-           
-            let modifiedDate = record["modifiedDate"] as? Date {
-             print("Found location QRCode BLG 015-002: modified \(modifiedDate)")
-            if let modificationDate = record["modificationDate"] as? Date {
-             print("Found location QRCode BLG 015-002: modificationDate \(modificationDate)")
-            }
-         }
-        
         DebugLocations.shared.didFetchRecord()      // TESTING
-        self.records.append(record)                 // TESTING
+
+        LocationRecordCache.shared.didFetchLocationRecord(record)
         processLocationRecord(record)
     }
     

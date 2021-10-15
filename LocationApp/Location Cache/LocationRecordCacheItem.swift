@@ -37,6 +37,7 @@ struct LocationRecordCacheItem: Codable, LocationRecordDelegate{
     var createdDate:Date?               // creation date
     var modifiedDate:Date?              // modified date
     var modificationDate:Date?          // modification date
+    var recordName: String?             // record name (record.recordID.recordName)
 
     // Location Record Metadata
     
@@ -119,6 +120,9 @@ struct LocationRecordCacheItem: Codable, LocationRecordDelegate{
  
         // set the modification date
         self.modificationDate = record.modificationDate
+        
+        // set the record name
+        self.recordName = record.recordID.recordName
  }
     
     // Subscript operator overload used to access properties.
