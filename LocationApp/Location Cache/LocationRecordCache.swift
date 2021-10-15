@@ -34,9 +34,12 @@ class LocationRecordCache: Codable {
     
     func didStartFetchingRecords() {
         locationItemCacheDict = [String: [LocationRecordCacheItem]]()
+        print(">> LocationRecordCache didStartFetchingRecords")     // TESTING
    }
     
     func didFetchLocationRecord(_ locationRecord: CKRecord) {
+        print(">> LocationRecordCache didFetchLocationRecord")     // TESTING
+
         // process the fetched CloudKit records in the background and
         // initialize  the cached location record items.
         DispatchQueue.global().async {
@@ -51,7 +54,8 @@ class LocationRecordCache: Codable {
         }
     }
     
-    func didFinishFetchingRecords(_ records: [CKRecord]) {
+    func didFinishFetchingRecords() {
+        print(">> LocationRecordCache didFinishFetchingRecords")     // TESTING
         DispatchQueue.global().async {
             self.saveLocationRecordCache()
       }
@@ -71,23 +75,23 @@ class LocationRecordCache: Codable {
      }
     
     // Load the cached location records cache file
-    func loadLocationsCacheFile(completion: @escaping (LocationRecordCache?) -> Void) {
+    func loadLocationsCacheFile(completion: @escaping (Bool) -> Void) {
         let path = self.pathToLocationRecordCache()
         guard FileManager.default.fileExists(atPath: path) else {
-            completion(nil)
+            completion(false)
             return
         }
         DispatchQueue.global().async {
             let cacheFileURL = URL(fileURLWithPath: path)
             guard let cacheData = try? Data(contentsOf: cacheFileURL) else {
                 print("Error loading LocationRecordCache data")     // TESTING
-                completion(nil)
+                completion(false)
                 return
             }
             guard let locationsCache = try? JSONDecoder().decode(LocationRecordCache.self,
                                                                  from: cacheData) else {
                 print("Error decoding LocationRecordCache from data")    // TESTING
-                completion(nil)
+                completion(false)
                 return
             }
             
@@ -96,15 +100,17 @@ class LocationRecordCache: Codable {
  
                 if locationsDict.keys.count > 0 {
                     LocationRecordCache.shared = locationsCache
-                    completion(locationsCache)
+                    completion(true)
                 }
              }
             else {
-                completion(nil)
+                completion(false)
             }
         }
     }
-
+   
+    // Fetch Location records from the locations cache for a given list of QRCodes,
+    // or fetch all locations
     func fetchLocationRecordsFromCache(withRecordNames: [String]?,
                                        processRecord: @escaping (LocationRecordCacheItem) -> Void,
                                        completion: @escaping (Bool) -> Void) {
@@ -145,14 +151,16 @@ class LocationRecordCache: Codable {
             return
         }
         
+        // delete the locations record cache file if it exists.
         let cacheFileURL = URL(fileURLWithPath: self.pathToLocationRecordCache())
-        try? FileManager.default.removeItem(at: cacheFileURL)
+       try? FileManager.default.removeItem(at: cacheFileURL)
+        
+        // save the locations record cahe data.
         guard let _ = try? cacheData.write(to: cacheFileURL) else {
             return
         }
     }
     
-    // Path to the locations cache file
     func pathToLocationRecordCache() -> String {
         let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
         let url = cachesDirectory.appendingPathComponent("LocationsCache.txt")

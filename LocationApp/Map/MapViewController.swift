@@ -22,7 +22,6 @@ class MapViewController: UIViewController {
     var locationmanager = CLLocationManager()
     let database = CKContainer.default().publicCloudDatabase
     var cycleDate = recordsUpdate()
-    var records = [CKRecord]()
     var checkQR = ""
     
     var filters:[UIColor:Bool] = [
@@ -301,12 +300,16 @@ extension MapViewController {
             return
         }
         
-        LocationRecordCache.shared.didStartFetchingRecords()                      // TESTING
         
+        // TESTINGs
         DebugLocations.shared.start(presentingViewController: self,
                                     description: "Map View")       // TESTING
 
-        records = [CKRecord]()
+        
+        
+        // Notify the locations cache that we started fetching records from CloudKit.
+        LocationRecordCache.shared.didStartFetchingRecords()
+        
         let predicate = NSPredicate(value: true)
         let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
         //let sort2 = NSSortDescriptor(key: "creationDate", ascending: false)
@@ -354,7 +357,8 @@ extension MapViewController {
          
             DebugLocations.shared.finish()      // TESTING
 
-            LocationRecordCache.shared.didFinishFetchingRecords(self.records)     // TESTING
+            // Notify the locations cache that we finished fetching records from CloudKit.
+            LocationRecordCache.shared.didFinishFetchingRecords()     // TESTING
         }
     } //end func
     
@@ -422,7 +426,10 @@ extension MapViewController {
     func recordFetchedBlock(record: CKRecord) {
         DebugLocations.shared.didFetchRecord()      // TESTING
 
+        // Notify the locations cache that we fetched a record from CloudKit.
         LocationRecordCache.shared.didFetchLocationRecord(record)
+        
+        // process the fetched location record.
         processLocationRecord(record)
     }
     
