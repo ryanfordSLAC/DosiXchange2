@@ -61,11 +61,22 @@ class LocationRecordCache: Codable {
       }
     }
     
-    // Test if the locations cache file exists.
-    func doesLocationRecordCacheExist() -> Bool {
+    // Test if the location record cache file exists on disk.
+    func locationRecordCacheFileExists() -> Bool {
         return FileManager.default.fileExists(atPath: pathToLocationRecordCache())
     }
     
+    // Test if the location record cache file is loaded into memory.
+    func chacheIsLoaded() -> Bool {
+        if let locationsCount = self.locationItemCacheDict?.keys.count,
+            locationsCount > 0 {
+            return true
+        }
+        else {
+            return false
+        }
+    }
+
     func deleteLocationRecordCache() {
         let path = self.pathToLocationRecordCache()
         guard FileManager.default.fileExists(atPath: path) else {
@@ -74,8 +85,7 @@ class LocationRecordCache: Codable {
         try? FileManager.default.removeItem(atPath: path)
      }
     
-    // Load the cached location records cache file
-    func loadLocationsCacheFile(completion: @escaping (Bool) -> Void) {
+    func loadLocationsRecordCacheFile(completion: @escaping (Bool) -> Void) {
         let path = self.pathToLocationRecordCache()
         guard FileManager.default.fileExists(atPath: path) else {
             completion(false)
@@ -110,22 +120,25 @@ class LocationRecordCache: Codable {
     }
    
     // Fetch Location records from the locations cache for a given list of QRCodes,
-    // or fetch all locations
-    func fetchLocationRecordsFromCache(withRecordNames: [String]?,
+    // or fetch all locations if the QRCOde parameter is nil.
+    func fetchLocationRecordsFromCache(withQRCode fetchQRCode: String?,
                                        processRecord: @escaping (LocationRecordCacheItem) -> Void,
-                                       completion: @escaping (Bool) -> Void) {
+                                       completion: @escaping () -> Void) {
         
         guard let locationsCacheDict = self.locationItemCacheDict else {
             print("Error: locationItemCacheDict = nil in LocationRecordCache.fetchLocationRecords()")   // TESTING
-            completion(false)
+            completion()
             return
         }
         print("Loaded \(locationsCacheDict.keys.count) LocationRecordCacheItem records")
 
+        
+        
          DispatchQueue.global().async {
              
-             for locationQRCode in locationsCacheDict.keys {
-                 if let cachedLocationRecordItems = locationsCacheDict[locationQRCode] {
+             if let QRCode = fetchQRCode {
+                 // Process the locations records for the given QRCode to fetch.
+                 if let cachedLocationRecordItems = locationsCacheDict[QRCode] {
                      for locationRecordCacheItem in cachedLocationRecordItems {
                          DebugLocations.shared.didFetchRecord()      // TESTING
                          
@@ -134,9 +147,22 @@ class LocationRecordCache: Codable {
                      }
                  }
              }
-
+             else {
+                 // Process all cached locations  records for all QRCodes.
+                 for QRCode in locationsCacheDict.keys {
+                     if let cachedLocationRecordItems = locationsCacheDict[QRCode] {
+                         for locationRecordCacheItem in cachedLocationRecordItems {
+                             DebugLocations.shared.didFetchRecord()      // TESTING
+                             
+                             // call the process location callback function
+                             processRecord(locationRecordCacheItem)
+                         }
+                     }
+                 }
+             }
+   
             // call the completion function with the new Locations cache
-            completion(true)
+            completion()
         }
     }
 

@@ -288,16 +288,35 @@ extension MapViewController {
     
     //query active locations
     func queryForMap() {
-        // try to load the records from the cache
-        if LocationRecordCache.shared.doesLocationRecordCacheExist() {
+        // try to load the records from the locations cache in memory
+        if LocationRecordCache.shared.chacheIsLoaded() {
 
             DebugLocations.shared.start(presentingViewController: self,
                                         description: "Map View Cache")       // TESTING
 
-//            LocationRecordCache.shared.loadLocationsRecordCache(recordNames: nil,
-//                                                                processLocationRecord,
-//                                                                completion: finishedLoadingCachedLocationRecords)
+            LocationRecordCache.shared.fetchLocationRecordsFromCache(withQRCode: nil,
+                                                                     processRecord: processLocationRecord,
+                                                                     completion: finishedLoadingCachedLocationRecords)
+            
+            // TODO: Get te maxium modificationDate from the cache for the
+            // date to use for the fetch predicate.
             return
+        }
+        else {
+            // try to load the locations cache fie into memory
+            LocationRecordCache.shared.loadLocationsRecordCacheFile { didLoad in
+                if didLoad {
+                    DebugLocations.shared.start(presentingViewController: self,
+                                                description: "Map View Cache")       // TESTING
+
+                    LocationRecordCache.shared.fetchLocationRecordsFromCache(withQRCode: nil,
+                                                                             processRecord: self.processLocationRecord,
+                                                                             completion: self.finishedLoadingCachedLocationRecords)
+                    // TODO: Get te maxium modificationDate from the cache for the
+                    // date to use for the fetch predicate.
+                    return
+                }
+            }
         }
         
         
@@ -320,7 +339,7 @@ extension MapViewController {
         addOperation(operation: operation)
    } //end func
     
-    func finishedLoadingCachedLocationRecords(_ didLoad: Bool) {
+    func finishedLoadingCachedLocationRecords() {
         DispatchQueue.main.async {
             self.activityIndicator.stopAnimating()
             self.filtersButton.isHidden = false
