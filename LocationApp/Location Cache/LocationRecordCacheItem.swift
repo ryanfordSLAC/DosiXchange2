@@ -22,23 +22,8 @@ extension CKRecord: LocationRecordDelegate{
 
 // Dosimetr Cache Item stores all of the properties of a dosimeter CloudKit record
 struct LocationRecordCacheItem: Codable, LocationRecordDelegate{
-    
-    /* CloudKit Location Scheme
-     active          INT64 QUERYABLE SORTABLE,
-     collectedFlag   INT64 QUERYABLE SORTABLE,
-     createdDate     TIMESTAMP QUERYABLE SORTABLE,
-     cycleDate       STRING QUERYABLE SORTABLE,
-     dosinumber      STRING QUERYABLE SEARCHABLE SORTABLE,
-     latitude        STRING QUERYABLE SORTABLE,
-     locdescription  STRING QUERYABLE SEARCHABLE SORTABLE,
-     longitude       STRING QUERYABLE SORTABLE,
-     mismatch        INT64 QUERYABLE SORTABLE,
-     moderator       INT64 QUERYABLE SORTABLE,
-     modifiedDate    TIMESTAMP QUERYABLE SORTABLE,
-     */
 
-    // Properties to cache the CloidKit Location Record
-    
+    // Location Record Fields
     var QRCode:String = ""              // QR Code
     var latitude:String = ""            // latitude
     var longitude:String = ""           // longitude
@@ -51,7 +36,10 @@ struct LocationRecordCacheItem: Codable, LocationRecordDelegate{
     var moderator:Int64?                // moderator field may contain nothing
     var createdDate:Date?               // creation date
     var modifiedDate:Date?              // modified date
-  
+    var modificationDate:Date?          // modification date
+
+    // Location Record Metadata
+    
     // Initialize with a CloudKit Record
     init?(withRecord record: CKRecord) {
           
@@ -128,7 +116,10 @@ struct LocationRecordCacheItem: Codable, LocationRecordDelegate{
 
         // set the modified date
         self.modifiedDate = record["modifiedDate"] as? Date
-   }
+ 
+        // set the modification date
+        self.modificationDate = record.modificationDate
+ }
     
     // Subscript operator overload used to access properties.
     subscript(key: String) -> CKRecordValue? {

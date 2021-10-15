@@ -46,9 +46,9 @@ class LocationRecordCache: Codable {
         sortedLocationRecordCacheItems = [LocationRecordCacheItem]()
         
         for record in records {
-            if let DosimeterRecordCacheItem = LocationRecordCacheItem(withRecord: record) {
-                sortedLocationRecordCacheItems!.append(DosimeterRecordCacheItem)
-                locationItemCacheDict![record.recordID.recordName] = DosimeterRecordCacheItem
+            if let recordCacheItem = LocationRecordCacheItem(withRecord: record) {
+                sortedLocationRecordCacheItems!.append(recordCacheItem)
+                locationItemCacheDict![record.recordID.recordName] = recordCacheItem
             }
         }
     }

@@ -420,7 +420,16 @@ extension MapViewController {
     //to be executed for each fetched Locationrecord
     func recordFetchedBlock(record: CKRecord) {
         
-//        print(">> Fetched CloudKit record modifiedDate: \(record["modifiedDate"])")        // TESTING
+        // TESTING
+        if let QRCode = record["QRCode"] as? String,
+           QRCode == "BLG 015-002",// TESTING
+           
+            let modifiedDate = record["modifiedDate"] as? Date {
+             print("Found location QRCode BLG 015-002: modified \(modifiedDate)")
+            if let modificationDate = record["modificationDate"] as? Date {
+             print("Found location QRCode BLG 015-002: modificationDate \(modificationDate)")
+            }
+         }
         
         DebugLocations.shared.didFetchRecord()      // TESTING
         self.records.append(record)                 // TESTING
