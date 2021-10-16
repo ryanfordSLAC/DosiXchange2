@@ -25,6 +25,9 @@ class LocationRecordCache: Codable {
     // [key = QRCode,value = LocationRecordCacheItem]
     var priorCycleLocationRecordCacheDict: [String: LocationRecordCacheItem]?
 
+    // Most recent location record modification date in the cache.
+    var mostRecentLocationRecordModificationDate: Date?
+    
     static var shared = LocationRecordCache()
 
     private init() {
@@ -66,9 +69,11 @@ class LocationRecordCache: Codable {
     func didFinishFetchingRecords() {
         DispatchQueue.global().async {
             self.saveLocationRecordCache()
+            self.mostRecentLocationRecordModificationDate = self.maxLocationRecordModificationDate()
       }
     }
     
+    // Get the maximu location record cache item modificatio date.
     func maxLocationRecordModificationDate() -> Date? {
         var maxLocationRecordModificatonDate: Date?
         
@@ -102,7 +107,7 @@ class LocationRecordCache: Codable {
              }
         }
         
-        print("*** Maximum Cached Location Record Time = \(maxLocationRecordModificatonDate)")
+        print("*** Most Recent Cached Location Record Time = \(maxLocationRecordModificatonDate)")
 
         return maxLocationRecordModificatonDate
     }
