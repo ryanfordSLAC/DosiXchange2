@@ -14,7 +14,7 @@ import CoreLocation
 class NearestLocations: UIViewController, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate {
 
     let dispatchGroup = DispatchGroup()
-    let recordsupdate = recordsUpdate()
+    let recordsupdate = RecordsUpdate()
 
     var locationManager:CLLocationManager = CLLocationManager()
     var startLocation: CLLocation!
@@ -159,8 +159,8 @@ extension NearestLocations {
         self.preSortedRecords = [(Int, String, String)]()
         self.sortedRecords = [(Int, String, String)]()
         
-        let cycleDate = self.recordsupdate.generateCycleDate()
-        let priorCycleDate = self.recordsupdate.generatePriorCycleDate(cycleDate: cycleDate)
+        let cycleDate = RecordsUpdate.generateCycleDate()
+        let priorCycleDate = RecordsUpdate.generatePriorCycleDate(cycleDate: cycleDate)
         let flag = 0
         let activeFlag = 1  //ver 1.2 = suppress inactive dosimeters from lists
         let p1 = NSPredicate(format: "collectedFlag == %d", flag)

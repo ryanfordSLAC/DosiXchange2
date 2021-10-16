@@ -21,7 +21,7 @@ class MapViewController: UIViewController {
     
     var locationmanager = CLLocationManager()
     let database = CKContainer.default().publicCloudDatabase
-    var cycleDate = recordsUpdate()
+    var cycleDate = RecordsUpdate()
     var checkQR = ""
     
     var filters:[UIColor:Bool] = [
@@ -295,15 +295,15 @@ extension MapViewController {
                                         description: "Map View Cache")       // TESTING
 
             LocationRecordCache.shared.fetchLocationRecordsFromCache(withQRCode: nil,
-                                                                     processRecord: processLocationRecord,
-                                                                     completion: finishedLoadingCachedLocationRecords)
+                                                                     processRecord: self.processLocationRecord,
+                                                                     completion: self.finishedLoadingCachedLocationRecords)
             
             // TODO: Get te maxium modificationDate from the cache for the
             // date to use for the fetch predicate.
             return
         }
-        else {
-            // try to load the locations cache fie into memory
+        else if LocationRecordCache.shared.locationRecordCacheFileExists() {
+
             LocationRecordCache.shared.loadLocationsRecordCacheFile { didLoad in
                 if didLoad {
                     DebugLocations.shared.start(presentingViewController: self,

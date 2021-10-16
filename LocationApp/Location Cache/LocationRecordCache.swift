@@ -19,52 +19,55 @@ class LocationRecordCache: Codable {
     static private let group = DispatchGroup()
     static var shared = LocationRecordCache()
     
-    var version = 1                                             // location cache file version #
+    var version: Float = 1.0                                    // location cache file version #
     
-    var cacheCycleDateString: String?                           // cache cycle date string
-   
-    // cache records dictionary. [dictionary key = Location record name,
-    // dictionary value = list of cached location records in same order as
-    // returned by the CloudKit fetch
-    var locationItemCacheDict: [String: [LocationRecordCacheItem]]?
-    
+    var cycleDateString: String?                                // current cycle date string
+    var priorCycleDateString: String?                           // prior cycle date string
+
+    // Current cycle location cache em records dictionary.
+    // [key = QRCode,value = LocationRecordCacheItem]
+    var cycleLocationItemCacheDict: [String: LocationRecordCacheItem]?
+ 
+    // Prior cycle location cache em records dictionary.
+    // [key = QRCode,value = LocationRecordCacheItem]
+    var priorCycleLocationItemCacheDict: [String: LocationRecordCacheItem]?
+ 
     private init() {
-        deleteLocationRecordCache()       // delete the cache file (TESTING)
+//        deleteLocationRecordCache()       // delete the cache file (TESTING)
    }
     
     func didStartFetchingRecords() {
-        locationItemCacheDict = [String: [LocationRecordCacheItem]]()
-        print(">> LocationRecordCache didStartFetchingRecords")     // TESTING
+        cycleDateString = RecordsUpdate.generateCycleDate()
+        if let currentCycleDateString = cycleDateString {
+            priorCycleDateString = RecordsUpdate.generatePriorCycleDate(cycleDate: currentCycleDateString)
+        }
+        cycleLocationItemCacheDict = [:]
+        priorCycleLocationItemCacheDict = [:]
    }
     
     func didFetchLocationRecord(_ locationRecord: CKRecord) {
-        print(">> LocationRecordCache didFetchLocationRecord")     // TESTING
 
-        // process the fetched CloudKit records in the background and
-        // initialize  the cached location record items.
-        DispatchQueue.global().async {
-            LocationRecordCache.group.wait()
-            LocationRecordCache.group.enter()
-
-            if let locationRecordCacheItem = LocationRecordCacheItem(withRecord: locationRecord) {
-                let QRCode = locationRecordCacheItem.QRCode
-                if let locationRecordItems = self.locationItemCacheDict?[QRCode] {
-                    print("Found locationRecordItems with \(locationRecordItems.count) items")
-                    var mutableLocationRecordItems = locationRecordItems
-                    mutableLocationRecordItems.append(locationRecordCacheItem)
- //                   self.locationItemCacheDict?[QRCode] = mutableLocationRecordItems
- 
-                }
-                else {
-                    self.locationItemCacheDict?[QRCode] = [locationRecordCacheItem]
-               }
+        let isCurrentCycleRecord: Bool?
+        if locationRecord["cycleDate"] == cycleDateString {
+            isCurrentCycleRecord = true
+        }
+        else if locationRecord["cycleDate"] == priorCycleDateString {
+            isCurrentCycleRecord = false
+        }
+        else {
+            return
+        }
+        if let locationRecordCacheItem = LocationRecordCacheItem(withRecord: locationRecord) {
+            if isCurrentCycleRecord! {
+                self.cycleLocationItemCacheDict?[locationRecordCacheItem.QRCode] = locationRecordCacheItem
             }
-            LocationRecordCache.group.leave()
+            else {
+                self.priorCycleLocationItemCacheDict?[locationRecordCacheItem.QRCode] = locationRecordCacheItem
+            }
         }
     }
     
     func didFinishFetchingRecords() {
-        print(">> LocationRecordCache didFinishFetchingRecords")     // TESTING
         DispatchQueue.global().async {
             self.saveLocationRecordCache()
       }
@@ -77,7 +80,11 @@ class LocationRecordCache: Codable {
     
     // Test if the location record cache file is loaded into memory.
     func chacheIsLoaded() -> Bool {
-        if let locationsCount = self.locationItemCacheDict?.keys.count,
+        if let locationsCount = self.cycleLocationItemCacheDict?.keys.count,
+            locationsCount > 0 {
+            return true
+        }
+        else if let locationsCount = self.priorCycleLocationItemCacheDict?.keys.count,
             locationsCount > 0 {
             return true
         }
@@ -114,12 +121,17 @@ class LocationRecordCache: Codable {
                 return
             }
             
-            if let locationsDict = locationsCache.locationItemCacheDict {
-                print("Loaded locations cache file: \(locationsDict.keys.count) LocationRecordCacheItem records")    // TESTING
+            if let cycleLocationsDict = locationsCache.cycleLocationItemCacheDict,
+                let priorCycleLocationsDict = locationsCache.priorCycleLocationItemCacheDict {
+                let recordCount = cycleLocationsDict.keys.count + priorCycleLocationsDict.keys.count
+                print("Loaded locations cache file: \(recordCount) LocationRecordCacheItem records")    // TESTING
  
-                if locationsDict.keys.count > 0 {
+                if recordCount > 0 {
                     LocationRecordCache.shared = locationsCache
                     completion(true)
+                }
+                else {
+                    completion(false)
                 }
              }
             else {
@@ -134,7 +146,7 @@ class LocationRecordCache: Codable {
                                        processRecord: @escaping (LocationRecordCacheItem) -> Void,
                                        completion: @escaping () -> Void) {
         
-        guard let locationsCacheDict = self.locationItemCacheDict else {
+        guard let locationsCacheDict = self.cycleLocationItemCacheDict else {
             print("Error: locationItemCacheDict = nil in LocationRecordCache.fetchLocationRecords()")   // TESTING
             completion()
             return
@@ -146,31 +158,36 @@ class LocationRecordCache: Codable {
          DispatchQueue.global().async {
              
              if let QRCode = fetchQRCode {
-                 // Process the locations records for the given QRCode to fetch.
-                 if let cachedLocationRecordItems = locationsCacheDict[QRCode] {
-                     for locationRecordCacheItem in cachedLocationRecordItems {
-                         DebugLocations.shared.didFetchRecord()      // TESTING
-                         
-                         // call the process location callback function
-                         processRecord(locationRecordCacheItem)
-                     }
+                 // Fetch and process a location record cache item with the
+                 // given QRCode and in the current cycle.
+                 if let locationRecordCacheItem = self.cycleLocationItemCacheDict?[QRCode] {
+                     processRecord(locationRecordCacheItem)
+                     DebugLocations.shared.didFetchRecord()     // TESTING
+                 }
+                 // Fetch and process a location record cache item with the
+                 // given QRCode and in the prior cycle.
+                  else if let locationRecordCacheItem = self.priorCycleLocationItemCacheDict?[QRCode] {
+                     processRecord(locationRecordCacheItem)
+                     DebugLocations.shared.didFetchRecord()     // TESTING
                  }
              }
              else {
-                 // Process all cached locations  records for all QRCodes.
                  for QRCode in locationsCacheDict.keys {
-                     if let cachedLocationRecordItems = locationsCacheDict[QRCode] {
-                         for locationRecordCacheItem in cachedLocationRecordItems {
-                             DebugLocations.shared.didFetchRecord()      // TESTING
-                             
-                             // call the process location callback function
-                             processRecord(locationRecordCacheItem)
-                         }
+                     // Fetch and process a location record cache item with the QRCode
+                     // and in the current cycle.
+                     if let locationRecordCacheItem = self.cycleLocationItemCacheDict?[QRCode] {
+                         processRecord(locationRecordCacheItem)
+                         DebugLocations.shared.didFetchRecord()     // TESTING
+                     }
+                     // Fetch and process a location record cache item with the QRCode
+                     // and in the prior cycle.
+                     if let locationRecordCacheItem = self.priorCycleLocationItemCacheDict?[QRCode] {
+                         processRecord(locationRecordCacheItem)
+                         DebugLocations.shared.didFetchRecord()     // TESTING
                      }
                  }
              }
    
-            // call the completion function with the new Locations cache
             completion()
         }
     }
@@ -178,7 +195,7 @@ class LocationRecordCache: Codable {
     // Save the dosimeter CloudKit records from disk.
     // Throws a DosimeterRecordCacheError is a required record field is nil.
     func saveLocationRecordCache() {
-        guard let count = self.locationItemCacheDict?.keys.count, (count > 0) else {
+        guard let count = self.cycleLocationItemCacheDict?.keys.count, (count > 0) else {
              return
          }
         guard let cacheData = try? JSONEncoder().encode(self) else {
@@ -188,7 +205,7 @@ class LocationRecordCache: Codable {
         
         // delete the locations record cache file if it exists.
         let cacheFileURL = URL(fileURLWithPath: self.pathToLocationRecordCache())
-       try? FileManager.default.removeItem(at: cacheFileURL)
+        try? FileManager.default.removeItem(at: cacheFileURL)
         
         // save the locations record cahe data.
         guard let _ = try? cacheData.write(to: cacheFileURL) else {
