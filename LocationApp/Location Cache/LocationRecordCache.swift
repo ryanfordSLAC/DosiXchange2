@@ -9,39 +9,35 @@
 import Foundation
 import CloudKit
 
-enum LocationRecordCacheError: Error {
-    case recordDataError                                        // a dosimeter record fied is empty (nil)
-}
-
+// MARK: LocationRecordCache Class
 class LocationRecordCache: Codable {
     
-    static private var fetchedLocationRecords: [CKRecord]?
-    static private let group = DispatchGroup()
-    static var shared = LocationRecordCache()
-    
+    // MARK: Codable Properties
     var version: Float = 1.0                                    // location cache file version #
-    
     var cycleDateString: String?                                // current cycle date string
     var priorCycleDateString: String?                           // prior cycle date string
 
-    // Current cycle location cache item records dictionary.
+    // Current cycle location records cache dictionary.
     // [key = QRCode,value = LocationRecordCacheItem]
-    var cycleLocationItemCacheDict: [String: LocationRecordCacheItem]?
+    var cycleLocationRecordCacheDict: [String: LocationRecordCacheItem]?
  
-    // Prior cycle location cache item records dictionary.
+    // Prior cycle location records cache dictionary.
     // [key = QRCode,value = LocationRecordCacheItem]
-    var priorCycleLocationItemCacheDict: [String: LocationRecordCacheItem]?
- 
+    var priorCycleLocationRecordCacheDict: [String: LocationRecordCacheItem]?
+
+    static var shared = LocationRecordCache()
+
     private init() {
     }
     
+    // MARK: Fetching Location Records
     func didStartFetchingRecords() {
         cycleDateString = RecordsUpdate.generateCycleDate()
         if let currentCycleDateString = cycleDateString {
             priorCycleDateString = RecordsUpdate.generatePriorCycleDate(cycleDate: currentCycleDateString)
         }
-        cycleLocationItemCacheDict = [:]
-        priorCycleLocationItemCacheDict = [:]
+        cycleLocationRecordCacheDict = [:]
+        priorCycleLocationRecordCacheDict = [:]
    }
     
     func didFetchLocationRecord(_ locationRecord: CKRecord) {
@@ -59,10 +55,10 @@ class LocationRecordCache: Codable {
         if let locationRecordCacheItem = LocationRecordCacheItem(withRecord: locationRecord) {
             if isCurrentCycleRecord
             {
-                self.cycleLocationItemCacheDict![locationRecordCacheItem.QRCode] = locationRecordCacheItem
+                self.cycleLocationRecordCacheDict![locationRecordCacheItem.QRCode] = locationRecordCacheItem
             }
             else {
-                self.priorCycleLocationItemCacheDict![locationRecordCacheItem.QRCode] = locationRecordCacheItem
+                self.priorCycleLocationRecordCacheDict![locationRecordCacheItem.QRCode] = locationRecordCacheItem
            }
         }
    }
@@ -73,6 +69,7 @@ class LocationRecordCache: Codable {
       }
     }
     
+    // MARK: Location
     // Test if the location record cache file exists on disk.
     func locationRecordCacheFileExists() -> Bool {
         return FileManager.default.fileExists(atPath: pathToLocationRecordCache())
@@ -80,12 +77,12 @@ class LocationRecordCache: Codable {
     
     // Test if the location record cache file is loaded into memory.
     func chacheIsLoaded() -> Bool {
-        if self.cycleLocationItemCacheDict != nil,
-            self.cycleLocationItemCacheDict!.keys.count  > 0 {
+        if self.cycleLocationRecordCacheDict != nil,
+            self.cycleLocationRecordCacheDict!.keys.count  > 0 {
             return true
         }
-        else if self.priorCycleLocationItemCacheDict != nil,
-            self.priorCycleLocationItemCacheDict!.keys.count  > 0 {
+        else if self.priorCycleLocationRecordCacheDict != nil,
+            self.priorCycleLocationRecordCacheDict!.keys.count  > 0 {
             return true
         }
         else {
@@ -95,8 +92,8 @@ class LocationRecordCache: Codable {
 
     func resetCache() {
         // delete the location records cached in memory.
-        self.cycleLocationItemCacheDict = nil
-        self.priorCycleLocationItemCacheDict = nil
+        self.cycleLocationRecordCacheDict = nil
+        self.priorCycleLocationRecordCacheDict = nil
 
         // delete the locatioms record cache file.
         let path = self.pathToLocationRecordCache()
@@ -127,8 +124,8 @@ class LocationRecordCache: Codable {
             }
             
             var recordCount = 0
-            if let cycleLocationsDict = locationsCache.cycleLocationItemCacheDict,
-                let priorCycleLocationsDict = locationsCache.priorCycleLocationItemCacheDict {
+            if let cycleLocationsDict = locationsCache.cycleLocationRecordCacheDict,
+                let priorCycleLocationsDict = locationsCache.priorCycleLocationRecordCacheDict {
                 recordCount = cycleLocationsDict.keys.count + priorCycleLocationsDict.keys.count
                 print("Loaded locations cache file: \(recordCount) LocationRecordCacheItem records")    // TESTING
  
@@ -151,13 +148,13 @@ class LocationRecordCache: Codable {
              if let QRCode = fetchQRCode {
                  // Fetch and process a location record cache item with the
                  // given QRCode and in the current cycle.
-                 if let locationRecordCacheItem = self.cycleLocationItemCacheDict?[QRCode] {
+                 if let locationRecordCacheItem = self.cycleLocationRecordCacheDict?[QRCode] {
                      processRecord(locationRecordCacheItem)
                      DebugLocations.shared.didFetchRecord()     // TESTING
                  }
                  // Fetch and process a location record cache item with the
                  // given QRCode and in the prior cycle.
-                  else if let locationRecordCacheItem = self.priorCycleLocationItemCacheDict?[QRCode] {
+                  else if let locationRecordCacheItem = self.priorCycleLocationRecordCacheDict?[QRCode] {
                      processRecord(locationRecordCacheItem)
                      DebugLocations.shared.didFetchRecord()     // TESTING
                  }
@@ -165,13 +162,13 @@ class LocationRecordCache: Codable {
              else {
                  // Fetch and process a location record cache item with the QRCode
                  // and in the current cycle.
-                 for locationRecordCacheItem in self.cycleLocationItemCacheDict!.values {
+                 for locationRecordCacheItem in self.cycleLocationRecordCacheDict!.values {
                      processRecord(locationRecordCacheItem)
                      DebugLocations.shared.didFetchRecord()     // TESTING
                  }
                  // Fetch and process a location record cache item with the QRCode
                  // and in the prior cycle.
-                for locationRecordCacheItem in self.priorCycleLocationItemCacheDict!.values {
+                for locationRecordCacheItem in self.priorCycleLocationRecordCacheDict!.values {
                      processRecord(locationRecordCacheItem)
                      DebugLocations.shared.didFetchRecord()     // TESTING
                  }
