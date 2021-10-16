@@ -25,8 +25,8 @@ class LocationRecordCache: Codable {
     // [key = QRCode,value = LocationRecordCacheItem]
     var priorCycleLocationRecordCacheDict: [String: LocationRecordCacheItem]?
 
-    // Most recent location record modification date in the cache.
-    var mostRecentLocationRecordModificationDate: Date?
+    // Maximum location record cache item modification date.
+    var maxLocationRecordCacheItemModificationDate: Date?
     
     static var shared = LocationRecordCache()
 
@@ -69,7 +69,6 @@ class LocationRecordCache: Codable {
     func didFinishFetchingRecords() {
         DispatchQueue.global().async {
             self.saveLocationRecordCache()
-            self.mostRecentLocationRecordModificationDate = self.maxLocationRecordModificationDate()
       }
     }
     
@@ -230,6 +229,9 @@ class LocationRecordCache: Codable {
             return
         }
         
+        // compute the maximum cached location record modification time.
+        self.maxLocationRecordCacheItemModificationDate = self.maxLocationRecordModificationDate()
+
         // delete the locations record cache file if it exists.
         let cacheFileURL = URL(fileURLWithPath: self.pathToLocationRecordCache())
         try? FileManager.default.removeItem(at: cacheFileURL)
