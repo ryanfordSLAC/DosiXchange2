@@ -81,7 +81,7 @@ class LocationRecordCache: Codable {
             for (_, locationRecordCacheItem) in cycleLocationRecordCacheItems.enumerated() {
                 if let locationRecordModificationDate = locationRecordCacheItem.modificationDate {
                     if let maxModificatonDate = maxLocationRecordModificatonDate,
-                       (locationRecordModificationDate.timeIntervalSinceReferenceDate > maxModificatonDate.timeIntervalSinceReferenceDate) {
+                       (locationRecordModificationDate.timeIntervalSinceReferenceDate < maxModificatonDate.timeIntervalSinceReferenceDate) {
                         maxLocationRecordModificatonDate = maxModificatonDate
                     }
                     else  {
@@ -96,9 +96,9 @@ class LocationRecordCache: Codable {
             for (_, locationRecordCacheItem) in priorCycleLocationRecordCacheItems.enumerated() {
                 if let locationRecordModificationDate = locationRecordCacheItem.modificationDate {
                     if let maxModificatonDate = maxLocationRecordModificatonDate,
-                       (locationRecordModificationDate.timeIntervalSinceReferenceDate > maxModificatonDate.timeIntervalSinceReferenceDate) {
+                       (locationRecordModificationDate.timeIntervalSinceReferenceDate < maxModificatonDate.timeIntervalSinceReferenceDate) {
                         maxLocationRecordModificatonDate = maxModificatonDate
-                    }
+                   }
                     else  {
                         maxLocationRecordModificatonDate = locationRecordModificationDate
                     }
