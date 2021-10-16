@@ -121,6 +121,11 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
         button3.layer.borderColor = borderColorUp
     }
     
+    @IBAction func resetCacheTouchUp(_ sender: Any) {
+        LocationRecordCache.shared.resetCache()
+        print("Deleted Locations Record Cache File")
+    }
+    
     //MARK:  Send Email
     func sendEmail() {
         

@@ -227,12 +227,24 @@
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RcM-5r-EfG">
+                                <rect key="frame" x="88.5" y="359" width="143" height="44"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="26"/>
+                                <state key="normal" title="Reset Cache">
+                                    <color key="titleColor" red="0.58072251080000004" green="0.066734083" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="resetCacheTouchUp:" destination="M89-R5-CVf" eventType="touchUpInside" id="IUB-yW-ET9"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="8cu-87-6eq"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="zZL-V9-XtT" firstAttribute="leading" secondItem="Kob-bg-1b1" secondAttribute="leading" id="1jI-fL-FlG"/>
                             <constraint firstItem="zZL-V9-XtT" firstAttribute="top" secondItem="8cu-87-6eq" secondAttribute="top" id="9D7-13-zaz"/>
+                            <constraint firstItem="RcM-5r-EfG" firstAttribute="top" secondItem="iL3-Xk-1J0" secondAttribute="bottom" constant="50" id="KyH-ds-r7E"/>
                             <constraint firstItem="P1C-rk-auY" firstAttribute="leading" secondItem="8cu-87-6eq" secondAttribute="centerX" constant="-95" id="PP0-4v-SJE"/>
                             <constraint firstItem="iL3-Xk-1J0" firstAttribute="top" secondItem="f4q-J5-UJn" secondAttribute="bottom" constant="50" id="U3h-PD-cLz"/>
                             <constraint firstAttribute="trailing" secondItem="zZL-V9-XtT" secondAttribute="trailing" id="b7D-Z6-DRt"/>
@@ -247,6 +259,7 @@
                             <constraint firstItem="f4q-J5-UJn" firstAttribute="trailing" secondItem="8cu-87-6eq" secondAttribute="centerX" constant="92" id="lFo-1j-4Wq"/>
                             <constraint firstItem="f4q-J5-UJn" firstAttribute="top" secondItem="P1C-rk-auY" secondAttribute="bottom" constant="50" id="nvL-A6-4wP"/>
                             <constraint firstItem="P1C-rk-auY" firstAttribute="trailing" secondItem="8cu-87-6eq" secondAttribute="centerX" constant="95" id="rKE-AV-hEm"/>
+                            <constraint firstItem="RcM-5r-EfG" firstAttribute="centerX" secondItem="Kob-bg-1b1" secondAttribute="centerX" id="zIE-Q7-RGv"/>
                         </constraints>
                     </view>
                     <connections>
@@ -1075,6 +1088,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="K3I-ac-JBM"/>
         <segue reference="ar4-0B-Xd6"/>
         <segue reference="1iZ-uO-Z3p"/>
         <segue reference="1eV-Ng-UnH"/>

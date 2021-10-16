@@ -33,15 +33,12 @@ class LocationRecordCache: Codable {
     var priorCycleLocationItemCacheDict: [String: LocationRecordCacheItem]?
  
     private init() {
-        deleteLocationRecordCacheFile()       // delete the cache file (TESTING)
-   }
+    }
     
     func didStartFetchingRecords() {
         cycleDateString = RecordsUpdate.generateCycleDate()
-        print("cycleDateString = \(cycleDateString)")
         if let currentCycleDateString = cycleDateString {
             priorCycleDateString = RecordsUpdate.generatePriorCycleDate(cycleDate: currentCycleDateString)
-            print("priorCycleDateString = \(priorCycleDateString)")
         }
         cycleLocationItemCacheDict = [:]
         priorCycleLocationItemCacheDict = [:]
@@ -63,11 +60,9 @@ class LocationRecordCache: Codable {
             if isCurrentCycleRecord
             {
                 self.cycleLocationItemCacheDict![locationRecordCacheItem.QRCode] = locationRecordCacheItem
-                print("Cached current location record: cycle date = \(locationRecordCacheItem.cycleDate!)")
             }
             else {
                 self.priorCycleLocationItemCacheDict![locationRecordCacheItem.QRCode] = locationRecordCacheItem
-                print("Cached prior location record: cycle date = \(locationRecordCacheItem.cycleDate!)")
            }
         }
    }
@@ -98,7 +93,12 @@ class LocationRecordCache: Codable {
         }
     }
 
-    func deleteLocationRecordCacheFile() {
+    func resetCache() {
+        // delete the location records cached in memory.
+        self.cycleLocationItemCacheDict = nil
+        self.priorCycleLocationItemCacheDict = nil
+
+        // delete the locatioms record cache file.
         let path = self.pathToLocationRecordCache()
         guard FileManager.default.fileExists(atPath: path) else {
             return
