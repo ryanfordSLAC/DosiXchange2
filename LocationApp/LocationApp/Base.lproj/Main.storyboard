@@ -255,6 +255,7 @@
                             <constraint firstItem="P1C-rk-auY" firstAttribute="top" secondItem="zZL-V9-XtT" secondAttribute="bottom" constant="21" id="fxf-KM-3yN"/>
                             <constraint firstItem="iL3-Xk-1J0" firstAttribute="leading" secondItem="8cu-87-6eq" secondAttribute="centerX" constant="-80" id="g45-4J-oW3"/>
                             <constraint firstItem="3FX-rC-9sw" firstAttribute="centerX" secondItem="Kob-bg-1b1" secondAttribute="centerX" id="gf8-t8-hfs"/>
+                            <constraint firstItem="RcM-5r-EfG" firstAttribute="leading" secondItem="8cu-87-6eq" secondAttribute="leading" constant="88.5" id="iKP-rO-Kxr"/>
                             <constraint firstItem="12k-op-bR2" firstAttribute="centerX" secondItem="Kob-bg-1b1" secondAttribute="centerX" id="j1A-My-Y08"/>
                             <constraint firstItem="f4q-J5-UJn" firstAttribute="trailing" secondItem="8cu-87-6eq" secondAttribute="centerX" constant="92" id="lFo-1j-4Wq"/>
                             <constraint firstItem="f4q-J5-UJn" firstAttribute="top" secondItem="P1C-rk-auY" secondAttribute="bottom" constant="50" id="nvL-A6-4wP"/>
@@ -267,6 +268,7 @@
                         <outlet property="button1" destination="P1C-rk-auY" id="9O8-Dx-vXv"/>
                         <outlet property="button2" destination="f4q-J5-UJn" id="iTU-a5-n1X"/>
                         <outlet property="button3" destination="iL3-Xk-1J0" id="GOc-1P-xTC"/>
+                        <outlet property="resetCacheButton" destination="RcM-5r-EfG" id="fRd-Nn-Tgf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UyI-x6-pjz" userLabel="First Responder" sceneMemberID="firstResponder"/>
