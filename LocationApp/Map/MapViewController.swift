@@ -288,6 +288,7 @@ extension MapViewController {
     
     //query active locations
     func queryForMap() {
+        #if true
         // try to load the records from the locations cache in memory
         if LocationRecordCache.shared.chacheIsLoaded() {
 
@@ -318,7 +319,7 @@ extension MapViewController {
                 }
             }
         }
-        
+        #endif
         
         // TESTINGs
         DebugLocations.shared.start(presentingViewController: self,
@@ -369,15 +370,15 @@ extension MapViewController {
             addOperation(operation: operation)
             return
         }
-        
+    
+        DebugLocations.shared.finish()      // TESTING
+
+        // Notify the locations cache that we finished fetching records from CloudKit.
+        LocationRecordCache.shared.didFinishFetchingRecords()     // TESTING
+
         DispatchQueue.main.async {
             self.activityIndicator.stopAnimating()
             self.filtersButton.isHidden = false
-         
-            DebugLocations.shared.finish()      // TESTING
-
-            // Notify the locations cache that we finished fetching records from CloudKit.
-            LocationRecordCache.shared.didFinishFetchingRecords()     // TESTING
         }
     } //end func
     
