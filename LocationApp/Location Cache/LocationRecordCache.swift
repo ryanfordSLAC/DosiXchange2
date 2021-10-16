@@ -69,6 +69,44 @@ class LocationRecordCache: Codable {
       }
     }
     
+    func maxLocationRecordModificationDate() -> Date? {
+        var maxLocationRecordModificatonDate: Date?
+        
+        // Search all current cycle location record cache items for the maximum modification time.
+        if let cycleLocationRecordCacheItems = self.cycleLocationRecordCacheDict?.values {
+            for (_, locationRecordCacheItem) in cycleLocationRecordCacheItems.enumerated() {
+                if let locationRecordModificationDate = locationRecordCacheItem.modificationDate {
+                    if let maxModificatonDate = maxLocationRecordModificatonDate,
+                       (locationRecordModificationDate.timeIntervalSinceReferenceDate > maxModificatonDate.timeIntervalSinceReferenceDate) {
+                        maxLocationRecordModificatonDate = maxModificatonDate
+                    }
+                    else  {
+                        maxLocationRecordModificatonDate = locationRecordModificationDate
+                    }
+                }
+             }
+        }
+  
+        // Search all prior cycle location record cache items for the maximum modification time.
+        if let priorCycleLocationRecordCacheItems = self.priorCycleLocationRecordCacheDict?.values {
+            for (_, locationRecordCacheItem) in priorCycleLocationRecordCacheItems.enumerated() {
+                if let locationRecordModificationDate = locationRecordCacheItem.modificationDate {
+                    if let maxModificatonDate = maxLocationRecordModificatonDate,
+                       (locationRecordModificationDate.timeIntervalSinceReferenceDate > maxModificatonDate.timeIntervalSinceReferenceDate) {
+                        maxLocationRecordModificatonDate = maxModificatonDate
+                    }
+                    else  {
+                        maxLocationRecordModificatonDate = locationRecordModificationDate
+                    }
+                }
+             }
+        }
+        
+        print("*** Maximum Cached Location Record Time = \(maxLocationRecordModificatonDate)")
+
+        return maxLocationRecordModificatonDate
+    }
+    
     // MARK: Location
     // Test if the location record cache file exists on disk.
     func locationRecordCacheFileExists() -> Bool {
