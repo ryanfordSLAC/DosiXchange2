@@ -33,7 +33,7 @@ class LocationRecordCache: Codable {
     var priorCycleLocationItemCacheDict: [String: LocationRecordCacheItem]?
  
     private init() {
-        deleteLocationRecordCache()       // delete the cache file (TESTING)
+        deleteLocationRecordCacheFile()       // delete the cache file (TESTING)
    }
     
     func didStartFetchingRecords() {
@@ -98,7 +98,7 @@ class LocationRecordCache: Codable {
         }
     }
 
-    func deleteLocationRecordCache() {
+    func deleteLocationRecordCacheFile() {
         let path = self.pathToLocationRecordCache()
         guard FileManager.default.fileExists(atPath: path) else {
             return
@@ -180,8 +180,7 @@ class LocationRecordCache: Codable {
         }
     }
 
-    // Save the dosimeter CloudKit records from disk.
-    // Throws a DosimeterRecordCacheError is a required record field is nil.
+    // Save the Location records cache file.
     func saveLocationRecordCache() {
         guard chacheIsLoaded() else {
              return
