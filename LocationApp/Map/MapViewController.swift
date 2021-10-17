@@ -288,12 +288,7 @@ extension MapViewController {
     
     //query active locations
     func queryForMap() {
-        
-        queryCloudKitForMap()
-        return                      // TESTING
-
-        var maxLocationRecordCacheModifiedDate: Date?
-        
+                
         // try to load the records from the locations cache in memory
         if LocationRecordCache.shared.chacheIsLoaded() {
 
@@ -303,8 +298,9 @@ extension MapViewController {
             LocationRecordCache.shared.fetchLocationRecordsFromCache(withQRCode: nil,
                                                                      processRecord: self.processLocationRecord,
                                                                      completion: self.finishedLoadingCachedLocationRecords)
-            maxLocationRecordCacheModifiedDate = LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate
-            queryCloudKitForMap()
+            // Fetch only the location records from CloudKit that have a modificationDate after the maximum modified time of
+            // all the cached location records.
+            queryCloudKitForMap(afterdModifiedDate: LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate)
         }
         else if LocationRecordCache.shared.locationRecordCacheFileExists() {
 
@@ -316,19 +312,24 @@ extension MapViewController {
                     LocationRecordCache.shared.fetchLocationRecordsFromCache(withQRCode: nil,
                                                                              processRecord: self.processLocationRecord,
                                                                              completion: self.finishedLoadingCachedLocationRecords)
-                    maxLocationRecordCacheModifiedDate = LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate
-                    self.queryCloudKitForMap()
+                    
+                    // Fetch only the location records from CloudKit that have a modificationDate after the maximum modified time of
+                    // all the cached location records.
+                    queryCloudKitForMap(afterdModifiedDate: LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate)
                 }
             }
         }
         else {
+            // Fetch all of the Location records from CloudKit.
             queryCloudKitForMap()
         }
    } //end func
     
+  
+    //query active locations from CloudKit after a given record modified date,
+    //else fetch all locations if the given record modified date is nil (default)
+    func queryCloudKitForMap(afterdModifiedDate recordModifiedDate: Date? = nil) {
     
-    //query active locations from CloudKit
-    func queryCloudKitForMap() {
         DebugLocations.shared.start(presentingViewController: self,
                                     description: "Map View")       // TESTING
 
@@ -339,33 +340,28 @@ extension MapViewController {
                 
         print("-------------------------- queryCloudKit For Map View -------------------------------")
 
-        
         var predicate: NSPredicate?
         if let modificationTime = LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate {
             predicate = NSPredicate(format: "modificationDate >= %@", argumentArray: [modificationTime])       // IT WORKS!
             print("CloudKit Query predicate = (modificationDate >= \(modificationTime)")
        }
         else {
-            print("maxModificationDate: nil")
-            predicate = NSPredicate(format: "QRCode = %@", argumentArray: ["ALPINE-002"])       // IT WORKS!
-            print("CloudKit Query predicate = QRCode = ALPINE-002")
-//           predicate = NSPredicate(value: true)
-       }
-   //     let maxModificationDate = LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate {
- 
-        
-//        let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
-//        let sort2 = NSSortDescriptor(key: "creationDate", ascending: false)
-        
-        let sortModificationDate = NSSortDescriptor(key: "modificationDate", ascending: false)
-        
-        print(">>> Fetching for QRCode = ALPINE-002")
+            // Predicate is for debugging CloudKit fetches only!
+//            predicate = NSPredicate(format: "QRCode = %@", argumentArray: ["GALRY-050"])       // IT WORKS!
+//            print("CloudKit Query predicate:  QRCode = GALRY-050")
 
-        let query = CKQuery(recordType: "Location", predicate: predicate!)
-        
-          
-//      query.sortDescriptors = [sort1, sort2]       // TESTING
-        query.sortDescriptors = [sortModificationDate]       // TESTING
+            predicate = NSPredicate(value: true)
+            print("CloudKit Query predicate:  true")
+        }
+        guard let predicate = predicate else {
+            return
+        }
+ 
+        let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
+        //let sort2 = NSSortDescriptor(key: "creationDate", ascending: false)
+        let sort2 = NSSortDescriptor(key: "createdDate", ascending: false)
+        let query = CKQuery(recordType: "Location", predicate: predicate)
+        query.sortDescriptors = [sort1, sort2]
         let operation = CKQueryOperation(query: query)
         addOperation(operation: operation)
     }
