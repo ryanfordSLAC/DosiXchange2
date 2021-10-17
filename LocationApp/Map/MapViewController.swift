@@ -347,7 +347,10 @@ extension MapViewController {
 //        let sort2 = NSSortDescriptor(key: "creationDate", ascending: false)
         
         let sortModificationDate = NSSortDescriptor(key: "modificationDate", ascending: false)
-        let predicate = NSPredicate(value: true)
+        
+        print(">>> Fetching for QRCode = ALPINE-002")
+  //      let predicate = NSPredicate(value: true)
+        let predicate = NSPredicate(format: "QRCode = %@", argumentArray: ["ALPINE-002"])
         let query = CKQuery(recordType: "Location", predicate: predicate)
         
           
