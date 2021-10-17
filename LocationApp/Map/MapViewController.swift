@@ -340,6 +340,15 @@ extension MapViewController {
         print("-------------------------- queryCloudKitForMap -------------------------------")
         print("maxModificationDate: \(LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate)")
 
+        
+        var predicate: NSPredicate?
+        if let modificationTime = LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate {
+            predicate = NSPredicate(format: "modificationDate = %@", argumentArray: [modificationTime])       // IT WORKS!
+       }
+        else {
+            predicate = NSPredicate(format: "QRCode = %@", argumentArray: ["ALPINE-002"])       // IT WORKS!
+//           predicate = NSPredicate(value: true)
+       }
    //     let maxModificationDate = LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate {
  
         
@@ -349,9 +358,8 @@ extension MapViewController {
         let sortModificationDate = NSSortDescriptor(key: "modificationDate", ascending: false)
         
         print(">>> Fetching for QRCode = ALPINE-002")
-  //      let predicate = NSPredicate(value: true)
-        let predicate = NSPredicate(format: "QRCode = %@", argumentArray: ["ALPINE-002"])
-        let query = CKQuery(recordType: "Location", predicate: predicate)
+
+        let query = CKQuery(recordType: "Location", predicate: predicate!)
         
           
 //      query.sortDescriptors = [sort1, sort2]       // TESTING

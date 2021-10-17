@@ -72,6 +72,7 @@ class LocationRecordCache: Codable {
       }
     }
     
+    #if false   // TESTING (good code)
     // Get the maximu location record cache item modificatio date.
     func maxLocationRecordModificationDate() -> Date? {
         var maxLocationRecordModificatonDate: Date?
@@ -106,10 +107,52 @@ class LocationRecordCache: Codable {
              }
         }
         
-        print("*** Most Recent Cached Location Record Time = \(maxLocationRecordModificatonDate)")
+        print("*** Most Recent Cached Location Record Time = \(maxLocationRecordModificatonDate!)")
 
         return maxLocationRecordModificatonDate
     }
+    #endif
+    
+    #if true
+    // TSTING get the Oldest cached modification time
+    func maxLocationRecordModificationDate() -> Date? {
+        var maxLocationRecordModificatonDate: Date?
+        
+        // Search all current cycle location record cache items for the maximum modification time.
+        if let cycleLocationRecordCacheItems = self.cycleLocationRecordCacheDict?.values {
+            for (_, locationRecordCacheItem) in cycleLocationRecordCacheItems.enumerated() {
+                if let locationRecordModificationDate = locationRecordCacheItem.modificationDate {
+                    if let maxModificatonDate = maxLocationRecordModificatonDate,
+                       (locationRecordModificationDate.timeIntervalSinceReferenceDate > maxModificatonDate.timeIntervalSinceReferenceDate) {
+                        maxLocationRecordModificatonDate = maxModificatonDate
+                    }
+                    else  {
+                        maxLocationRecordModificatonDate = locationRecordModificationDate
+                    }
+                }
+             }
+        }
+  
+        // Search all prior cycle location record cache items for the maximum modification time.
+        if let priorCycleLocationRecordCacheItems = self.priorCycleLocationRecordCacheDict?.values {
+            for (_, locationRecordCacheItem) in priorCycleLocationRecordCacheItems.enumerated() {
+                if let locationRecordModificationDate = locationRecordCacheItem.modificationDate {
+                    if let maxModificatonDate = maxLocationRecordModificatonDate,
+                       (locationRecordModificationDate.timeIntervalSinceReferenceDate > maxModificatonDate.timeIntervalSinceReferenceDate) {
+                        maxLocationRecordModificatonDate = maxModificatonDate
+                   }
+                    else  {
+                        maxLocationRecordModificatonDate = locationRecordModificationDate
+                    }
+                }
+             }
+        }
+        
+        print("*** Most Recent Cached Location Record Time = \(maxLocationRecordModificatonDate!)")
+
+        return maxLocationRecordModificatonDate
+    }
+    #endif
     
     // MARK: Location
     // Test if the location record cache file exists on disk.
