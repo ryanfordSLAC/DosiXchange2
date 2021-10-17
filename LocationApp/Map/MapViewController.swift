@@ -337,18 +337,18 @@ extension MapViewController {
         // Notify the locations cache that we started fetching records from CloudKit.
         LocationRecordCache.shared.didStartFetchingRecords()
                 
-        print("-------------------------- queryCloudKitForMap -------------------------------")
+        print("-------------------------- queryCloudKit For Map View -------------------------------")
 
         
         var predicate: NSPredicate?
         if let modificationTime = LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate {
             predicate = NSPredicate(format: "modificationDate >= %@", argumentArray: [modificationTime])       // IT WORKS!
-            print("CloudKit Query prediate = (modificationDate >= \(modificationTime)")
+            print("CloudKit Query predicate = (modificationDate >= \(modificationTime)")
        }
         else {
             print("maxModificationDate: nil")
             predicate = NSPredicate(format: "QRCode = %@", argumentArray: ["ALPINE-002"])       // IT WORKS!
-            print("CloudKit Query prediate = QRCode = ALPINE-002")
+            print("CloudKit Query predicate = QRCode = ALPINE-002")
 //           predicate = NSPredicate(value: true)
        }
    //     let maxModificationDate = LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate {
