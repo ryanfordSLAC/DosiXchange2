@@ -288,7 +288,12 @@ extension MapViewController {
     
     //query active locations
     func queryForMap() {
-        #if true
+        
+        queryCloudKitForMap()
+        return                      // TESTING
+
+        var maxLocationRecordCacheModifiedDate: Date?
+        
         // try to load the records from the locations cache in memory
         if LocationRecordCache.shared.chacheIsLoaded() {
 
@@ -298,14 +303,12 @@ extension MapViewController {
             LocationRecordCache.shared.fetchLocationRecordsFromCache(withQRCode: nil,
                                                                      processRecord: self.processLocationRecord,
                                                                      completion: self.finishedLoadingCachedLocationRecords)
-            
-            // TODO: Get te maxium modificationDate from the cache for the
-            // date to use for the fetch predicate.
-            return
+            maxLocationRecordCacheModifiedDate = LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate
+            queryCloudKitForMap()
         }
         else if LocationRecordCache.shared.locationRecordCacheFileExists() {
 
-            LocationRecordCache.shared.loadLocationsRecordCacheFile { didLoad in
+            LocationRecordCache.shared.loadLocationsRecordCacheFile { [self] didLoad in
                 if didLoad {
                     DebugLocations.shared.start(presentingViewController: self,
                                                 description: "Map View Cache")       // TESTING
@@ -313,15 +316,19 @@ extension MapViewController {
                     LocationRecordCache.shared.fetchLocationRecordsFromCache(withQRCode: nil,
                                                                              processRecord: self.processLocationRecord,
                                                                              completion: self.finishedLoadingCachedLocationRecords)
-                    // TODO: Get te maxium modificationDate from the cache for the
-                    // date to use for the fetch predicate.
-                    return
+                    maxLocationRecordCacheModifiedDate = LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate
+                    self.queryCloudKitForMap()
                 }
             }
         }
-        #endif
-        
-        // TESTINGs
+        else {
+            queryCloudKitForMap()
+        }
+   } //end func
+    
+    
+    //query active locations from CloudKit
+    func queryCloudKitForMap() {
         DebugLocations.shared.start(presentingViewController: self,
                                     description: "Map View")       // TESTING
 
@@ -329,17 +336,27 @@ extension MapViewController {
         
         // Notify the locations cache that we started fetching records from CloudKit.
         LocationRecordCache.shared.didStartFetchingRecords()
+                
+        print("-------------------------- queryCloudKitForMap -------------------------------")
+        print("maxModificationDate: \(LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate)")
+
+   //     let maxModificationDate = LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate {
+ 
         
+//        let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
+//        let sort2 = NSSortDescriptor(key: "creationDate", ascending: false)
+        
+        let sortModificationDate = NSSortDescriptor(key: "modificationDate", ascending: false)
         let predicate = NSPredicate(value: true)
-        let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
-        //let sort2 = NSSortDescriptor(key: "creationDate", ascending: false)
-        let sort2 = NSSortDescriptor(key: "createdDate", ascending: false)
         let query = CKQuery(recordType: "Location", predicate: predicate)
-        query.sortDescriptors = [sort1, sort2]
+        
+          
+//      query.sortDescriptors = [sort1, sort2]       // TESTING
+        query.sortDescriptors = [sortModificationDate]       // TESTING
         let operation = CKQueryOperation(query: query)
         addOperation(operation: operation)
-   } //end func
-    
+    }
+
     func finishedLoadingCachedLocationRecords() {
         DispatchQueue.main.async {
             self.activityIndicator.stopAnimating()
@@ -444,6 +461,9 @@ extension MapViewController {
     
     //to be executed for each fetched Locationrecord
     func recordFetchedBlock(record: CKRecord) {
+        
+        print(">>> Fetched record: QRCode: \(record["QRCode"]!)  modificationDate = \(record.modificationDate!)")
+        
         DebugLocations.shared.didFetchRecord()      // TESTING
 
         // Notify the locations cache that we fetched a record from CloudKit.

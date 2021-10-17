@@ -49,6 +49,8 @@ class DebugLocations {
             return
         }
         
+        print("*** Finished fetching \(fetchedRecordCount) records")            // TESTING
+        
         DispatchQueue.main.async {
             let elapsed = endTime.timeIntervalSince(startTime)
             let message = "Loaded \(self.fetchedRecordCount) records in \(elapsed) seconds: "
