@@ -161,7 +161,7 @@ class LocationRecordCache: Codable {
     }
     
     // Test if the location record cache file is loaded into memory.
-    func chacheIsLoaded() -> Bool {
+    func cacheIsLoaded() -> Bool {
         if self.cycleLocationRecordCacheDict != nil,
             self.cycleLocationRecordCacheDict!.keys.count  > 0 {
             return true
@@ -264,7 +264,7 @@ class LocationRecordCache: Codable {
 
     // Save the Location records cache file.
     func saveLocationRecordCache() {
-        guard chacheIsLoaded() else {
+        guard cacheIsLoaded() else {
              return
          }
         guard let cacheData = try? JSONEncoder().encode(self) else {

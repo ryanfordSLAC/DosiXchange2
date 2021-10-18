@@ -16,9 +16,9 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
     let dispatchGroup = DispatchGroup()
     
     var segment:Int = 0
-    var displayInfo = [[(CKRecord, String, String)]]()
+    var displayInfo = [[(LocationRecordDelegate, String, String)]]()
     var checkQR = ""
-    var searches = [[(CKRecord, String, String)]]()
+    var searches = [[(LocationRecordDelegate, String, String)]]()
     var searching = false
     
     @IBOutlet weak var segmentedControl: UISegmentedControl!
@@ -137,7 +137,103 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
 //query and helper functions
 //MARK:  Extensions
 extension ActiveLocations {
+
+    @objc func queryDatabase() {
+                
+        // try to load the records from the locations cache in memory
+        if LocationRecordCache.shared.cacheIsLoaded() {
+
+            DebugLocations.shared.start(presentingViewController: self,
+                                        description: "All Locations Cache")       // TESTING
+
+            LocationRecordCache.shared.fetchLocationRecordsFromCache(withQRCode: nil,
+                                                                     processRecord: self.processLocationRecord,
+                                                                     completion: self.finishedLoadingCachedLocationRecords)
+            // Fetch only the location records from CloudKit that have a modificationDate after the maximum modified time of
+            // all the cached location records.
+            queryCloudKitForDatabase(afterdModifiedDate: LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate)
+        }
+        else if LocationRecordCache.shared.locationRecordCacheFileExists() {
+
+            LocationRecordCache.shared.loadLocationsRecordCacheFile { [self] didLoad in
+                if didLoad {
+                    DebugLocations.shared.start(presentingViewController: self,
+                                                description: "Location Details Cache")       // TESTING
+
+                    LocationRecordCache.shared.fetchLocationRecordsFromCache(withQRCode: nil,
+                                                                             processRecord: self.processLocationRecord,
+                                                                             completion: self.finishedLoadingCachedLocationRecords)
+                    
+                    // Fetch only the location records from CloudKit that have a modificationDate after the maximum modified time of
+                    // all the cached location records.
+                    queryCloudKitForDatabase(afterdModifiedDate: LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate)
+                }
+            }
+        }
+        else {
+            // Fetch all of the Location records from CloudKit.
+            queryCloudKitForDatabase()
+        }
+   } //end func
     
+    
+  
+    //query locations from CloudKit after a given record modified date,
+    //else fetch all locations if the given record modified date is nil (default)
+    func queryCloudKitForDatabase(afterdModifiedDate recordModifiedDate: Date? = nil) {
+    
+        
+        DebugLocations.shared.start(presentingViewController: self,
+                                    description: "All Locations")       // TESTING
+
+        // Notify the locations cache that we started fetching records from CloudKit.
+        LocationRecordCache.shared.didStartFetchingRecords()
+                
+        print("-------------------------- queryCloudKitForDatabase -------------------------------")
+        dispatchGroup.enter()
+        //reset array
+        displayInfo = [[(CKRecord, String, String)]]()
+        displayInfo.append([(CKRecord, String, String)]())
+        displayInfo.append([(CKRecord, String, String)]())
+        
+        var predicate: NSPredicate?
+        if let modificationTime = LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate {
+            predicate = NSPredicate(format: "modificationDate >= %@", argumentArray: [modificationTime])       // IT WORKS!
+            print("CloudKit Query predicate = (modificationDate >= \(modificationTime)")
+       }
+        else {
+            // Predicate is for debugging CloudKit fetches only!
+//            predicate = NSPredicate(format: "QRCode = %@", argumentArray: ["GALRY-050"])       // IT WORKS!
+//            print("CloudKit Query predicate:  QRCode = GALRY-050")
+
+            predicate = NSPredicate(value: true)
+            print("CloudKit Query predicate:  true")
+        }
+        let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
+        //let sort2 = NSSortDescriptor(key: "creationDate", ascending: false)
+        let sort2 = NSSortDescriptor(key: "createdDate", ascending: false) //Ver 1.2
+        let query = CKQuery(recordType: "Location", predicate: predicate!)
+        query.sortDescriptors = [sort1, sort2]
+        let operation = CKQueryOperation(query: query)
+        addOperation(operation: operation)
+    }
+
+    func finishedLoadingCachedLocationRecords() {
+        DebugLocations.shared.finish()       // TESTING
+
+        DispatchQueue.main.async {
+            if self.activesTableView != nil {
+                self.activesTableView.refreshControl?.endRefreshing()
+                self.activesTableView.reloadData()
+        
+                //stop activityIndicator
+                self.activityIndicator.stopAnimating()
+         }
+        }
+        dispatchGroup.leave()
+    }
+    
+    #if false
     @objc func queryDatabase() {
         
         DebugLocations.shared.start(presentingViewController: self,
@@ -159,7 +255,7 @@ extension ActiveLocations {
         addOperation(operation: operation)
 
     } //end function
-    
+    #endif
     
     //add query operation
     func addOperation(operation: CKQueryOperation) {
@@ -196,6 +292,46 @@ extension ActiveLocations {
     } //end func
     
     
+    // Process a Location record that was fetched from CloudKit
+    // or thr local location records cache.
+    func processLocationRecord(_ record: LocationRecordDelegate) {
+ 
+        //if record is active ("active" = 1), record is appended to the first array (flag = 0)
+        //else record is appended to the second array (flag = 1)
+        
+        switch record["active"] {
+        
+        case nil:
+            //handle rare cases where active is nil, prevent app crashes.
+            print("record skipped")
+            alert12()
+            return
+            
+            
+        default:
+            
+            //fetch active flag, QRCode and locdescription.
+            if let active:Int64 = record["active"] as? Int64,
+               let currentQR:String = record["QRCode"] as? String,
+               let currentLoc:String = record["locdescription"] as? String {
+                
+                //Original
+                let flag = active == 1 ? 0 : 1
+                                
+                //if QRCode is not the same as previous record
+                if currentQR != self.checkQR {
+                    //append (QRCode, locdescription) tuple displayInfo
+                    displayInfo[flag].append((record, currentQR, currentLoc))
+                }
+                
+                DebugLocations.shared.didFetchRecord()      // TESTING
+                
+                self.checkQR = currentQR
+          }
+                  
+        }
+    } //end func
+    
     //to be executed for each fetched record
     //MARK:  Loading Tableview
     func recordFetchedBlock(record: CKRecord) {
@@ -226,12 +362,12 @@ extension ActiveLocations {
                 displayInfo[flag].append((record, currentQR, currentLoc))
             }
             
-            DebugLocations.shared.didFetchRecord()
+            DebugLocations.shared.didFetchRecord()      // TESTING
             
             self.checkQR = currentQR
-        
         }
     } //end func
+    
 //MARK:  Alert 12
     
     //Handle nils in active field (rare - set by system)
@@ -246,4 +382,4 @@ extension ActiveLocations {
         }
     } //end alert12
     
-}
+    }

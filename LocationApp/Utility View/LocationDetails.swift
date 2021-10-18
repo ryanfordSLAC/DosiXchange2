@@ -12,14 +12,14 @@ import CloudKit
 //MARK:  Class
 class LocationDetails: UIViewController {
     
-    var record = CKRecord(recordType: "Location")
+    var record: LocationRecordDelegate = CKRecord(recordType: "Location")
     var QRCode = ""
     var loc = ""
     var lat = ""
     var long = ""
     var active = 0
     
-    var records = [CKRecord]()
+    var records = [LocationRecordDelegate]()
     var details = [(String, String, String, Int, Int)]()
     
     let dispatchGroup = DispatchGroup()
@@ -51,7 +51,7 @@ class LocationDetails: UIViewController {
     @IBOutlet weak var pCollected: UISwitch!
     @IBOutlet weak var pMismatch: UISwitch!
     
-    var popupRecord = CKRecord(recordType: "Location")
+    var popupRecord: LocationRecordDelegate = CKRecord(recordType: "Location")
     var moderator = 0
     var collected = 0
     var mismatch = 0
@@ -183,10 +183,11 @@ extension LocationDetails {
         dispatchGroup.enter()
         
         //set active flag for all records in current location
-        for record in records {
+        for var record in records {
             record.setValue(active, forKey: "active")
         }
         
+        #if false       // TODO: Hande saving LocationRecordCacheItem to CloudKit
         let operation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: nil)
         
         operation.perRecordCompletionBlock = { (record, error) in
@@ -205,7 +206,7 @@ extension LocationDetails {
         }
         
         database.add(operation)
-        
+        #endif
         
     } //end saveActiveStatus
     
@@ -290,7 +291,7 @@ extension LocationDetails: UITableViewDelegate, UITableViewDataSource {
     func queryLocationTable() {
         dispatchGroup.enter()
         
-        records = [CKRecord]()
+        records = [LocationRecordDelegate]()
         details = [(String, String, String, Int, Int)]()
         
         let predicate = NSPredicate(format: "QRCode == %@", QRCode)
@@ -402,7 +403,10 @@ extension LocationDetails: UITextFieldDelegate {
             popupRecord.setValue(mismatch, forKey: "mismatch")
         }
         //not handled if dosimeter number is empty.  Therefore can't set collected flag.
-        
+   
+        //
+        #if false
+        // TODO: Handdle saving LocationRecordCacheItem to disk.
         let operation = CKModifyRecordsOperation(recordsToSave: [popupRecord], recordIDsToDelete: nil)
         
         operation.modifyRecordsCompletionBlock = { (records, recordIDs, error) in
@@ -412,13 +416,14 @@ extension LocationDetails: UITextFieldDelegate {
          
             self.dispatchGroup.leave()
         }
-        
         database.add(operation)
+        #else
+        self.dispatchGroup.leave()
+        #endif
         
-        
-    } //end saveActiveStatus
+     } //end saveActiveStatus
     
-    func setPopupDetails(record: CKRecord) {
+    func setPopupDetails(record: LocationRecordDelegate) {
         
         popupRecord = record
         
@@ -434,18 +439,48 @@ extension LocationDetails: UITextFieldDelegate {
         dateCreated.text = "Date Created: \(createdDate)"
         dateModified.text = "Date Last Modified: \(modifiedDate)"
         
-        pQRCode.text = record.value(forKey: "QRCode") as? String
+        if let QRCode = record.value(forKey: "QRCode") as? String {
+            pQRCode.text = QRCode
+        }
         pDescription.text = record.value(forKey: "locdescription") as? String
         pLatitude.text = record.value(forKey: "latitude") as? String
         pLongitude.text = record.value(forKey: "longitude") as? String
         
-        pDosimeter.text = record["dosinumber"] != "" ? String(describing: record["dosinumber"]!) : ""
-        pCycleDate.text = record["cycleDate"] != nil ? String(describing: record["cycleDate"]!) : nil
+        if let dosimeter = record["dosinumber"]  as? String {
+            pDosimeter.text = String(describing: dosimeter)
+        }
+        else {
+            pDosimeter.text = ""
+        }
+       
+        if let cycleDate = record["cycleDate"]  as? String {
+            pCycleDate.text = String(describing: cycleDate)
+        }
+        else {
+            pCycleDate.text = nil
+        }
         
-        moderator = record["moderator"] != nil ? record["moderator"]! as Int : 0
-        collected = record["collectedFlag"] != nil ? record["collectedFlag"]! as Int : 0
-        mismatch = record["mismatch"] != nil ? record["mismatch"]! as Int : 0
+        if let moderator = record["moderator"] as? Int {
+            self.moderator = moderator
+        }
+        else {
+            self.moderator = 0
+        }
         
+        if let collected = record["collectedFlag"] as? Int {
+            self.collected = collected
+        }
+        else {
+            self.collected = 0
+        }
+        
+        if let mismatch = record["mismatch"] as? Int {
+            self.mismatch = mismatch
+        }
+        else {
+            self.mismatch = 0
+        }
+
         pModerator.isOn = moderator == 1 ? true : false
         pCollected.isOn = collected == 1 ? true : false
         pMismatch.isOn = mismatch == 1 ? true : false

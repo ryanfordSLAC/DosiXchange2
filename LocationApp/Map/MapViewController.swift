@@ -290,7 +290,7 @@ extension MapViewController {
     func queryForMap() {
                 
         // try to load the records from the locations cache in memory
-        if LocationRecordCache.shared.chacheIsLoaded() {
+        if LocationRecordCache.shared.cacheIsLoaded() {
 
             DebugLocations.shared.start(presentingViewController: self,
                                         description: "Map View Cache")       // TESTING
@@ -353,14 +353,11 @@ extension MapViewController {
             predicate = NSPredicate(value: true)
             print("CloudKit Query predicate:  true")
         }
-        guard let predicate = predicate else {
-            return
-        }
  
         let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
         //let sort2 = NSSortDescriptor(key: "creationDate", ascending: false)
         let sort2 = NSSortDescriptor(key: "createdDate", ascending: false)
-        let query = CKQuery(recordType: "Location", predicate: predicate)
+        let query = CKQuery(recordType: "Location", predicate: predicate!)
         query.sortDescriptors = [sort1, sort2]
         let operation = CKQueryOperation(query: query)
         addOperation(operation: operation)
@@ -408,8 +405,8 @@ extension MapViewController {
         }
     } //end func
     
-    
-    // A Location record was fetched from CloudKit or a local cache
+    // Process a Location record that was fetched from CloudKit
+    // or thr local location records cache.
     func processLocationRecord(_ record: LocationRecordDelegate) {
    
         var showErrorAlert = false

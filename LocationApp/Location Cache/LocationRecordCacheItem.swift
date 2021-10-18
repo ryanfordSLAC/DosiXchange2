@@ -12,16 +12,32 @@ import Foundation
 import CloudKit
 
 protocol LocationRecordDelegate {
-    subscript(key: String) -> CKRecordValue? {get}
+
+    func value(forKey key: String) -> Any?
+    mutating func setValue(_ value: Any?, forKey key: String)
+
+    subscript(key: String) -> CKRecordValue? {get set}
 }
 
-extension CKRecord: LocationRecordDelegate{
+extension LocationRecordDelegate {
+    
+    subscript(key: String) -> CKRecordValue? {
+        get {
+            return self.value(forKey: key) as? CKRecordValue
+        }
+        set {
+            self.setValue(newValue, forKey: key)
+        }
+    }
+}
+
+extension CKRecord: LocationRecordDelegate {
     // CKRecord already implements the DosimeterRecordDelegate protocol
     // to access properties with a subscript so this protocol is empty.
 }
 
 // Dosimetr Cache Item stores all of the properties of a dosimeter CloudKit record
-struct LocationRecordCacheItem: Codable, LocationRecordDelegate{
+struct LocationRecordCacheItem: Codable, LocationRecordDelegate {
 
     // Location Record Fields
     var QRCode:String = ""              // QR Code
@@ -204,5 +220,61 @@ struct LocationRecordCacheItem: Codable, LocationRecordDelegate{
                   return nil
                }
            }
+        set {
+            switch key {
+                case "QRCode":
+                    QRCode = newValue as! String
+                   
+                case "active":
+                    active = newValue as! Int64
+                   
+                case "latitude":
+                    latitude = newValue as! String
+               
+                case "longitude":
+                    longitude = newValue as! String
+                   
+                case "locdescription":
+                    locdescription = newValue as! String
+
+                case "dosinumber":
+                    dosinumber = newValue as? String
+                
+                case "collectedFlag":
+                    collectedFlag = newValue as? Int64
+                
+                case "cycleDate":
+                    cycleDate = newValue as? String
+
+               case "mismatch":
+                    mismatch = newValue as? Int64
+
+               case "moderator":
+                    moderator = newValue as? Int64
+
+               case "createdDate":
+                    createdDate = newValue as? Date
+
+               case "modifiedDate":
+                    modifiedDate = newValue as? Date
+
+            default:
+                    print("Unknown key = \(key) in LocationRecordCacheItem subscript setter")
+               }
+        }
+    }
+
+    func value(forKey key: String) -> Any? {
+        return self[key]
+    }
+    
+    mutating func setValue(_ value: AnyObject?, forKey key: String) {
+        self[key] = value as? CKRecordValue
+    }
+
+    func setValue(_ value: Any?, forKey key: String) {
+        if let valueObject = value as? NSObject {
+           setValue(valueObject, forKey: key)
+        }
     }
 }
