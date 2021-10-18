@@ -79,16 +79,24 @@ class LocationRecordCache: Codable {
         // Create a new location record cache item for the fetched location record.
         if let locationRecordCacheItem = LocationRecordCacheItem(withRecord: locationRecord) {
             
+            print("Made new LocationRecordCacheItem for QRCode: \(QRCode)")
+            
             // get the list of location record cache items for the record's associated QRCode.
             var QRCodeLocationCachetems = self.locationRecordCacheDict?[QRCode] as? [LocationRecordCacheItem] ?? [LocationRecordCacheItem]()
+            
+            print(" \(QRCode) LocationRecordCacheItem array has:\(QRCodeLocationCachetems.count) items Before append()")
             
             // append the new location record cache item to the list.
             QRCodeLocationCachetems.append(locationRecordCacheItem)
             
+            print(" \(QRCode) LocationRecordCacheItem array has:\(QRCodeLocationCachetems.count) items After append()")
+
             // save the new list of location record cache items for the record's associated QRCode
             // back in the location record cache dictionary.
             self.locationRecordCacheDict![QRCode] = QRCodeLocationCachetems
             
+            print("Set new LocationRecordCacheItem for QRCode: \(QRCode)")
+
             if isCurrentCycleRecord
             {
                 self.cycleLocationRecordCacheDict![locationRecordCacheItem.QRCode] = locationRecordCacheItem
