@@ -20,10 +20,14 @@ class LocationRecordCache: Codable {
     // Current cycle location records cache dictionary.
     // [key = QRCode,value = LocationRecordCacheItem]
     var cycleLocationRecordCacheDict: [String: LocationRecordCacheItem]?
- 
+    
     // Prior cycle location records cache dictionary.
     // [key = QRCode,value = LocationRecordCacheItem]
     var priorCycleLocationRecordCacheDict: [String: LocationRecordCacheItem]?
+
+    // Location records cache dictionary of all cached location cache items.
+    // [key = QRCode,value = LocationRecordCacheItem]
+    var  locationRecordCacheDict: [String: [LocationRecordCacheItem]]?
 
     // Maximum location record cache item modification date.
     var maxLocationRecordCacheItemModificationDate: Date?
@@ -45,10 +49,22 @@ class LocationRecordCache: Codable {
         if priorCycleLocationRecordCacheDict == nil {
             priorCycleLocationRecordCacheDict = [:]
         }
+        
+        if locationRecordCacheDict == nil {
+            locationRecordCacheDict = [:]
+        }
    }
     
     func didFetchLocationRecord(_ locationRecord: CKRecord) {
 
+        if self.locationRecordCacheDict == nil {
+            self.locationRecordCacheDict = [:]
+        }
+
+        guard let QRCode = locationRecord["QRCode"] as? String else {
+            print("Error: QRCode in record (CKRecord) = nil in LocationReoordCache.didFetchLocationRecord(")
+            return
+        }
         var isCurrentCycleRecord: Bool = false
         if locationRecord["cycleDate"] == cycleDateString {
             isCurrentCycleRecord = true
@@ -59,7 +75,13 @@ class LocationRecordCache: Codable {
         else {
             return
         }
+        
+        // Create a new location record cache item for the fetched location record.
         if let locationRecordCacheItem = LocationRecordCacheItem(withRecord: locationRecord) {
+            
+            // get the list of location record cahce items for the record's associated QRCode.
+            var QRCodeLocationCachetems = self.locationRecordCacheDict![QRCode] as? [LocationRecordCacheItem] ?? [LocationRecordCacheItem]()
+            
             if isCurrentCycleRecord
             {
                 self.cycleLocationRecordCacheDict![locationRecordCacheItem.QRCode] = locationRecordCacheItem
