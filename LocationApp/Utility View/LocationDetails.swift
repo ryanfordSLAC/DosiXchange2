@@ -202,10 +202,11 @@ extension LocationDetails {
             if let error = error {
                 print(error.localizedDescription)
             }
-            self.dispatchGroup.leave()
         }
         
         database.add(operation)
+        #else
+        self.dispatchGroup.leave()
         #endif
         
     } //end saveActiveStatus

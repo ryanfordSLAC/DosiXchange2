@@ -39,8 +39,12 @@ class LocationRecordCache: Codable {
         if let currentCycleDateString = cycleDateString {
             priorCycleDateString = RecordsUpdate.generatePriorCycleDate(cycleDate: currentCycleDateString)
         }
-        cycleLocationRecordCacheDict = [:]
-        priorCycleLocationRecordCacheDict = [:]
+        if cycleLocationRecordCacheDict == nil {
+            cycleLocationRecordCacheDict = [:]
+        }
+        if priorCycleLocationRecordCacheDict == nil {
+            priorCycleLocationRecordCacheDict = [:]
+        }
    }
     
     func didFetchLocationRecord(_ locationRecord: CKRecord) {
@@ -72,7 +76,6 @@ class LocationRecordCache: Codable {
       }
     }
     
-    #if false   // TESTING (good code)
     // Get the maximu location record cache item modificatio date.
     func maxLocationRecordModificationDate() -> Date? {
         var maxLocationRecordModificatonDate: Date?
@@ -111,49 +114,7 @@ class LocationRecordCache: Codable {
 
         return maxLocationRecordModificatonDate
     }
-    #endif
-    
-    #if true
-    // TSTING get the Oldest cached modification time
-    func maxLocationRecordModificationDate() -> Date? {
-        var maxLocationRecordModificatonDate: Date?
-        
-        // Search all current cycle location record cache items for the maximum modification time.
-        if let cycleLocationRecordCacheItems = self.cycleLocationRecordCacheDict?.values {
-            for (_, locationRecordCacheItem) in cycleLocationRecordCacheItems.enumerated() {
-                if let locationRecordModificationDate = locationRecordCacheItem.modificationDate {
-                    if let maxModificatonDate = maxLocationRecordModificatonDate,
-                       (locationRecordModificationDate.timeIntervalSinceReferenceDate > maxModificatonDate.timeIntervalSinceReferenceDate) {
-                        maxLocationRecordModificatonDate = maxModificatonDate
-                    }
-                    else  {
-                        maxLocationRecordModificatonDate = locationRecordModificationDate
-                    }
-                }
-             }
-        }
-  
-        // Search all prior cycle location record cache items for the maximum modification time.
-        if let priorCycleLocationRecordCacheItems = self.priorCycleLocationRecordCacheDict?.values {
-            for (_, locationRecordCacheItem) in priorCycleLocationRecordCacheItems.enumerated() {
-                if let locationRecordModificationDate = locationRecordCacheItem.modificationDate {
-                    if let maxModificatonDate = maxLocationRecordModificatonDate,
-                       (locationRecordModificationDate.timeIntervalSinceReferenceDate > maxModificatonDate.timeIntervalSinceReferenceDate) {
-                        maxLocationRecordModificatonDate = maxModificatonDate
-                   }
-                    else  {
-                        maxLocationRecordModificatonDate = locationRecordModificationDate
-                    }
-                }
-             }
-        }
-        
-        print("*** Most Recent Cached Location Record Time = \(maxLocationRecordModificatonDate!)")
-
-        return maxLocationRecordModificatonDate
-    }
-    #endif
-    
+       
     // MARK: Location
     // Test if the location record cache file exists on disk.
     func locationRecordCacheFileExists() -> Bool {
@@ -228,6 +189,10 @@ class LocationRecordCache: Codable {
                                        processRecord: @escaping (LocationRecordCacheItem) -> Void,
                                        completion: @escaping () -> Void) {
         
+        
+        print("Fetchin locations from cache")       // TESTING
+        debugCache()
+        
         DispatchQueue.global().async {
              
              if let QRCode = fetchQRCode {
@@ -235,13 +200,11 @@ class LocationRecordCache: Codable {
                  // given QRCode and in the current cycle.
                  if let locationRecordCacheItem = self.cycleLocationRecordCacheDict?[QRCode] {
                      processRecord(locationRecordCacheItem)
-                     DebugLocations.shared.didFetchRecord()     // TESTING
                  }
                  // Fetch and process a location record cache item with the
                  // given QRCode and in the prior cycle.
                   else if let locationRecordCacheItem = self.priorCycleLocationRecordCacheDict?[QRCode] {
                      processRecord(locationRecordCacheItem)
-                     DebugLocations.shared.didFetchRecord()     // TESTING
                  }
              }
              else {
@@ -249,13 +212,11 @@ class LocationRecordCache: Codable {
                  // and in the current cycle.
                  for locationRecordCacheItem in self.cycleLocationRecordCacheDict!.values {
                      processRecord(locationRecordCacheItem)
-                     DebugLocations.shared.didFetchRecord()     // TESTING
                  }
                  // Fetch and process a location record cache item with the QRCode
                  // and in the prior cycle.
                 for locationRecordCacheItem in self.priorCycleLocationRecordCacheDict!.values {
                      processRecord(locationRecordCacheItem)
-                     DebugLocations.shared.didFetchRecord()     // TESTING
                  }
              }
             completion()
@@ -283,11 +244,32 @@ class LocationRecordCache: Codable {
         guard let _ = try? cacheData.write(to: cacheFileURL) else {
             return
         }
+        print("Saving the Location Record Cache")
+        debugCache()
     }
     
     func pathToLocationRecordCache() -> String {
         let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
         let url = cachesDirectory.appendingPathComponent("LocationsCache.txt")
         return url.path
+    }
+    
+    func debugCache() {
+        
+        print("--------------------- Debug Locaton Cache -------------------------------------")
+        
+        if (cycleLocationRecordCacheDict != nil) {
+            print("Cache has \(cycleLocationRecordCacheDict!.keys.count) Current Cycle Records")
+        }
+        else {
+            print("Cache has 0 Current Cycle Records")
+            }
+
+        if (priorCycleLocationRecordCacheDict != nil) {
+            print("Cache has \(priorCycleLocationRecordCacheDict!.keys.count) Prior Cycle Records")
+        }
+        else {
+            print("Cache has 0 Prior Cycle Records")
+        }
     }
 }

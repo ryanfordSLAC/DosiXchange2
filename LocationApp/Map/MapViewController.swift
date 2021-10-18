@@ -292,9 +292,6 @@ extension MapViewController {
         // try to load the records from the locations cache in memory
         if LocationRecordCache.shared.cacheIsLoaded() {
 
-            DebugLocations.shared.start(presentingViewController: self,
-                                        description: "Map View Cache")       // TESTING
-
             LocationRecordCache.shared.fetchLocationRecordsFromCache(withQRCode: nil,
                                                                      processRecord: self.processLocationRecord,
                                                                      completion: self.finishedLoadingCachedLocationRecords)
@@ -306,9 +303,6 @@ extension MapViewController {
 
             LocationRecordCache.shared.loadLocationsRecordCacheFile { [self] didLoad in
                 if didLoad {
-                    DebugLocations.shared.start(presentingViewController: self,
-                                                description: "Map View Cache")       // TESTING
-
                     LocationRecordCache.shared.fetchLocationRecordsFromCache(withQRCode: nil,
                                                                              processRecord: self.processLocationRecord,
                                                                              completion: self.finishedLoadingCachedLocationRecords)
@@ -329,21 +323,16 @@ extension MapViewController {
     //query active locations from CloudKit after a given record modified date,
     //else fetch all locations if the given record modified date is nil (default)
     func queryCloudKitForMap(afterdModifiedDate recordModifiedDate: Date? = nil) {
-    
-        DebugLocations.shared.start(presentingViewController: self,
-                                    description: "Map View")       // TESTING
-
-        
-        
+            
         // Notify the locations cache that we started fetching records from CloudKit.
         LocationRecordCache.shared.didStartFetchingRecords()
                 
         print("-------------------------- queryCloudKit For Map View -------------------------------")
 
         var predicate: NSPredicate?
-        if let modificationTime = LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate {
-            predicate = NSPredicate(format: "modificationDate >= %@", argumentArray: [modificationTime])       // IT WORKS!
-            print("CloudKit Query predicate = (modificationDate >= \(modificationTime)")
+        if let modificationDate = recordModifiedDate {
+            predicate = NSPredicate(format: "modificationDate > %@", argumentArray: [modificationDate])       // IT WORKS!
+            print("CloudKit Query predicate = (modificationDate > \(modificationDate)")
        }
         else {
             // Predicate is for debugging CloudKit fetches only!
@@ -368,7 +357,6 @@ extension MapViewController {
             self.activityIndicator.stopAnimating()
             self.filtersButton.isHidden = false
         }
-        DebugLocations.shared.finish()      // TESTING
     }
     
     //add query operation
@@ -394,8 +382,6 @@ extension MapViewController {
             return
         }
     
-        DebugLocations.shared.finish()      // TESTING
-
         // Notify the locations cache that we finished fetching records from CloudKit.
         LocationRecordCache.shared.didFinishFetchingRecords()     // TESTING
 
@@ -408,9 +394,8 @@ extension MapViewController {
     // Process a Location record that was fetched from CloudKit
     // or thr local location records cache.
     func processLocationRecord(_ record: LocationRecordDelegate) {
-   
+           
         var showErrorAlert = false
-                
         defer {
             //handle rare cases when active is nil.  Notify administrator.
             if showErrorAlert {
@@ -467,17 +452,16 @@ extension MapViewController {
     
     //to be executed for each fetched Locationrecord
     func recordFetchedBlock(record: CKRecord) {
+           
         
-        print(">>> Fetched record: QRCode: \(record["QRCode"]!)  modificationDate = \(record.modificationDate!)")
-        
-        DebugLocations.shared.didFetchRecord()      // TESTING
+        print("** recordFetchedBlock: QRCode = \(record["QRCode"])")        // TESTING
+
+        // process the fetched location record.
+        processLocationRecord(record)
 
         // Notify the locations cache that we fetched a record from CloudKit.
         LocationRecordCache.shared.didFetchLocationRecord(record)
-        
-        // process the fetched location record.
-        processLocationRecord(record)
-    }
+      }
     
     //MARK:  Alert 13
         

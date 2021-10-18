@@ -140,12 +140,15 @@ extension ActiveLocations {
 
     @objc func queryDatabase() {
                 
+        dispatchGroup.enter()
+        
+        //reset array
+        displayInfo = [[(CKRecord, String, String)]]()
+        displayInfo.append([(CKRecord, String, String)]())
+        displayInfo.append([(CKRecord, String, String)]())
+         
         // try to load the records from the locations cache in memory
         if LocationRecordCache.shared.cacheIsLoaded() {
-
-            DebugLocations.shared.start(presentingViewController: self,
-                                        description: "All Locations Cache")       // TESTING
-
             LocationRecordCache.shared.fetchLocationRecordsFromCache(withQRCode: nil,
                                                                      processRecord: self.processLocationRecord,
                                                                      completion: self.finishedLoadingCachedLocationRecords)
@@ -157,10 +160,7 @@ extension ActiveLocations {
 
             LocationRecordCache.shared.loadLocationsRecordCacheFile { [self] didLoad in
                 if didLoad {
-                    DebugLocations.shared.start(presentingViewController: self,
-                                                description: "Location Details Cache")       // TESTING
-
-                    LocationRecordCache.shared.fetchLocationRecordsFromCache(withQRCode: nil,
+                      LocationRecordCache.shared.fetchLocationRecordsFromCache(withQRCode: nil,
                                                                              processRecord: self.processLocationRecord,
                                                                              completion: self.finishedLoadingCachedLocationRecords)
                     
@@ -182,24 +182,15 @@ extension ActiveLocations {
     //else fetch all locations if the given record modified date is nil (default)
     func queryCloudKitForDatabase(afterdModifiedDate recordModifiedDate: Date? = nil) {
     
-        
-        DebugLocations.shared.start(presentingViewController: self,
-                                    description: "All Locations")       // TESTING
-
         // Notify the locations cache that we started fetching records from CloudKit.
         LocationRecordCache.shared.didStartFetchingRecords()
                 
         print("-------------------------- queryCloudKitForDatabase -------------------------------")
-        dispatchGroup.enter()
-        //reset array
-        displayInfo = [[(CKRecord, String, String)]]()
-        displayInfo.append([(CKRecord, String, String)]())
-        displayInfo.append([(CKRecord, String, String)]())
-        
+         
         var predicate: NSPredicate?
-        if let modificationTime = LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate {
-            predicate = NSPredicate(format: "modificationDate >= %@", argumentArray: [modificationTime])       // IT WORKS!
-            print("CloudKit Query predicate = (modificationDate >= \(modificationTime)")
+        if let modificationDate = recordModifiedDate {
+            predicate = NSPredicate(format: "modificationDate > %@", argumentArray: [modificationDate])       // IT WORKS!
+            print("CloudKit Query predicate = (modificationDate > \(modificationDate)")
        }
         else {
             // Predicate is for debugging CloudKit fetches only!
@@ -219,7 +210,6 @@ extension ActiveLocations {
     }
 
     func finishedLoadingCachedLocationRecords() {
-        DebugLocations.shared.finish()       // TESTING
 
         DispatchQueue.main.async {
             if self.activesTableView != nil {
@@ -228,34 +218,9 @@ extension ActiveLocations {
         
                 //stop activityIndicator
                 self.activityIndicator.stopAnimating()
-         }
+            }
         }
-        dispatchGroup.leave()
     }
-    
-    #if false
-    @objc func queryDatabase() {
-        
-        DebugLocations.shared.start(presentingViewController: self,
-                                    description: "All Locations View")       // TESTING
-
-        dispatchGroup.enter()
-        //reset array
-        displayInfo = [[(CKRecord, String, String)]]()
-        displayInfo.append([(CKRecord, String, String)]())
-        displayInfo.append([(CKRecord, String, String)]())
-        
-        let predicate = NSPredicate(value: true)
-        let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
-        //let sort2 = NSSortDescriptor(key: "creationDate", ascending: false)
-        let sort2 = NSSortDescriptor(key: "createdDate", ascending: false) //Ver 1.2
-        let query = CKQuery(recordType: "Location", predicate: predicate)
-        query.sortDescriptors = [sort1, sort2]
-        let operation = CKQueryOperation(query: query)
-        addOperation(operation: operation)
-
-    } //end function
-    #endif
     
     //add query operation
     func addOperation(operation: CKQueryOperation) {
@@ -279,8 +244,6 @@ extension ActiveLocations {
             addOperation(operation: operation)
             return
         }
-
-        DebugLocations.shared.finish()       // TESTING
 
         DispatchQueue.main.async {
             if self.activesTableView != nil {
@@ -324,8 +287,6 @@ extension ActiveLocations {
                     displayInfo[flag].append((record, currentQR, currentLoc))
                 }
                 
-                DebugLocations.shared.didFetchRecord()      // TESTING
-                
                 self.checkQR = currentQR
           }
                   
@@ -335,37 +296,12 @@ extension ActiveLocations {
     //to be executed for each fetched record
     //MARK:  Loading Tableview
     func recordFetchedBlock(record: CKRecord) {
-        
-        //if record is active ("active" = 1), record is appended to the first array (flag = 0)
-        //else record is appended to the second array (flag = 1)
-        
-        switch record["active"] {
-        
-        case nil:
-            //handle rare cases where active is nil, prevent app crashes.
-            print("record skipped")
-            alert12()
-            return
-            
-            
-        default:
-            //Original
-            let flag = record["active"]! == 1 ? 0 : 1
-            
-            //fetch QRCode and locdescription
-            let currentQR:String = record["QRCode"]!
-            let currentLoc:String = record["locdescription"]!
-            
-            //if QRCode is not the same as previous record
-            if currentQR != self.checkQR {
-                //append (QRCode, locdescription) tuple displayInfo
-                displayInfo[flag].append((record, currentQR, currentLoc))
-            }
-            
-            DebugLocations.shared.didFetchRecord()      // TESTING
-            
-            self.checkQR = currentQR
-        }
+                
+        // Notify the locations cache that we fetched a record from CloudKit.
+        LocationRecordCache.shared.didFetchLocationRecord(record)
+ 
+        processLocationRecord(record)
+
     } //end func
     
 //MARK:  Alert 12
