@@ -436,6 +436,12 @@
                                 <color key="textColor" red="0.88717480959999995" green="0.88717480959999995" blue="0.88717480959999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Version 1.3" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zuC-3j-mde">
+                                <rect key="frame" x="125" y="516" width="70.5" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" red="0.88717480959999995" green="0.88717480959999995" blue="0.88717480959999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="QGn-nO-09E"/>
                         <color key="backgroundColor" red="0.58072251080000004" green="0.066734083" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -446,6 +452,7 @@
                             <constraint firstItem="QGn-nO-09E" firstAttribute="trailing" secondItem="2ol-Sj-N2C" secondAttribute="trailing" constant="15" id="JhB-tm-ZSl"/>
                             <constraint firstItem="Yg7-fX-lCZ" firstAttribute="top" secondItem="C5U-sR-g2Z" secondAttribute="bottom" constant="16" id="LZq-ga-AbQ"/>
                             <constraint firstItem="QGn-nO-09E" firstAttribute="bottom" secondItem="2ol-Sj-N2C" secondAttribute="bottom" constant="15" id="PcN-9q-dJZ"/>
+                            <constraint firstItem="zuC-3j-mde" firstAttribute="centerX" secondItem="Mvd-fQ-Y1c" secondAttribute="centerX" id="Uh3-O7-nmw"/>
                             <constraint firstItem="O1Z-lw-q30" firstAttribute="trailing" secondItem="QGn-nO-09E" secondAttribute="centerX" constant="70" id="VEw-k4-rMl"/>
                             <constraint firstItem="C5U-sR-g2Z" firstAttribute="leading" secondItem="Mvd-fQ-Y1c" secondAttribute="leadingMargin" constant="44" id="We1-fy-7ap"/>
                             <constraint firstItem="wOM-u4-FVE" firstAttribute="trailing" secondItem="QGn-nO-09E" secondAttribute="centerX" constant="95" id="aaT-bM-Qdj"/>
@@ -456,6 +463,7 @@
                             <constraint firstItem="C5U-sR-g2Z" firstAttribute="top" secondItem="O1Z-lw-q30" secondAttribute="bottom" constant="118" id="enO-hm-B3M"/>
                             <constraint firstItem="dgk-90-ebF" firstAttribute="trailing" secondItem="QGn-nO-09E" secondAttribute="centerX" constant="72" id="foz-j5-uo1"/>
                             <constraint firstItem="O1Z-lw-q30" firstAttribute="top" secondItem="dgk-90-ebF" secondAttribute="bottom" constant="33" id="mv8-ty-w29"/>
+                            <constraint firstItem="QGn-nO-09E" firstAttribute="bottom" secondItem="zuC-3j-mde" secondAttribute="bottom" constant="15" id="qi0-S4-HbK"/>
                             <constraint firstItem="wOM-u4-FVE" firstAttribute="top" secondItem="QGn-nO-09E" secondAttribute="top" constant="60" id="sFt-Wp-SsC"/>
                             <constraint firstItem="Yg7-fX-lCZ" firstAttribute="leading" secondItem="C5U-sR-g2Z" secondAttribute="leading" id="uPB-Y7-1a1"/>
                             <constraint firstItem="C5U-sR-g2Z" firstAttribute="centerX" secondItem="Mvd-fQ-Y1c" secondAttribute="centerX" id="zIo-xE-zTL"/>
@@ -1090,10 +1098,9 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="K3I-ac-JBM"/>
         <segue reference="ar4-0B-Xd6"/>
         <segue reference="1iZ-uO-Z3p"/>
-        <segue reference="1eV-Ng-UnH"/>
+        <segue reference="zta-o7-k1W"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Tools" width="512" height="512"/>
