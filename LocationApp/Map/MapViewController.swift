@@ -454,7 +454,7 @@ extension MapViewController {
     func recordFetchedBlock(record: CKRecord) {
            
         
-        print("** recordFetchedBlock: QRCode = \(record["QRCode"])")        // TESTING
+  //      print("** recordFetchedBlock: QRCode = \(record["QRCode"]!)")        // TESTING
 
         // process the fetched location record.
         processLocationRecord(record)
