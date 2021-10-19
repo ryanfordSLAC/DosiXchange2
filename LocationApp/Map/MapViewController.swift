@@ -38,14 +38,8 @@ class MapViewController: UIViewController {
         locationmanager.delegate = self
         locationmanager.requestAlwaysAuthorization()
         locationmanager.startUpdatingLocation()
-        #if false       // testing
         let latitude = locationmanager.location?.coordinate.latitude
         let longitude = locationmanager.location?.coordinate.longitude
-        #else
-        // Use the SLAC Geolocation as the map origin
-        let latitude: Double? = 37.4236943
-        let longitude: Double? = -122.197171
-        #endif
         self.MapView.delegate = self
 
         //format filters button
@@ -327,20 +321,12 @@ extension MapViewController {
         // Notify the locations cache that we started fetching records from CloudKit.
         LocationRecordCache.shared.didStartFetchingRecords()
                 
-        print("-------------------------- queryCloudKit For Map View -------------------------------")
-
         var predicate: NSPredicate?
         if let modificationDate = recordModifiedDate {
-            predicate = NSPredicate(format: "modificationDate > %@", argumentArray: [modificationDate])       // IT WORKS!
-            print("CloudKit Query predicate = (modificationDate > \(modificationDate)")
+            predicate = NSPredicate(format: "modificationDate > %@", argumentArray: [modificationDate])
        }
         else {
-            // Predicate is for debugging CloudKit fetches only!
-//            predicate = NSPredicate(format: "QRCode = %@", argumentArray: ["GALRY-050"])       // IT WORKS!
-//            print("CloudKit Query predicate:  QRCode = GALRY-050")
-
             predicate = NSPredicate(value: true)
-            print("CloudKit Query predicate:  true")
         }
  
         let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
@@ -452,10 +438,7 @@ extension MapViewController {
     
     //to be executed for each fetched Locationrecord
     func recordFetchedBlock(record: CKRecord) {
-           
-        
-  //      print("** recordFetchedBlock: QRCode = \(record["QRCode"]!)")        // TESTING
-
+ 
         // process the fetched location record.
         processLocationRecord(record)
 

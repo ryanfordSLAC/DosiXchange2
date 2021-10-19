@@ -184,21 +184,13 @@ extension ActiveLocations {
     
         // Notify the locations cache that we started fetching records from CloudKit.
         LocationRecordCache.shared.didStartFetchingRecords()
-                
-        print("-------------------------- queryCloudKitForDatabase -------------------------------")
-         
+                         
         var predicate: NSPredicate?
         if let modificationDate = recordModifiedDate {
-            predicate = NSPredicate(format: "modificationDate > %@", argumentArray: [modificationDate])       // IT WORKS!
-            print("CloudKit Query predicate = (modificationDate > \(modificationDate)")
+            predicate = NSPredicate(format: "modificationDate > %@", argumentArray: [modificationDate])
        }
         else {
-            // Predicate is for debugging CloudKit fetches only!
-//            predicate = NSPredicate(format: "QRCode = %@", argumentArray: ["GALRY-050"])       // IT WORKS!
-//            print("CloudKit Query predicate:  QRCode = GALRY-050")
-
             predicate = NSPredicate(value: true)
-            print("CloudKit Query predicate:  true")
         }
         let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
         //let sort2 = NSSortDescriptor(key: "creationDate", ascending: false)

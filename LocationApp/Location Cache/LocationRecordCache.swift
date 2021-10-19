@@ -150,9 +150,7 @@ class LocationRecordCache: Codable {
                 recordCount += QRCodeLocationRecordCacheItems.count
             }
         }
-        
-        print(">> cachedLocationRecordCount = \(cachedLocationRecordCount)")        // TESTING
-        
+
         return recordCount
     }
     
@@ -161,10 +159,6 @@ class LocationRecordCache: Codable {
     func fetchLocationRecordsFromCache(withQRCode fetchQRCode: String?,
                                        processRecord: @escaping (LocationRecordCacheItem) -> Void,
                                        completion: @escaping () -> Void) {
-        
-        
-        print("Fetchin locations from cache")       // TESTING
-        debugCache()
         
         DispatchQueue.global().async {
              
@@ -210,8 +204,6 @@ class LocationRecordCache: Codable {
         guard let _ = try? cacheData.write(to: cacheFileURL) else {
             return
         }
-        print("Saving the Location Record Cache")
-        debugCache()
     }
     
     func pathToLocationRecordCache() -> String {
@@ -227,7 +219,7 @@ class LocationRecordCache: Codable {
             if let QRCodeLocationRecordCacheItems = self.locationRecordCacheDict[QRCode] {
                 print("QRCode: \(QRCode) has \(QRCodeLocationRecordCacheItems.count) cached location records")
                 for (index, locationRecordCacheItem) in QRCodeLocationRecordCacheItems.enumerated() {
-                    print("\(index): \(QRCode), cycleDate: \(locationRecordCacheItem.cycleDate) ,modifictionDate: \(locationRecordCacheItem.modificationDate)")
+                    print("\(index): \(QRCode), cycleDate: \(locationRecordCacheItem.cycleDate!) ,modifictionDate: \(locationRecordCacheItem.modificationDate!)")
                 }
             }
         }
