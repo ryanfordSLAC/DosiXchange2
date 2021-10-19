@@ -23,7 +23,7 @@ class LocationRecordCache: Codable {
     var maxLocationRecordCacheItemModificationDate: Date?
     
     // all location resource cache item-sorted by alphabetical order
-    var sortedLocationResourceCacheItems   : [LocationRecordCacheItem]?
+    var sortedLocationResourceCacheItems: [LocationRecordCacheItem]?
     
     static var shared = LocationRecordCache()
 
@@ -61,8 +61,8 @@ class LocationRecordCache: Codable {
             self.saveLocationRecordCache()
       }
     }
-    0l7.
-    // Get the maximu locationm record cache item modificatio date.
+
+    // Get the maximum locationm record cache item modification date.
     func maxLocationRecordModificationDate() -> Date? {
         var maxLocationRecordModificatonDate: Date?
  
@@ -141,6 +141,9 @@ class LocationRecordCache: Codable {
             if recordCount > 0 {
                 LocationRecordCache.shared = locationsCache
             }
+            
+            LocationRecordCache.shared.debugSortedResourceCacheItems()      // TESTINGF
+            
             completion(recordCount > 0)
         }
     }
@@ -156,7 +159,7 @@ class LocationRecordCache: Codable {
 
         return recordCount
     }
-    
+
     // Fetch Location records from the locations cache for a given list of QRCodes,
     // or fetch all locations if the QRCOde parameter is nil.
     func fetchLocationRecordsFromCache(withQRCode fetchQRCode: String?,
@@ -165,22 +168,28 @@ class LocationRecordCache: Codable {
         
         DispatchQueue.global().async {
              
-            let _ = self.sortByQTCodeAlphabetically()
-
              if let QRCode = fetchQRCode,
-                // Fetch and process the location record cahche items with the given QRCode.
+                // Fetch and process the location record cache items with the given QRCode.
                  let QRCodeLocationRecordCacheItems = self.locationRecordCacheDict[QRCode]{
                  for locationRecordCacheItem in QRCodeLocationRecordCacheItems {
                      processRecord(locationRecordCacheItem)
                  }
              }
              else {
-                 // Fetch and process all location record cahche items.
-                 for QRCode in self.locationRecordCacheDict.keys {
-                     if let QRCodeLocationRecordCacheItems = self.locationRecordCacheDict[QRCode] {
-                         for locationRecordCacheItem in QRCodeLocationRecordCacheItems {
-                             processRecord(locationRecordCacheItem)
-                       }
+                 if let sortedLocationCacheItems = self.sortedLocationResourceCacheItems {
+                     // Fetch and process the location record cache items in alphabetical order.
+                     for locationRecordCacheItem in sortedLocationCacheItems {
+                         processRecord(locationRecordCacheItem)
+                     }
+                 }
+                 else {
+                     // Fetch and process all location record cache items.
+                     for QRCode in self.locationRecordCacheDict.keys {
+                         if let QRCodeLocationRecordCacheItems = self.locationRecordCacheDict[QRCode] {
+                             for locationRecordCacheItem in QRCodeLocationRecordCacheItems {
+                                 processRecord(locationRecordCacheItem)
+                           }
+                         }
                      }
                  }
              }
@@ -200,7 +209,6 @@ class LocationRecordCache: Codable {
         
         // sort the location resourc eitem QTCodes alphabetically.
         let _ = sortByQTCodeAlphabetically()
-        debugSortedResourceCacheItems()             // TESTING
         
         // compute the maximum cached location record modification time.
         self.maxLocationRecordCacheItemModificationDate = self.maxLocationRecordModificationDate()
