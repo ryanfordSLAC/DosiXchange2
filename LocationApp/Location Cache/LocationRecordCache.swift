@@ -22,6 +22,9 @@ class LocationRecordCache: Codable {
     // Maximum location record cache item modification date.
     var maxLocationRecordCacheItemModificationDate: Date?
     
+    // all location resource cache item-sorted by alphabetical order
+    var sortedLocationResourceCacheItems   : [LocationRecordCacheItem]?
+    
     static var shared = LocationRecordCache()
 
     private init() {
@@ -58,7 +61,7 @@ class LocationRecordCache: Codable {
             self.saveLocationRecordCache()
       }
     }
-    
+    0l7.
     // Get the maximu locationm record cache item modificatio date.
     func maxLocationRecordModificationDate() -> Date? {
         var maxLocationRecordModificatonDate: Date?
@@ -78,9 +81,6 @@ class LocationRecordCache: Codable {
                  }
             }
         }
-        
-        print("*** Most Recent Cached Location Record Time = \(maxLocationRecordModificatonDate!)")
-
         return maxLocationRecordModificatonDate
     }
        
@@ -99,6 +99,9 @@ class LocationRecordCache: Codable {
     func resetCache() {
         // delete the location records cached in memory.
         self.locationRecordCacheDict = [:]
+        
+        // delete the sorted location resource items
+        self.sortedLocationResourceCacheItems = nil
 
         // delete the locatioms record cache file.
         let path = self.pathToLocationRecordCache()
@@ -162,6 +165,8 @@ class LocationRecordCache: Codable {
         
         DispatchQueue.global().async {
              
+            let _ = self.sortByQTCodeAlphabetically()
+
              if let QRCode = fetchQRCode,
                 // Fetch and process the location record cahche items with the given QRCode.
                  let QRCodeLocationRecordCacheItems = self.locationRecordCacheDict[QRCode]{
@@ -193,6 +198,10 @@ class LocationRecordCache: Codable {
             return
         }
         
+        // sort the location resourc eitem QTCodes alphabetically.
+        let _ = sortByQTCodeAlphabetically()
+        debugSortedResourceCacheItems()             // TESTING
+        
         // compute the maximum cached location record modification time.
         self.maxLocationRecordCacheItemModificationDate = self.maxLocationRecordModificationDate()
 
@@ -210,6 +219,39 @@ class LocationRecordCache: Codable {
         let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
         let url = cachesDirectory.appendingPathComponent("LocationsCache.txt")
         return url.path
+    }
+    
+    // Sort all of the location resource items by QRCode in alphabetical order.
+    func sortByQTCodeAlphabetically() -> [LocationRecordCacheItem]? {
+        
+        self.sortedLocationResourceCacheItems = [LocationRecordCacheItem]()
+   
+        for QRCode in self.locationRecordCacheDict.keys {
+            if let QRCodeLocationRecordCacheItems = self.locationRecordCacheDict[QRCode] {
+                for (_, locationRecordCacheItem) in QRCodeLocationRecordCacheItems.enumerated() {
+                    self.sortedLocationResourceCacheItems?.append(locationRecordCacheItem)
+                }
+            }
+        }
+
+        let  sortedRecordCacheItems = self.sortedLocationResourceCacheItems?.sorted(by: { (locationResourceCacheItem1, locationResourceCacheItem2) in
+             return locationResourceCacheItem1.QRCode < locationResourceCacheItem2.QRCode
+         })
+                                                                                    
+        self.sortedLocationResourceCacheItems = sortedRecordCacheItems
+        
+        return sortedRecordCacheItems
+    }
+    
+    func debugSortedResourceCacheItems() {
+        print("----------------- Sorted Location Resource Items -------------------------")
+        if sortedLocationResourceCacheItems == nil {
+            print("sortedLocationResourceCacheItems = nil")
+            return
+        }
+        for (index, locationRecordCacheItem) in sortedLocationResourceCacheItems!.enumerated() {
+            print("\(index): \(locationRecordCacheItem.QRCode), cycleDate: \(locationRecordCacheItem.cycleDate!) ,modifictionDate: \(locationRecordCacheItem.modificationDate!)")
+        }
     }
     
     func debugCache() {
