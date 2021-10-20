@@ -31,7 +31,10 @@ Install from SLAC MDM, SLAC Apps folder.
 * App is now available on devices registered with SLAC MDM, in the SLAC Apps folder on your device.
 
 #### Version Notes
-
+Version 1.3 / October 2021:
+* By Matt Lintlop:
+  - Implement workaround to prevent crashes in map view
+  - Implement Data Caching
 Version 1.2 / January 2020:
 * Created and Modified Fields in Data Schema:
   - New createdDate and modified Date fields to use in lieu of system dates
