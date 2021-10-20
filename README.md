@@ -35,7 +35,8 @@ Version 1.3 / October 2021:
 * By Matt Lintlop:
   - Implement workaround to prevent crashes in map view
   - Implement Data Caching
-* Version 1.2 / January 2020:
+
+Version 1.2 / January 2020:
 * Created and Modified Fields in Data Schema:
   - New createdDate and modified Date fields to use in lieu of system dates
   - Auto populate these fields during Alert 8 (deploy new), 3a (collect only), 3i (exchange only)
