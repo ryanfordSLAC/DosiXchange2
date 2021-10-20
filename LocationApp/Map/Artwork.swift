@@ -20,7 +20,7 @@ class Artwork: NSObject, MKAnnotation {
     let cycleDate: String?
     let active: Int64
     let collected: Int64?
-    let getcycleDate = recordsUpdate()
+    let getcycleDate = RecordsUpdate()
     
     
     init(title: String, locDescription: String, active: Int64, coordinate: CLLocationCoordinate2D, cycleDate: String?, collected: Int64?) {
@@ -36,7 +36,7 @@ class Artwork: NSObject, MKAnnotation {
     
     var markerTintColor: UIColor {
         //change to cycledate
-        let cycle = getcycleDate.generateCycleDate() //fetch the current cycle
+        let cycle = RecordsUpdate.generateCycleDate() //fetch the current cycle
         let color:UIColor
         
         //active location

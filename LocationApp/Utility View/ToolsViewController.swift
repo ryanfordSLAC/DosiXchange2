@@ -42,6 +42,7 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
     @IBOutlet weak var button1: UIButton!
     @IBOutlet weak var button2: UIButton!
     @IBOutlet weak var button3: UIButton!
+    @IBOutlet weak var resetCacheButton: UIButton!
 
     
     let borderColorUp = UIColor(red: 0.580723, green: 0.0667341, blue: 0, alpha: 1).cgColor
@@ -64,7 +65,10 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
         button3.layer.borderWidth = 1.5
         button3.layer.borderColor = borderColorUp
         button3.layer.cornerRadius = 22
-        
+ 
+        resetCacheButton.layer.borderWidth = 1.5
+        resetCacheButton.layer.borderColor = borderColorUp
+        resetCacheButton.layer.cornerRadius = 22
     }
     
     //@IBAction func uploadToCloud(_ sender: Any) {
@@ -119,6 +123,10 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
         //stop activityIndicator
         activityIndicator.stopAnimating()
         button3.layer.borderColor = borderColorUp
+    }
+    
+    @IBAction func resetCacheTouchUp(_ sender: Any) {
+        LocationRecordCache.shared.resetCache()
     }
     
     //MARK:  Send Email

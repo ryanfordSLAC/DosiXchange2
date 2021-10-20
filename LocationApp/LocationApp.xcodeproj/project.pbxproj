@@ -7,10 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		449A7E9B271337E6005AF1F7 /* LocationRecordCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449A7E9A271337E6005AF1F7 /* LocationRecordCache.swift */; };
+		449A7E9D271341B2005AF1F7 /* LocationRecordCacheItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449A7E9C271341B2005AF1F7 /* LocationRecordCacheItem.swift */; };
 		5C7925A122DE9B1900B981B2 /* LocationDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C7925A022DE9B1900B981B2 /* LocationDetails.swift */; };
 		5C941E5522D93335008C9B3E /* LocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C941E5422D93335008C9B3E /* LocationViewController.swift */; };
 		5CF01FDE22D92F19004604BC /* ToolsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CF01FDD22D92F19004604BC /* ToolsViewController.swift */; };
 		5CFF888B22CAA5B700611F60 /* ActiveLocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CFF888A22CAA5B700611F60 /* ActiveLocations.swift */; };
+		79A5CB15270E77E9007309EF /* DebugLocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A5CB14270E77E9007309EF /* DebugLocations.swift */; };
 		8409448921CC539900C4EA28 /* TODO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8409448821CC539900C4EA28 /* TODO.swift */; };
 		8409F52422022A3900B78BCC /* Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8409F52322022A3900B78BCC /* Queries.swift */; };
 		8421B0642165BBB80041A53A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421B0632165BBB80041A53A /* AppDelegate.swift */; };
@@ -42,7 +45,7 @@
 		84B58D4D21FD69C80013D5F3 /* UploadToCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B58D4C21FD69C80013D5F3 /* UploadToCloud.swift */; };
 		84E09F2021AA609B000CE8E2 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84E09F1F21AA609B000CE8E2 /* MapKit.framework */; };
 		84F477962167173A00A63336 /* LocationApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84F477942167173A00A63336 /* LocationApp.xcdatamodeld */; };
-		84F5ED6721B2024900381E76 /* classRecordsUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F5ED6621B2024900381E76 /* classRecordsUpdate.swift */; };
+		84F5ED6721B2024900381E76 /* RecordsUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F5ED6621B2024900381E76 /* RecordsUpdate.swift */; };
 		84F9180222211C9B00D25634 /* NearestDosimeters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F9180122211C9B00D25634 /* NearestDosimeters.swift */; };
 /* End PBXBuildFile section */
 
@@ -64,10 +67,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		449A7E9A271337E6005AF1F7 /* LocationRecordCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationRecordCache.swift; sourceTree = "<group>"; };
+		449A7E9C271341B2005AF1F7 /* LocationRecordCacheItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationRecordCacheItem.swift; sourceTree = "<group>"; };
 		5C7925A022DE9B1900B981B2 /* LocationDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetails.swift; sourceTree = "<group>"; };
 		5C941E5422D93335008C9B3E /* LocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationViewController.swift; sourceTree = "<group>"; };
 		5CF01FDD22D92F19004604BC /* ToolsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsViewController.swift; sourceTree = "<group>"; };
 		5CFF888A22CAA5B700611F60 /* ActiveLocations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveLocations.swift; sourceTree = "<group>"; };
+		79A5CB14270E77E9007309EF /* DebugLocations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugLocations.swift; sourceTree = "<group>"; };
 		8409448821CC539900C4EA28 /* TODO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TODO.swift; sourceTree = "<group>"; };
 		8409F52322022A3900B78BCC /* Queries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queries.swift; sourceTree = "<group>"; };
 		8421B0602165BBB80041A53A /* LocationApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocationApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -106,7 +112,7 @@
 		84B58D4C21FD69C80013D5F3 /* UploadToCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadToCloud.swift; sourceTree = "<group>"; };
 		84E09F1F21AA609B000CE8E2 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		84F477952167173A00A63336 /* LocationApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = LocationApp.xcdatamodel; sourceTree = "<group>"; };
-		84F5ED6621B2024900381E76 /* classRecordsUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = classRecordsUpdate.swift; sourceTree = "<group>"; };
+		84F5ED6621B2024900381E76 /* RecordsUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordsUpdate.swift; sourceTree = "<group>"; };
 		84F9180122211C9B00D25634 /* NearestDosimeters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearestDosimeters.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -137,6 +143,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		449A7E9E27135171005AF1F7 /* Location Cache */ = {
+			isa = PBXGroup;
+			children = (
+				449A7E9A271337E6005AF1F7 /* LocationRecordCache.swift */,
+				449A7E9C271341B2005AF1F7 /* LocationRecordCacheItem.swift */,
+			);
+			path = "Location Cache";
+			sourceTree = "<group>";
+		};
+		79A5CB13270E7788007309EF /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				79A5CB14270E77E9007309EF /* DebugLocations.swift */,
+			);
+			path = Utility;
+			sourceTree = "<group>";
+		};
 		8409F52522022A4300B78BCC /* Database Interactions */ = {
 			isa = PBXGroup;
 			children = (
@@ -152,12 +175,14 @@
 				8409F52522022A4300B78BCC /* Database Interactions */,
 				84673C5521FF864C00680EAB /* Utility View */,
 				8421B0622165BBB80041A53A /* LocationApp */,
+				449A7E9E27135171005AF1F7 /* Location Cache */,
 				845D9FAE21E7F6CF00A11C0B /* Scanner */,
 				845D9FAF21E7F71A00A11C0B /* Text File */,
 				845D9FAD21E7F66F00A11C0B /* Map */,
 				84B58D5021FD7F580013D5F3 /* Populate Database */,
 				8421B0772165BBB90041A53A /* LocationAppTests */,
 				8421B0822165BBB90041A53A /* LocationAppUITests */,
+				79A5CB13270E7788007309EF /* Utility */,
 				8421B0612165BBB80041A53A /* Products */,
 				846D6B502170161A008E003D /* Frameworks */,
 			);
@@ -240,7 +265,7 @@
 			isa = PBXGroup;
 			children = (
 				8487FE2D21A8F4E000CC62E8 /* ScannerViewController.swift */,
-				84F5ED6621B2024900381E76 /* classRecordsUpdate.swift */,
+				84F5ED6621B2024900381E76 /* RecordsUpdate.swift */,
 			);
 			path = Scanner;
 			sourceTree = "<group>";
@@ -442,11 +467,14 @@
 				5CF01FDE22D92F19004604BC /* ToolsViewController.swift in Sources */,
 				84F477962167173A00A63336 /* LocationApp.xcdatamodeld in Sources */,
 				84B58D4D21FD69C80013D5F3 /* UploadToCloud.swift in Sources */,
+				449A7E9B271337E6005AF1F7 /* LocationRecordCache.swift in Sources */,
 				84A6671421E7162200FC1892 /* Artwork.swift in Sources */,
 				84571FE5258FE29C009AC936 /* BriefCase.swift in Sources */,
 				84F9180222211C9B00D25634 /* NearestDosimeters.swift in Sources */,
+				79A5CB15270E77E9007309EF /* DebugLocations.swift in Sources */,
 				8487FE2E21A8F4E000CC62E8 /* ScannerViewController.swift in Sources */,
 				8434D57B25956DE800B2E413 /* RepairCycleDate.swift in Sources */,
+				449A7E9D271341B2005AF1F7 /* LocationRecordCacheItem.swift in Sources */,
 				846606C121AA3CA00049814C /* ReadWriteText.swift in Sources */,
 				5C941E5522D93335008C9B3E /* LocationViewController.swift in Sources */,
 				8487FE3021A8F9C700CC62E8 /* StartupViewController.swift in Sources */,
@@ -456,7 +484,7 @@
 				5CFF888B22CAA5B700611F60 /* ActiveLocations.swift in Sources */,
 				8409F52422022A3900B78BCC /* Queries.swift in Sources */,
 				5C7925A122DE9B1900B981B2 /* LocationDetails.swift in Sources */,
-				84F5ED6721B2024900381E76 /* classRecordsUpdate.swift in Sources */,
+				84F5ED6721B2024900381E76 /* RecordsUpdate.swift in Sources */,
 				846606C321AA5C380049814C /* MapViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -549,6 +577,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = KHM26R2G73;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -612,6 +641,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = KHM26R2G73;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -646,7 +676,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.SLAC.LocationApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -669,7 +699,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.SLAC.LocationApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

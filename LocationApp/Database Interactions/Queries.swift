@@ -19,7 +19,7 @@ class Queries {
     var count = Int()
     var countCFNo = Int()
     var countCFYes = Int()
-    let recordsupdate = recordsUpdate()
+    let recordsupdate = RecordsUpdate()
     let dispatchGroup = DispatchGroup()
     var records = [CKRecord]()
     let database = CKContainer.default().publicCloudDatabase
@@ -33,9 +33,9 @@ class Queries {
         count = 0
         
         //get current Cycle Date
-        let cycleDate = self.recordsupdate.generateCycleDate()
+        let cycleDate = RecordsUpdate.generateCycleDate()
         //print(cycleDate)
-        let priorCycleDate = self.recordsupdate.generatePriorCycleDate(cycleDate: cycleDate)
+        let priorCycleDate = RecordsUpdate.generatePriorCycleDate(cycleDate: cycleDate)
         //print(priorCycleDate)
         let flag = 1
         let active = 1
@@ -60,9 +60,9 @@ class Queries {
         count = 0
         
         //get current Cycle Date
-        let cycleDate = self.recordsupdate.generateCycleDate()
-        let priorCycleDate = self.recordsupdate.generatePriorCycleDate(cycleDate: cycleDate)
-        let flag = 0
+        let cycleDate = RecordsUpdate.generateCycleDate()
+        let priorCycleDate = RecordsUpdate.generatePriorCycleDate(cycleDate: cycleDate)
+        let flag = 0    
         let active = 1
         let p1 = NSPredicate(format: "collectedFlag == %d", flag)
         let p2 = NSPredicate(format: "cycleDate == %@", priorCycleDate)

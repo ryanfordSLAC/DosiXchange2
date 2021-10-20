@@ -15,7 +15,7 @@ import CoreLocation
 
 let svController = ScannerViewController()
 
-class recordsUpdate: UIViewController {
+class RecordsUpdate: UIViewController {
     
     //variables used to populate the database record
 
@@ -59,7 +59,7 @@ class recordsUpdate: UIViewController {
     }  //end saveRecord
     
     //MARK:  Cycle Date
-    func generateCycleDate() -> String {
+    static func generateCycleDate() -> String {
 
         //return the dosimeter wear date for the CKRecord as a string (date format not necessary - will be converted in excel)
         //The wear date is important for post processing the CSV file
@@ -110,8 +110,9 @@ class recordsUpdate: UIViewController {
         } //end switch
         
     } //end generateCycleDate
+    
     //MARK:  Prior Cycle Date
-    func generatePriorCycleDate(cycleDate: String) -> String {
+    static func generatePriorCycleDate(cycleDate: String) -> String {
         
         let year = Int64(cycleDate.suffix(4))!
         

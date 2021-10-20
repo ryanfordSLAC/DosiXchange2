@@ -14,7 +14,7 @@ import CoreLocation
 //MARK:  Class
 class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
-    var recordsupdate = recordsUpdate()
+    var recordsupdate = RecordsUpdate()
     var zoomFactor:CGFloat = 3
     var captureSession: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!
@@ -881,7 +881,7 @@ extension ScannerViewController {  //alerts
 //MARK:  Alert8
     func alert8() {
 
-        let cycle = recordsupdate.generateCycleDate()
+        let cycle = RecordsUpdate.generateCycleDate()
         variables.cycle = cycle
         getCoordinates()
         
