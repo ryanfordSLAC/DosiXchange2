@@ -38,15 +38,15 @@ class MapViewController: UIViewController {
         locationmanager.delegate = self
         locationmanager.requestAlwaysAuthorization()
         locationmanager.startUpdatingLocation()
-        let latitude = locationmanager.location?.coordinate.latitude
-        let longitude = locationmanager.location?.coordinate.longitude
+        let latitude = locationmanager.location?.coordinate.latitude ?? 37.408831698
+        let longitude = locationmanager.location?.coordinate.longitude ?? -122.219665788
         self.MapView.delegate = self
 
         //format filters button
         filtersButton.layer.cornerRadius = 5
         
         //set initial map properties
-        let initialLocation = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
+        let initialLocation = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
         let region = MKCoordinateRegion(center: initialLocation, latitudinalMeters: 150, longitudinalMeters: 150)
         
         //query records
