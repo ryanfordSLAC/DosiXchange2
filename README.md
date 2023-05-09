@@ -31,6 +31,15 @@ Install from SLAC MDM, SLAC Apps folder.
 * App is now available on devices registered with SLAC MDM, in the SLAC Apps folder on your device.
 
 #### Version Notes
+
+Version 2.0 / May 2023:
+* By CosyLab (Laszlo Szollosi, Attila Lakatos)
+  - Statement of Work
+  - Simulator bug fix (map coordinates)
+  - Reset cache button sizing
+  - Data export limit by number of cycles (2, 3, 4 or All Data)
+
+
 Version 1.3 / October 2021:
 * By Matt Lintlop:
   - Implement workaround to prevent crashes in map view
