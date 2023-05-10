@@ -81,23 +81,29 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
         
         dispatchGroup.wait()
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "QRCell", for: indexPath)
+        if indexPath.row == displayInfo[segment][indexPath.row].count - 1 {
+            return nil
+        }
+        else {
         
-        activesTableView.estimatedRowHeight = 60
-        activesTableView.rowHeight = UITableView.automaticDimension
-        
-        let QRCode = searching ? searches[segment][indexPath.row].1 : displayInfo[segment][indexPath.row].1
-        let locdescription = searching ? searches[segment][indexPath.row].2 : displayInfo[segment][indexPath.row].2
-        
-        //format cell title
-        cell.textLabel?.font = UIFont(name: "Arial", size: 16)
-        cell.textLabel?.text = "\(QRCode)"
-        //format cell subtitle
-        cell.detailTextLabel?.font = UIFont(name: "Arial", size: 12)
-        cell.detailTextLabel?.numberOfLines = 0
-        cell.detailTextLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
-        cell.detailTextLabel?.text = "\(locdescription)"
-        return cell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "QRCell", for: indexPath)
+            
+            activesTableView.estimatedRowHeight = 60
+            activesTableView.rowHeight = UITableView.automaticDimension
+            
+            let QRCode = searching ? searches[segment][indexPath.row].1 : displayInfo[segment][indexPath.row].1
+            let locdescription = searching ? searches[segment][indexPath.row].2 : displayInfo[segment][indexPath.row].2
+            
+            //format cell title
+            cell.textLabel?.font = UIFont(name: "Arial", size: 16)
+            cell.textLabel?.text = "\(QRCode)"
+            //format cell subtitle
+            cell.detailTextLabel?.font = UIFont(name: "Arial", size: 12)
+            cell.detailTextLabel?.numberOfLines = 0
+            cell.detailTextLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
+            cell.detailTextLabel?.text = "\(locdescription)"
+            return cell
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -109,6 +115,9 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
         
         self.present(vc, animated: true)
     }
+    
+    
+
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
@@ -167,6 +176,9 @@ extension ActiveLocations {
                     // Fetch only the location records from CloudKit that have a modificationDate after the maximum modified time of
                     // all the cached location records.
                     queryCloudKitForDatabase(afterdModifiedDate: LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate)
+                }
+                else {
+                    queryCloudKitForDatabase()
                 }
             }
         }
@@ -237,6 +249,9 @@ extension ActiveLocations {
             return
         }
 
+        // Notify the locations cache that we finished fetching records from CloudKit.
+        LocationRecordCache.shared.didFinishFetchingRecords()     // TESTING
+        
         DispatchQueue.main.async {
             if self.activesTableView != nil {
                 self.activesTableView.refreshControl?.endRefreshing()

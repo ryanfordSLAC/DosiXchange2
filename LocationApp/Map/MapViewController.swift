@@ -305,6 +305,9 @@ extension MapViewController {
                     // all the cached location records.
                     queryCloudKitForMap(afterdModifiedDate: LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate)
                 }
+                else {
+                    queryCloudKitForMap()
+                }
             }
         }
         else {
