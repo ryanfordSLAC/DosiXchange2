@@ -157,12 +157,12 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
     } //end func mailComposeController
     
     func showExportAlert() {
-        let alert = UIAlertController(title: "Export locations data", message: "Select cycle count", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Export Exchange Data", message: "Export current cycle plus:", preferredStyle: .alert)
 
-        alert.addAction(UIAlertAction(title: "2 cycle", style: .default, handler: { _ in self.sendEmail(2) }))
-        alert.addAction(UIAlertAction(title: "3 cycle", style: .default, handler: { _ in self.sendEmail(3) }))
-        alert.addAction(UIAlertAction(title: "4 cycle", style: .default, handler: { _ in self.sendEmail(4) }))
-        alert.addAction(UIAlertAction(title: "All cycle", style: .default, handler: { _ in self.sendEmail(0) }))
+        alert.addAction(UIAlertAction(title: "2 cycles", style: .default, handler: { _ in self.sendEmail(2) }))
+        alert.addAction(UIAlertAction(title: "3 cycles", style: .default, handler: { _ in self.sendEmail(3) }))
+        alert.addAction(UIAlertAction(title: "4 cycles", style: .default, handler: { _ in self.sendEmail(4) }))
+        alert.addAction(UIAlertAction(title: "All cycles", style: .default, handler: { _ in self.sendEmail(0) }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
         self.present(alert, animated: true)
