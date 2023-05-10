@@ -76,7 +76,10 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
       //  saveToCloud.uploadToCloud()
      //   activityIndicator.stopAnimating()
         
-        
+    @IBAction func done(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     //}
     @IBAction func button1down(_ sender: Any) {
         button1.layer.borderColor = borderColorDown
