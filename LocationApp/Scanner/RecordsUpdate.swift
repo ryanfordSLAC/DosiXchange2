@@ -135,5 +135,21 @@ class RecordsUpdate: UIViewController {
         }
         
     }
+    
+    static func getLastCycles(cycles: Int) -> [String] {
+        var date = Date()
+        let calendar = Calendar.current
+        var components = calendar.dateComponents([.year, .month], from: date)
+        components.month = components.month! < 7 ? 1 : 7
+        date = calendar.date(from: components)!
+        
+        var result = ["\(components.month!)-1-\(components.year!)"]
+        for _ in 2...cycles {
+            date = calendar.date(byAdding: Calendar.Component.month, value: -6, to: date)!
+            components = calendar.dateComponents([.year, .month], from: date)
+            result.append("\(components.month!)-1-\(components.year!)")
+        }
+        return result
+    }
 
 } // end class
