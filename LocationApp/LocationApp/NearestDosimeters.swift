@@ -69,6 +69,10 @@ class NearestLocations: UIViewController, UITableViewDataSource, UITableViewDele
 
     } //end viewDidLoad
     
+    @IBAction func done(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     //segment control
     @IBAction func tableSwitch(_ sender: UISegmentedControl) {
         segment = sender.selectedSegmentIndex

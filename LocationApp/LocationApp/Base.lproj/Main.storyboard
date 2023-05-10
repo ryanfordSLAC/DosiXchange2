@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="46x-xA-AQB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="46x-xA-AQB">
     <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -168,7 +168,7 @@
                                     <navigationItem title="Tools" id="QSm-i8-SLV" userLabel="Tools and Settings">
                                         <barButtonItem key="leftBarButtonItem" title="Done" id="4d6-Ou-Ja2">
                                             <connections>
-                                                <segue destination="46x-xA-AQB" kind="show" id="1iZ-uO-Z3p"/>
+                                                <action selector="done:" destination="M89-R5-CVf" id="YwS-71-sLX"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -300,7 +300,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="PlainCell" textLabel="hEW-8z-LYz" detailTextLabel="VVu-cr-qpr" style="IBUITableViewCellStyleSubtitle" id="UKv-iS-ify">
-                                        <rect key="frame" x="0.0" y="50" width="320" height="51.5"/>
+                                        <rect key="frame" x="0.0" y="44.5" width="320" height="51.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="UKv-iS-ify" id="t9s-Qb-MTx">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="51.5"/>
@@ -368,7 +368,7 @@
             <objects>
                 <viewController storyboardIdentifier="Main" title="Main Page" id="46x-xA-AQB" customClass="StartupViewController" customModule="LocationApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Mvd-fQ-Y1c">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="548"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wOM-u4-FVE">
@@ -386,7 +386,7 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Tools" translatesAutoresizingMaskIntoConstraints="NO" id="2ol-Sj-N2C">
-                                <rect key="frame" x="255" y="483" width="50" height="50"/>
+                                <rect key="frame" x="255" y="503" width="50" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="50" id="64z-d6-e0J"/>
                                     <constraint firstAttribute="height" constant="50" id="OwH-iR-VGF"/>
@@ -437,7 +437,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Version 1.3" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zuC-3j-mde">
-                                <rect key="frame" x="125" y="516" width="70.5" height="17"/>
+                                <rect key="frame" x="125" y="536" width="70.5" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" red="0.88717480959999995" green="0.88717480959999995" blue="0.88717480959999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -502,7 +502,7 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
-                                            <segue destination="46x-xA-AQB" kind="show" id="jLQ-01-gAR"/>
+                                            <action selector="done:" destination="Z99-ZC-Hyz" eventType="touchUpInside" id="Ssj-X8-kTW"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ohR-Dy-gEm">
@@ -574,7 +574,7 @@
                                     <navigationItem title="Map View" id="cu5-mt-laI">
                                         <barButtonItem key="leftBarButtonItem" systemItem="done" id="9o9-lx-Ad5">
                                             <connections>
-                                                <segue destination="46x-xA-AQB" kind="show" id="WDT-T2-TNV"/>
+                                                <action selector="done:" destination="Pbj-ZR-7ZZ" id="i2U-vc-2yo"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -637,7 +637,7 @@
                                     <navigationItem title="All Locations" id="Sv9-df-A1k">
                                         <barButtonItem key="leftBarButtonItem" title="Done" id="SRA-Ky-SsG">
                                             <connections>
-                                                <segue destination="M89-R5-CVf" kind="show" id="1eV-Ng-UnH"/>
+                                                <action selector="done:" destination="M2J-wt-yhg" id="zCF-3w-WVJ"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -651,10 +651,10 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="QRCell" textLabel="vAW-gL-j2I" detailTextLabel="Bnt-WA-Kpi" style="IBUITableViewCellStyleSubtitle" id="WWW-xf-OOi">
-                                        <rect key="frame" x="0.0" y="50" width="320" height="55.5"/>
+                                        <rect key="frame" x="0.0" y="44.5" width="320" height="55.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="WWW-xf-OOi" id="nRY-iP-aBu">
-                                            <rect key="frame" x="0.0" y="0.0" width="293.5" height="55.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="295.5" height="55.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="vAW-gL-j2I">
@@ -803,7 +803,7 @@
                                 <color key="backgroundColor" systemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="itemCell" textLabel="jOC-5M-CC1" detailTextLabel="f2j-MS-Bjc" style="IBUITableViewCellStyleValue2" id="kJD-jU-5PM">
-                                        <rect key="frame" x="0.0" y="55.5" width="320" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="49.5" width="320" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="kJD-jU-5PM" id="rIA-zz-4r8">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
@@ -1098,9 +1098,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="ar4-0B-Xd6"/>
-        <segue reference="1iZ-uO-Z3p"/>
-        <segue reference="zta-o7-k1W"/>
+        <segue reference="Szf-7B-3OI"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Tools" width="512" height="512"/>
