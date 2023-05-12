@@ -12,8 +12,6 @@ import CloudKit
 //MARK:  Class
 class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
-    let database = CKContainer.default().publicCloudDatabase
-    let dispatchGroup = DispatchGroup()
     let locations = LocationsCK()
     var searchQuery: Query?
     var allQuery: Query?
@@ -74,8 +72,6 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-       // dispatchGroup.wait()
-                
         let cell = tableView.dequeueReusableCell(withIdentifier: "QRCell", for: indexPath)
         
         activesTableView.estimatedRowHeight = 60
@@ -120,9 +116,7 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
         activesTableView.reloadData()
         
         let qrPred = NSPredicate(format: "QRCode BEGINSWITH %@", searchText)
-        let locPred = NSPredicate(format: "locdescription BEGINSWITH %@", searchText)
-        let preds = NSCompoundPredicate(andPredicateWithSubpredicates: [qrPred, locPred])
-        searchQuery = locations.query(predicate: preds, sortDescriptors: [], pageSize: 20, completionHandler: queryCompletionHandler)
+        searchQuery = locations.query(predicate: qrPred, sortDescriptors: [], pageSize: 20, completionHandler: queryCompletionHandler)
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
@@ -146,6 +140,10 @@ extension ActiveLocations {
     @objc func queryDatabase() {
         allQuery?.cancel()
         
+        displayInfo[0].max(by: { a, b -> Bool in
+            a.0[""] < b.0[""]
+        } )
+        
         //reset array
         displayInfo = [[(CKRecord, String, String)]]()
         displayInfo.append([(CKRecord, String, String)]())
@@ -158,16 +156,9 @@ extension ActiveLocations {
     //query locations from CloudKit after a given record modified date,
     //else fetch all locations if the given record modified date is nil (default)
     func queryCloudKitForDatabase(afterdModifiedDate recordModifiedDate: Date? = nil) {
-            
-        // Notify the locations cache that we started fetching records from CloudKit.
-        LocationRecordCache.shared.didStartFetchingRecords()
-                         
         var predicate: NSPredicate?
         if let modificationDate = recordModifiedDate {
             predicate = NSPredicate(format: "modificationDate > %@", argumentArray: [modificationDate])
-       }
-        else {
-            predicate = NSPredicate(value: true)
         }
         let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
         let sort2 = NSSortDescriptor(key: "createdDate", ascending: false) //Ver 1.2
