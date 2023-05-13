@@ -12,14 +12,12 @@ import CloudKit
 //MARK:  Class
 class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
-    let locations = LocationsCK()
-    var searchQuery: Query?
-    var allQuery: Query?
+    let locations = LocationsCK.shared
     
     var segment:Int = 0
-    var displayInfo = [[(LocationRecordDelegate, String, String)]]()
+    var displayInfo :[[(LocationRecordDelegate, String, String)]] = [[],[]]
     var checkQR = ""
-    var searches = [[(LocationRecordDelegate, String, String)]]()
+    var searches : [[(LocationRecordDelegate, String, String)]] = [[],[]]
     var searching = false
     
     @IBOutlet weak var segmentedControl: UISegmentedControl!
@@ -101,30 +99,38 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
         self.present(vc, animated: true)
     }
     
+    fileprivate func clearSearchedItems() {
+        searches = [[(LocationRecordDelegate, String, String)]]()
+        searches.append([(LocationRecordDelegate, String, String)]())
+        searches.append([(LocationRecordDelegate, String, String)]())
+    }
+    
+    fileprivate func clearLocationItems() {
+        displayInfo = [[],[]]
+    }
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.count < 3 {
             return
         }
             
         searching = true
-        allQuery?.cancel()
-        searchQuery?.cancel()
 
-        searches = [[(LocationRecordDelegate, String, String)]]()
-        searches.append([(LocationRecordDelegate, String, String)]())
-        searches.append([(LocationRecordDelegate, String, String)]())
+        clearSearchedItems()
+
+        let items = locations.filter(by: { $0.QRCode.contains(searchText) || $0.locdescription.contains(searchText) })
+        for item in items {
+            processLocationRecord(item)
+        }
         activesTableView.reloadData()
-        
-        let qrPred = NSPredicate(format: "QRCode BEGINSWITH %@", searchText)
-        searchQuery = locations.query(predicate: qrPred, sortDescriptors: [], pageSize: 20, completionHandler: queryCompletionHandler)
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchQuery?.cancel()
         searching = false
         searchBar.text = ""
         searchBar.endEditing(true)
         activesTableView.reloadData()
+        queryDatabase()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -138,60 +144,20 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
 extension ActiveLocations {
 
     @objc func queryDatabase() {
-        allQuery?.cancel()
-        
-        displayInfo[0].max(by: { a, b -> Bool in
-            a.0[""] < b.0[""]
-        } )
-        
-        //reset array
-        displayInfo = [[(CKRecord, String, String)]]()
-        displayInfo.append([(CKRecord, String, String)]())
-        displayInfo.append([(CKRecord, String, String)]())
-            
-        queryCloudKitForDatabase()
+        clearLocationItems()
+        activityIndicator.startAnimating()
+        var items = locations.filter(by: { _ in true })
+        items.sort {
+            ($0.QRCode, $0.locdescription) < ($1.QRCode, $1.locdescription)
+        }
+        for item in items {
+            processLocationRecord(item)
+        }
+        activesTableView.reloadData()
+        activityIndicator.stopAnimating()
    } //end func
         
   
-    //query locations from CloudKit after a given record modified date,
-    //else fetch all locations if the given record modified date is nil (default)
-    func queryCloudKitForDatabase(afterdModifiedDate recordModifiedDate: Date? = nil) {
-        var predicate: NSPredicate?
-        if let modificationDate = recordModifiedDate {
-            predicate = NSPredicate(format: "modificationDate > %@", argumentArray: [modificationDate])
-        }
-        let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
-        let sort2 = NSSortDescriptor(key: "createdDate", ascending: false) //Ver 1.2
-        allQuery = locations.query(predicate: predicate!, sortDescriptors: [sort1, sort2], pageSize: 20, completionHandler: queryCompletionHandler)
-    }
-
-    func queryCompletionHandler(records :[LocationRecordDelegate], completed: Bool?, error: Error?)  {
-        if let error = error {
-            print(error.localizedDescription)
-            return
-        }
-        
-        if (!records.isEmpty){
-            for record in records {
-                self.processLocationRecord(record)
-            }
-            DispatchQueue.main.async {
-                if self.activesTableView != nil {
-                    self.activesTableView.refreshControl?.endRefreshing()
-                    self.activesTableView.reloadData()
-                }
-            }
-        }
-        
-        if let completed = completed {
-            if completed {
-            DispatchQueue.main.async {
-                self.activityIndicator.stopAnimating()
-            }}
-        }
-    }
-    
-    
     // Process a Location record that was fetched from CloudKit
     // or thr local location records cache.
     func processLocationRecord(_ record: LocationRecordDelegate) {
@@ -234,7 +200,6 @@ extension ActiveLocations {
                   
         }
     } //end func
-    
     
 //MARK:  Alert 12
     
