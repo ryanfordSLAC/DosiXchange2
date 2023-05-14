@@ -54,7 +54,6 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
         
         //progress view
         progressView.setProgress(0, animated: true)
-        setProgress()
         
         //tools button
         let toolsTap = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
@@ -100,6 +99,10 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
     } //end viewDidLoad
     
     
+    override func viewDidAppear(_ makk: Bool) {
+        setProgress()
+    }
+    
     @IBAction func scanButtonDown(_ sender: Any) {
         scanButton.layer.borderColor = borderColorDown
     }
@@ -140,7 +143,9 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
         
         //start activityIndicator
         activityIndicator.startAnimating()
-
+        
+        LocationsCK.shared.synchronize(loaded: nil)
+        
         //start the queries
         query.getPriorCycleCountCFYes()
         query.getPriorCycleCountCFNo()

@@ -10,11 +10,9 @@ import Foundation
 import CloudKit
 
 protocol Locations {
-    func start()
+    func synchronize(loaded: ((Int) -> Void)?)
     
     func filter(by: (LocationRecordCacheItem) -> Bool) -> [LocationRecordCacheItem]
-    
-    func query(predicate: NSPredicate, sortDescriptors: [NSSortDescriptor], pageSize: Int, completionHandler: @escaping ([LocationRecordDelegate], Bool?, Error?) -> Void) -> Query
 }
 
 class LocationsCK : Locations {
@@ -25,29 +23,32 @@ class LocationsCK : Locations {
     
     static var shared: Locations = LocationsCK()
     
-    func start() {
-        if cache != nil {
-            return
-        }
-        
-        self.cache = Cache.load() ?? Cache()
-        synchronize()
-    }
-    
-    func synchronize() {
+    func synchronize(loaded: ((Int) -> Void)?) {
         queue.sync {
-            dispatchGroup.enter()
+            if cache == nil {
+                self.cache = Cache.load() ?? Cache()
+            }
+            
             let lastDate = cache!.locations
                 .filter({ $0.modifiedDate != nil })
                 .max(by: { a,b -> Bool in a.modifiedDate! < b.modifiedDate!})
-            
+
             var predicate = NSPredicate(value: true)
             if lastDate != nil {
                 predicate = NSPredicate(format: "modifiedDate > %@", argumentArray: [lastDate!.modifiedDate!])
             }
-            _ = self.query(predicate: predicate, sortDescriptors: [], pageSize: 50, completionHandler: queryCompletionHandler)
+
+            let start = DispatchTime.now()
+            dispatchGroup.enter()
+            _ = self.query(predicate: predicate, sortDescriptors: [], pageSize: 50, progress:{
+                loaded?($0)
+            }, completionHandler: queryCompletionHandler)
             dispatchGroup.wait()
             cache!.save()
+            let end = DispatchTime.now()
+            let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds // <<<<< Difference in nano seconds (UInt64)
+            let timeInterval = Double(nanoTime) / 1_000_000_000 // Technically could overflow for long running tests
+            print(timeInterval)
         }
     }
     
@@ -79,21 +80,20 @@ class LocationsCK : Locations {
             }
         }
     }
-
     
-    func query(predicate: NSPredicate, sortDescriptors: [NSSortDescriptor], pageSize:Int,  completionHandler: @escaping ([LocationRecordDelegate], Bool?, Error?) -> Void) -> Query {
+    func query(predicate: NSPredicate, sortDescriptors: [NSSortDescriptor], pageSize:Int, progress:@escaping ((Int) -> Void),  completionHandler: @escaping ([LocationRecordDelegate], Bool?, Error?) -> Void) -> Query {
         let query = CKQuery(recordType: "Location", predicate: predicate)
         query.sortDescriptors = sortDescriptors
         let operation = CKQueryOperation(query: query)
         let queryOp = QueryCK(operation: operation)
-        add(queryOp, pageSize: pageSize, completionHandler: completionHandler)
+        add(queryOp, progress: progress, completionHandler: completionHandler)
         return queryOp
     }
     
-    private func add(_ queryCK : QueryCK, pageSize:Int, completionHandler: @escaping ([LocationRecordDelegate], Bool?, Error?) -> Void) {
+    private func add(_ queryCK : QueryCK, progress: @escaping ((Int) -> Void), completionHandler: @escaping ([LocationRecordDelegate], Bool?, Error?) -> Void) {
         var result: [LocationRecordDelegate] = []
         let operation = queryCK.ckOperation
-        operation.resultsLimit = pageSize
+        operation.resultsLimit = 500
         operation.recordFetchedBlock = { record in result.append(record) }
         operation.queryCompletionBlock = { cursor, error in
             if let error = error {
@@ -102,10 +102,11 @@ class LocationsCK : Locations {
             }
             if let cursor = cursor {
                 completionHandler(result, false, nil)
+                progress(result.count)
                 result = []
                 let operation = CKQueryOperation(cursor: cursor)
                 queryCK.set(operation)
-                self.add(queryCK, pageSize: pageSize, completionHandler:  completionHandler)
+                self.add(queryCK, progress:progress, completionHandler:  completionHandler)
                 return
             }
             completionHandler(result, true, nil)
