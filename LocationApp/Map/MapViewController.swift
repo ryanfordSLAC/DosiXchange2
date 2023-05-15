@@ -65,6 +65,10 @@ class MapViewController: UIViewController {
     override func viewDidAppear(_ makk: Bool) {
         queryForMap()
     }
+    
+    @IBAction func done(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
 	
 }
 

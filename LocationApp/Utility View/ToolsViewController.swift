@@ -76,7 +76,10 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
       //  saveToCloud.uploadToCloud()
      //   activityIndicator.stopAnimating()
         
-        
+    @IBAction func done(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     //}
     @IBAction func button1down(_ sender: Any) {
         button1.layer.borderColor = borderColorDown
@@ -114,14 +117,7 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
     
     @IBAction func emailTouchUp(_ sender: Any) {
         
-        queryDatabaseForCSV() //takes up to 5 seconds
-        
-        dispatchGroup.wait() //wait for query to finish
-        
-        self.readwrite.writeText(someText: "\(csvText)")
-        self.sendEmail()
-        //stop activityIndicator
-        activityIndicator.stopAnimating()
+        showExportAlert()
         button3.layer.borderColor = borderColorUp
     }
     
@@ -162,6 +158,30 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
         AudioServicesPlaySystemSound(systemSoundID)
         controller.dismiss(animated: true)
     } //end func mailComposeController
+    
+    func showExportAlert() {
+        let alert = UIAlertController(title: "Export Exchange Data", message: "Export current cycle plus:", preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: "2 cycles", style: .default, handler: { _ in self.sendEmail(2) }))
+        alert.addAction(UIAlertAction(title: "3 cycles", style: .default, handler: { _ in self.sendEmail(3) }))
+        alert.addAction(UIAlertAction(title: "4 cycles", style: .default, handler: { _ in self.sendEmail(4) }))
+        alert.addAction(UIAlertAction(title: "All cycles", style: .default, handler: { _ in self.sendEmail(0) }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        self.present(alert, animated: true)
+    }
+    
+    func sendEmail(_ cycle: Int) {
+        queryDatabaseForCSV(cycle) //takes up to 5 seconds
+        
+        dispatchGroup.wait() //wait for query to finish
+        
+        self.readwrite.writeText(someText: "\(csvText)")
+        self.sendEmail()
+        //stop activityIndicator
+        activityIndicator.stopAnimating()
+        button3.layer.borderColor = borderColorUp
+    }
 }
 
 
@@ -169,13 +189,17 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
 //MARK:  Extension
 extension ToolsViewController {
     
-    func queryDatabaseForCSV() {
+    func queryDatabaseForCSV(_ cycles: Int) {
         
         //set first line of text file
         //should separate text file from query
         dispatchGroup.enter()
         self.csvText = "LocationID (QRCode),Latitude,Longitude,Description,Moderator (0/1),Active (0/1),Dosimeter,Collected Flag (0/1),Wear Period,System_Date Deployed,System_Date Collected,Mismatch (0/1), my_Date Deployed, my_Date Collected, recordID\n"
-        let predicate = NSPredicate(value: true)
+        var predicate = NSPredicate(value: true)
+        if (cycles > 0) {
+            let cycleDates = RecordsUpdate.getLastCycles(cycles: cycles)
+            predicate = NSPredicate(format: "cycleDate in %@", cycleDates)
+        }
         let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
         //let sort2 = NSSortDescriptor(key: "creationDate", ascending: false)
         let sort2 = NSSortDescriptor(key: "createdDate", ascending: false)  //Ver 1.2

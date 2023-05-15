@@ -52,6 +52,10 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
         
     } //end viewDidLoad
     
+    @IBAction func done(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     //MARK:  Table View
     @IBAction func tableSwitch(_ sender: UISegmentedControl) {
         segment = sender.selectedSegmentIndex

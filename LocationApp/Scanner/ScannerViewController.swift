@@ -113,6 +113,10 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         
     }//end viewDidLoad()
     
+    @IBAction func done(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     func failed() {
         
         let ac = UIAlertController(title: "Scanning not supported", message: "Your device does not support scanning a code from an item. Please use a device with a camera.", preferredStyle: .alert)

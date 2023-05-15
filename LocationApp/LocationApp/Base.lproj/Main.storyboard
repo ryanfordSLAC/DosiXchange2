@@ -168,7 +168,7 @@
                                     <navigationItem title="Tools" id="QSm-i8-SLV" userLabel="Tools and Settings">
                                         <barButtonItem key="leftBarButtonItem" title="Done" id="4d6-Ou-Ja2">
                                             <connections>
-                                                <segue destination="46x-xA-AQB" kind="show" id="1iZ-uO-Z3p"/>
+                                                <action selector="done:" destination="M89-R5-CVf" id="YwS-71-sLX"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -368,7 +368,7 @@
             <objects>
                 <viewController storyboardIdentifier="Main" title="Main Page" id="46x-xA-AQB" customClass="StartupViewController" customModule="LocationApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Mvd-fQ-Y1c">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="548"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wOM-u4-FVE">
@@ -386,7 +386,7 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Tools" translatesAutoresizingMaskIntoConstraints="NO" id="2ol-Sj-N2C">
-                                <rect key="frame" x="255" y="483" width="50" height="50"/>
+                                <rect key="frame" x="255" y="503" width="50" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="50" id="64z-d6-e0J"/>
                                     <constraint firstAttribute="height" constant="50" id="OwH-iR-VGF"/>
@@ -437,7 +437,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Version 1.3" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zuC-3j-mde">
-                                <rect key="frame" x="125" y="516" width="70.5" height="17"/>
+                                <rect key="frame" x="125" y="536" width="70.5" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" red="0.88717480959999995" green="0.88717480959999995" blue="0.88717480959999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -502,7 +502,7 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
-                                            <segue destination="46x-xA-AQB" kind="show" id="jLQ-01-gAR"/>
+                                            <action selector="done:" destination="Z99-ZC-Hyz" eventType="touchUpInside" id="Ssj-X8-kTW"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ohR-Dy-gEm">
@@ -574,7 +574,7 @@
                                     <navigationItem title="Map View" id="cu5-mt-laI">
                                         <barButtonItem key="leftBarButtonItem" systemItem="done" id="9o9-lx-Ad5">
                                             <connections>
-                                                <segue destination="46x-xA-AQB" kind="show" id="WDT-T2-TNV"/>
+                                                <action selector="done:" destination="Pbj-ZR-7ZZ" id="i2U-vc-2yo"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -637,7 +637,7 @@
                                     <navigationItem title="All Locations" id="Sv9-df-A1k">
                                         <barButtonItem key="leftBarButtonItem" title="Done" id="SRA-Ky-SsG">
                                             <connections>
-                                                <segue destination="M89-R5-CVf" kind="show" id="1eV-Ng-UnH"/>
+                                                <action selector="done:" destination="M2J-wt-yhg" id="zCF-3w-WVJ"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -1098,9 +1098,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="ar4-0B-Xd6"/>
-        <segue reference="jLQ-01-gAR"/>
-        <segue reference="zta-o7-k1W"/>
+        <segue reference="Szf-7B-3OI"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Tools" width="512" height="512"/>
