@@ -52,6 +52,12 @@ class Queries {
         
     } //end func
     
+    func getCollectedNum() -> Int {
+        let locations = LocationsCK.shared
+        let cycleDate = RecordsUpdate.generateCycleDate()
+        let priorCycleDate = RecordsUpdate.generatePriorCycleDate(cycleDate: cycleDate)
+        return locations.count(by: { $0.collectedFlag == 1 && $0.active == 1 && $0.cycleDate == priorCycleDate})
+    }
     
     func getPriorCycleCountCFNo() {
         
@@ -77,6 +83,12 @@ class Queries {
 
     } //end func
     
+    func getNotCollectedNum() -> Int {
+        let locations = LocationsCK.shared
+        let cycleDate = RecordsUpdate.generateCycleDate()
+        let priorCycleDate = RecordsUpdate.generatePriorCycleDate(cycleDate: cycleDate)
+        return locations.count(by: { $0.collectedFlag == 0 && $0.active == 1 && $0.cycleDate == priorCycleDate})
+    }
     
     // add query operation
     func addOperation(operation: CKQueryOperation) {

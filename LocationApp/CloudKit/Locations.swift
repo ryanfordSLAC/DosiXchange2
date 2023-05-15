@@ -13,6 +13,8 @@ protocol Locations {
     func synchronize(loaded: @escaping ((Int) -> Void))
     
     func filter(by: (LocationRecordCacheItem) -> Bool) -> [LocationRecordCacheItem]
+    
+    func count(by: (LocationRecordCacheItem) -> Bool) -> Int
 }
 
 class LocationsCK : Locations {
@@ -44,6 +46,12 @@ class LocationsCK : Locations {
     func filter(by: (LocationRecordCacheItem) -> Bool) -> [LocationRecordCacheItem] {
         queue.sync {
             return self.cache!.locations.filter(by)
+        }
+    }
+    
+    func count(by: (LocationRecordCacheItem) -> Bool) -> Int {
+        queue.sync {
+            return self.cache!.locations.reduce(0, { (count, e) in count + (by(e) ? 1 : 0) })
         }
     }
     

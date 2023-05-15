@@ -147,12 +147,12 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
         LocationsCK.shared.synchronize(loaded: { _ in
         
         //start the queries
-            self.query.getPriorCycleCountCFYes()
-            self.query.getPriorCycleCountCFNo()
+   //         self.query.getPriorCycleCountCFYes()
+     //       self.query.getPriorCycleCountCFNo()
         
             self.query.dispatchGroup.notify(queue: .main) {
-            let numberCompleted:Float = Float(self.query.countCFYes)
-            let numberRemaining:Float = Float(self.query.countCFNo)
+            let numberCompleted:Float = Float(self.query.getCollectedNum())
+            let numberRemaining:Float = Float(self.query.getNotCollectedNum())
             let numberDeployed:Float = numberCompleted + numberRemaining
             let progress = (numberCompleted / numberDeployed)
             
