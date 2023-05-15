@@ -13,17 +13,17 @@ import CloudKit
 class LocationRecordCache: Codable {
     
     // MARK: Codable Properties
-    var version: Float = 1.0                                    // location cache file version #
+    private var version: Float = 1.0                                    // location cache file version #
  
     // Location records cache dictionary of all cached location cache items.
     // [key = QRCode,value = LocationRecordCacheItem]
-    var locationRecordCacheDict: [String: [LocationRecordCacheItem]]
+    private var locationRecordCacheDict: [String: [LocationRecordCacheItem]]
 
     // Maximum location record cache item modification date.
     var maxLocationRecordCacheItemModificationDate: Date?
     
     // all location resource cache item-sorted by alphabetical order
-    var sortedLocationResourceCacheItems: [LocationRecordCacheItem]?
+    private var sortedLocationResourceCacheItems: [LocationRecordCacheItem]?
     
     static var shared = LocationRecordCache()
 
@@ -48,7 +48,9 @@ class LocationRecordCache: Codable {
             var QRCodeLocationCachetems = self.locationRecordCacheDict[QRCode] ?? [LocationRecordCacheItem]()
              
             // append the new location record cache item to the list.
-            QRCodeLocationCachetems.append(locationRecordCacheItem)
+            if (!QRCodeLocationCachetems.contains(where: { i in i.recordName == locationRecord.recordID.recordName})) {
+                QRCodeLocationCachetems.append(locationRecordCacheItem)
+            }
   
             // save the new list of location record cache items for the record's associated QRCode
             // back in the location record cache dictionary.

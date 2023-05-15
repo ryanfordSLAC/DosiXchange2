@@ -47,6 +47,9 @@
 		84F477962167173A00A63336 /* LocationApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84F477942167173A00A63336 /* LocationApp.xcdatamodeld */; };
 		84F5ED6721B2024900381E76 /* RecordsUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F5ED6621B2024900381E76 /* RecordsUpdate.swift */; };
 		84F9180222211C9B00D25634 /* NearestDosimeters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F9180122211C9B00D25634 /* NearestDosimeters.swift */; };
+		E452A4912A0E74E20096365E /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = E452A4902A0E74E20096365E /* Cache.swift */; };
+		E49CBDB72A0CF3D2009C4F49 /* Locations.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49CBDB62A0CF3D2009C4F49 /* Locations.swift */; };
+		E49CBDB92A0D355D009C4F49 /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49CBDB82A0D355D009C4F49 /* Query.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -114,6 +117,9 @@
 		84F477952167173A00A63336 /* LocationApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = LocationApp.xcdatamodel; sourceTree = "<group>"; };
 		84F5ED6621B2024900381E76 /* RecordsUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordsUpdate.swift; sourceTree = "<group>"; };
 		84F9180122211C9B00D25634 /* NearestDosimeters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearestDosimeters.swift; sourceTree = "<group>"; };
+		E452A4902A0E74E20096365E /* Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
+		E49CBDB62A0CF3D2009C4F49 /* Locations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Locations.swift; sourceTree = "<group>"; };
+		E49CBDB82A0D355D009C4F49 /* Query.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Query.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,6 +177,7 @@
 		8421B0572165BBB80041A53A = {
 			isa = PBXGroup;
 			children = (
+				E49CBDB52A0CF3B1009C4F49 /* CloudKit */,
 				84505D1D2231DEAD009551BC /* Other Asseets */,
 				8409F52522022A4300B78BCC /* Database Interactions */,
 				84673C5521FF864C00680EAB /* Utility View */,
@@ -306,6 +313,16 @@
 				8434D57A25956DE800B2E413 /* RepairCycleDate.swift */,
 			);
 			path = "Populate Database";
+			sourceTree = "<group>";
+		};
+		E49CBDB52A0CF3B1009C4F49 /* CloudKit */ = {
+			isa = PBXGroup;
+			children = (
+				E49CBDB62A0CF3D2009C4F49 /* Locations.swift */,
+				E49CBDB82A0D355D009C4F49 /* Query.swift */,
+				E452A4902A0E74E20096365E /* Cache.swift */,
+			);
+			path = CloudKit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -468,10 +485,12 @@
 				84F477962167173A00A63336 /* LocationApp.xcdatamodeld in Sources */,
 				84B58D4D21FD69C80013D5F3 /* UploadToCloud.swift in Sources */,
 				449A7E9B271337E6005AF1F7 /* LocationRecordCache.swift in Sources */,
+				E49CBDB92A0D355D009C4F49 /* Query.swift in Sources */,
 				84A6671421E7162200FC1892 /* Artwork.swift in Sources */,
 				84571FE5258FE29C009AC936 /* BriefCase.swift in Sources */,
 				84F9180222211C9B00D25634 /* NearestDosimeters.swift in Sources */,
 				79A5CB15270E77E9007309EF /* DebugLocations.swift in Sources */,
+				E49CBDB72A0CF3D2009C4F49 /* Locations.swift in Sources */,
 				8487FE2E21A8F4E000CC62E8 /* ScannerViewController.swift in Sources */,
 				8434D57B25956DE800B2E413 /* RepairCycleDate.swift in Sources */,
 				449A7E9D271341B2005AF1F7 /* LocationRecordCacheItem.swift in Sources */,
@@ -483,6 +502,7 @@
 				8421B0642165BBB80041A53A /* AppDelegate.swift in Sources */,
 				5CFF888B22CAA5B700611F60 /* ActiveLocations.swift in Sources */,
 				8409F52422022A3900B78BCC /* Queries.swift in Sources */,
+				E452A4912A0E74E20096365E /* Cache.swift in Sources */,
 				5C7925A122DE9B1900B981B2 /* LocationDetails.swift in Sources */,
 				84F5ED6721B2024900381E76 /* RecordsUpdate.swift in Sources */,
 				846606C321AA5C380049814C /* MapViewController.swift in Sources */,
@@ -543,7 +563,6 @@
 		8421B0862165BBB90041A53A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -574,7 +593,6 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ALLOW_ENTITLEMENTS_MODIFICATION = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = KHM26R2G73;
@@ -607,7 +625,6 @@
 		8421B0872165BBB90041A53A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -638,7 +655,6 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ALLOW_ENTITLEMENTS_MODIFICATION = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = KHM26R2G73;

@@ -15,6 +15,7 @@ import CloudKit
 
 //MARK:  Class
 class MapViewController: UIViewController {
+    let locations = LocationsCK.shared
     @IBOutlet weak var MapView: MKMapView!
     @IBOutlet weak var filtersButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -50,7 +51,6 @@ class MapViewController: UIViewController {
         let region = MKCoordinateRegion(center: initialLocation, latitudinalMeters: 150, longitudinalMeters: 150)
         
         //query records
-        queryForMap()
         
         self.MapView.setRegion(region, animated: true)
         self.MapView.mapType = MKMapType.standard
@@ -60,7 +60,10 @@ class MapViewController: UIViewController {
         DispatchQueue.main.async {
             self.locationmanager.startUpdatingLocation()
         }
-        
+    }
+    
+    override func viewDidAppear(_ makk: Bool) {
+        queryForMap()
     }
     
     @IBAction func done(_ sender: Any) {
@@ -286,104 +289,33 @@ extension MapViewController {
     
     //query active locations
     func queryForMap() {
-                
-        // try to load the records from the locations cache in memory
-        if LocationRecordCache.shared.cacheIsLoaded() {
-
-            LocationRecordCache.shared.fetchLocationRecordsFromCache(withQRCode: nil,
-                                                                     processRecord: self.processLocationRecord,
-                                                                     completion: self.finishedLoadingCachedLocationRecords)
-            // Fetch only the location records from CloudKit that have a modificationDate after the maximum modified time of
-            // all the cached location records.
-            queryCloudKitForMap(afterdModifiedDate: LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate)
+        self.activityIndicator.startAnimating()
+        
+        var items = self.locations.filter(by: { _ in true })
+        items.sort {
+            ($0.QRCode, $0.locdescription) < ($1.QRCode, $1.locdescription)
         }
-        else if LocationRecordCache.shared.locationRecordCacheFileExists() {
-
-            LocationRecordCache.shared.loadLocationsRecordCacheFile { [self] didLoad in
-                if didLoad {
-                    LocationRecordCache.shared.fetchLocationRecordsFromCache(withQRCode: nil,
-                                                                             processRecord: self.processLocationRecord,
-                                                                             completion: self.finishedLoadingCachedLocationRecords)
-                    
-                    // Fetch only the location records from CloudKit that have a modificationDate after the maximum modified time of
-                    // all the cached location records.
-                    queryCloudKitForMap(afterdModifiedDate: LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate)
-                }
+        var annotations = [Artwork]()
+        for item in items {
+            let annotation = self.processLocationRecord(item)
+            if annotation != nil {
+                annotations.append(annotation!)
             }
         }
-        else {
-            // Fetch all of the Location records from CloudKit.
-            queryCloudKitForMap()
-        }
+        self.finishedLoadingCachedLocationRecords(annotations: annotations)
    } //end func
-    
   
-    //query active locations from CloudKit after a given record modified date,
-    //else fetch all locations if the given record modified date is nil (default)
-    func queryCloudKitForMap(afterdModifiedDate recordModifiedDate: Date? = nil) {
-            
-        // Notify the locations cache that we started fetching records from CloudKit.
-        LocationRecordCache.shared.didStartFetchingRecords()
-                
-        var predicate: NSPredicate?
-        if let modificationDate = recordModifiedDate {
-            predicate = NSPredicate(format: "modificationDate > %@", argumentArray: [modificationDate])
-       }
-        else {
-            predicate = NSPredicate(value: true)
-        }
- 
-        let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
-        //let sort2 = NSSortDescriptor(key: "creationDate", ascending: false)
-        let sort2 = NSSortDescriptor(key: "createdDate", ascending: false)
-        let query = CKQuery(recordType: "Location", predicate: predicate!)
-        query.sortDescriptors = [sort1, sort2]
-        let operation = CKQueryOperation(query: query)
-        addOperation(operation: operation)
-    }
-
-    func finishedLoadingCachedLocationRecords() {
+    func finishedLoadingCachedLocationRecords(annotations: [Artwork]) {
         DispatchQueue.main.async {
             self.activityIndicator.stopAnimating()
             self.filtersButton.isHidden = false
+            self.MapView.addAnnotations(annotations)
         }
     }
-    
-    //add query operation
-    func addOperation(operation: CKQueryOperation) {
-        operation.resultsLimit = 200 // max 400; 200 to be safe
-        operation.recordFetchedBlock = self.recordFetchedBlock // to be executed for each fetched record
-        operation.queryCompletionBlock = self.queryCompletionBlock // to be executed after each query (query fetches 200 records at a time)
-        
-        database.add(operation)
-    } //end func
-    
-    
-    //to be executed after each query (query fetches 200 records at a time)
-    func queryCompletionBlock(cursor: CKQueryOperation.Cursor?, error: Error?) {
-
-        if let error = error {
-            print(error.localizedDescription)
-            return
-        }
-        if let cursor = cursor {
-            let operation = CKQueryOperation(cursor: cursor)
-            addOperation(operation: operation)
-            return
-        }
-    
-        // Notify the locations cache that we finished fetching records from CloudKit.
-        LocationRecordCache.shared.didFinishFetchingRecords()     // TESTING
-
-        DispatchQueue.main.async {
-            self.activityIndicator.stopAnimating()
-            self.filtersButton.isHidden = false
-        }
-    } //end func
     
     // Process a Location record that was fetched from CloudKit
     // or thr local location records cache.
-    func processLocationRecord(_ record: LocationRecordDelegate) {
+    func processLocationRecord(_ record: LocationRecordDelegate) -> Artwork? {
            
         var showErrorAlert = false
         defer {
@@ -397,58 +329,45 @@ extension MapViewController {
         //fetch QRCode
         guard let QRCode:String = record["QRCode"] as? String else {
             showErrorAlert = true
-            return
+            return nil
         }
         
         //if record has the same QRCode as the previous record, skip record
-        if QRCode == self.checkQR { return }
+        if QRCode == self.checkQR { return nil }
         
         //run whole thing on main thread to prevent "let artwork" line from producing error
         switch record["active"] {
         //handle rare cases when active is nil.  Notify administrator.
         case nil:
             showErrorAlert = true
-            return
+            return nil
         default:
             guard let active:Int64 = record["active"] as? Int64,
                   let latitude:String = record["latitude"] as? String,
                   let longitude:String = record["longitude"] as? String,
                   let description:String = record["locdescription"] as? String else {
                       showErrorAlert = true
-                      return
+                      return nil
             }
-
-            DispatchQueue.main.async {
                 
-                let dosimeter = record["dosinumber"] as? String
-                let cycleDate = record["cycleDate"] as? String
-                let collected = record["collectedFlag"] as? Int64
-                
-                var fullTitle = "\(QRCode)"
-                if collected == 0 && dosimeter != "" {
-                    fullTitle.append(contentsOf: "\n\(dosimeter ?? "Dosi Nil")")
-                }
-                
-                let dosiLocations = CLLocationCoordinate2D(latitude: CLLocationDegrees(latitude)!, longitude: CLLocationDegrees(longitude)!)
-                let artwork = Artwork(title: fullTitle, locDescription: description, active: active, coordinate: dosiLocations, cycleDate: cycleDate, collected: collected) //this has a location manager and needs main thread.
-                if(self.filters[artwork.markerTintColor]!) {
-                    self.MapView.addAnnotation(artwork)
-                }
-            }
+            let dosimeter = record["dosinumber"] as? String
+            let cycleDate = record["cycleDate"] as? String
+            let collected = record["collectedFlag"] as? Int64
             
+            var fullTitle = "\(QRCode)"
+            if collected == 0 && dosimeter != "" {
+                fullTitle.append(contentsOf: "\n\(dosimeter ?? "Dosi Nil")")
+            }
             self.checkQR = QRCode
+            
+            let dosiLocations = CLLocationCoordinate2D(latitude: CLLocationDegrees(latitude)!, longitude: CLLocationDegrees(longitude)!)
+            let artwork = Artwork(title: fullTitle, locDescription: description, active: active, coordinate: dosiLocations, cycleDate: cycleDate, collected: collected) //this has a location manager and needs main thread.
+            if(self.filters[artwork.markerTintColor]!) {
+                return artwork
+            }
+            return nil
         }
     }
-    
-    //to be executed for each fetched Locationrecord
-    func recordFetchedBlock(record: CKRecord) {
- 
-        // process the fetched location record.
-        processLocationRecord(record)
-
-        // Notify the locations cache that we fetched a record from CloudKit.
-        LocationRecordCache.shared.didFetchLocationRecord(record)
-      }
     
     //MARK:  Alert 13
         
