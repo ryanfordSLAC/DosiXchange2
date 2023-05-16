@@ -289,27 +289,34 @@ extension MapViewController {
     
     //query active locations
     func queryForMap() {
-        self.activityIndicator.startAnimating()
-        
-        var items = self.locations.filter(by: { _ in true })
-        items.sort {
-            ($0.QRCode, $0.locdescription) < ($1.QRCode, $1.locdescription)
-        }
-        var annotations = [Artwork]()
-        for item in items {
-            let annotation = self.processLocationRecord(item)
-            if annotation != nil {
-                annotations.append(annotation!)
+        DispatchQueue.global(qos: .userInitiated).async {
+            DispatchQueue.main.async {
+                self.activityIndicator.startAnimating()
+            }
+                        
+            var items = self.locations.filter(by: { _ in true })
+            items.sort {
+                ($0.QRCode, $0.locdescription) < ($1.QRCode, $1.locdescription)
+            }
+            var annotations = [Artwork]()
+            DispatchQueue.main.async {
+                for item in items {
+                    let annotation = self.processLocationRecord(item)
+                    if annotation != nil {
+                        annotations.append(annotation!)
+                    }
+                }
+                self.finishedLoadingCachedLocationRecords(annotations: annotations)
             }
         }
-        self.finishedLoadingCachedLocationRecords(annotations: annotations)
    } //end func
   
     func finishedLoadingCachedLocationRecords(annotations: [Artwork]) {
         DispatchQueue.main.async {
+            print("annotations count: \(annotations.count)")
+            self.MapView.addAnnotations(annotations)
             self.activityIndicator.stopAnimating()
             self.filtersButton.isHidden = false
-            self.MapView.addAnnotations(annotations)
         }
     }
     
