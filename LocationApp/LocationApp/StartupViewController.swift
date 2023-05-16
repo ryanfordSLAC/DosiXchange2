@@ -14,6 +14,7 @@ import CoreLocation
 
 class StartupViewController: UIViewController, MFMailComposeViewControllerDelegate, CLLocationManagerDelegate {
     
+    let locations = LocationsCK.shared
     let reachability = Reachability()!
     let location = CLLocationManager()
     let query = Queries()

@@ -47,6 +47,8 @@
 		84F477962167173A00A63336 /* LocationApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84F477942167173A00A63336 /* LocationApp.xcdatamodeld */; };
 		84F5ED6721B2024900381E76 /* RecordsUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F5ED6621B2024900381E76 /* RecordsUpdate.swift */; };
 		84F9180222211C9B00D25634 /* NearestDosimeters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F9180122211C9B00D25634 /* NearestDosimeters.swift */; };
+		E404C0C52A124558000D2D14 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = E404C0C32A124558000D2D14 /* Cache.swift */; };
+		E404C0C62A124558000D2D14 /* Locations.swift in Sources */ = {isa = PBXBuildFile; fileRef = E404C0C42A124558000D2D14 /* Locations.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -114,6 +116,8 @@
 		84F477952167173A00A63336 /* LocationApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = LocationApp.xcdatamodel; sourceTree = "<group>"; };
 		84F5ED6621B2024900381E76 /* RecordsUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordsUpdate.swift; sourceTree = "<group>"; };
 		84F9180122211C9B00D25634 /* NearestDosimeters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearestDosimeters.swift; sourceTree = "<group>"; };
+		E404C0C32A124558000D2D14 /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
+		E404C0C42A124558000D2D14 /* Locations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Locations.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +150,8 @@
 		449A7E9E27135171005AF1F7 /* Location Cache */ = {
 			isa = PBXGroup;
 			children = (
+				E404C0C32A124558000D2D14 /* Cache.swift */,
+				E404C0C42A124558000D2D14 /* Locations.swift */,
 				449A7E9A271337E6005AF1F7 /* LocationRecordCache.swift */,
 				449A7E9C271341B2005AF1F7 /* LocationRecordCacheItem.swift */,
 			);
@@ -464,11 +470,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E404C0C52A124558000D2D14 /* Cache.swift in Sources */,
 				5CF01FDE22D92F19004604BC /* ToolsViewController.swift in Sources */,
 				84F477962167173A00A63336 /* LocationApp.xcdatamodeld in Sources */,
 				84B58D4D21FD69C80013D5F3 /* UploadToCloud.swift in Sources */,
 				449A7E9B271337E6005AF1F7 /* LocationRecordCache.swift in Sources */,
 				84A6671421E7162200FC1892 /* Artwork.swift in Sources */,
+				E404C0C62A124558000D2D14 /* Locations.swift in Sources */,
 				84571FE5258FE29C009AC936 /* BriefCase.swift in Sources */,
 				84F9180222211C9B00D25634 /* NearestDosimeters.swift in Sources */,
 				79A5CB15270E77E9007309EF /* DebugLocations.swift in Sources */,
