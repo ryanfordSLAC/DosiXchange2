@@ -296,7 +296,10 @@ extension MapViewController {
                         
             var items = self.locations.filter(by: { i in i.createdDate != nil })
             items.sort {
-                ($0.QRCode, $0.createdDate!) < ($1.QRCode, $1.createdDate!)
+                if $0.QRCode == $1.QRCode {
+                    return $0.createdDate! > $1.createdDate!
+                }
+                return $0.QRCode < $1.QRCode
             }
             var annotations = [Artwork]()
             DispatchQueue.main.async {
