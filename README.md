@@ -38,6 +38,8 @@ Version 2.0 / May 2023:
   - Simulator bug fix (map coordinates)
   - Reset cache button sizing
   - Data export limit by number of cycles (2, 3, 4 or All Data)
+  - Refactor cache
+  - Fix Nil QRCode and Nil Dosi issue for bad scans
 
 
 Version 1.3 / October 2021:

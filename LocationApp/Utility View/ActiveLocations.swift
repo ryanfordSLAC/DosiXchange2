@@ -12,13 +12,12 @@ import CloudKit
 //MARK:  Class
 class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
-    let database = CKContainer.default().publicCloudDatabase
-    let dispatchGroup = DispatchGroup()
+    let locations = LocationsCK.shared
     
     var segment:Int = 0
-    var displayInfo = [[(LocationRecordDelegate, String, String)]]()
+    var displayInfo :[[(LocationRecordDelegate, String, String)]] = [[],[]]
     var checkQR = ""
-    var searches = [[(LocationRecordDelegate, String, String)]]()
+    var searches : [[(LocationRecordDelegate, String, String)]] = [[],[]]
     var searching = false
     
     @IBOutlet weak var segmentedControl: UISegmentedControl!
@@ -42,22 +41,14 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
         segmentedControl.selectedSegmentIndex = segment
         
         //Table View SetUp
-
-        //this query will populate the tableView when the view loads.
-        queryDatabase()
-        
-        //wait for query to finish
-        dispatchGroup.notify(queue: .main) {
-            self.activesTableView.reloadData()
-            //stop activityIndicator
-            self.activityIndicator.stopAnimating()
-        }
-        
         let refreshControl = UIRefreshControl()
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to Refresh Locations")
         //this query will populate the table when the table is pulled.
         refreshControl.addTarget(self, action: #selector(queryDatabase), for: .valueChanged)
         self.activesTableView.refreshControl = refreshControl
+        
+        //this query will populate the tableView when the view loads.
+        queryDatabase()
         
     } //end viewDidLoad
     
@@ -82,8 +73,6 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        dispatchGroup.wait()
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "QRCell", for: indexPath)
         
@@ -114,14 +103,29 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
         self.present(vc, animated: true)
     }
     
+    fileprivate func clearSearchedItems() {
+        searches = [[(LocationRecordDelegate, String, String)]]()
+        searches.append([(LocationRecordDelegate, String, String)]())
+        searches.append([(LocationRecordDelegate, String, String)]())
+    }
+    
+    fileprivate func clearLocationItems() {
+        displayInfo = [[],[]]
+    }
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
-        let segment0 = displayInfo[0].filter({$0.1.lowercased().contains(searchText.lowercased()) || $0.2.lowercased().contains(searchText.lowercased())})
-        let segment1 = displayInfo[1].filter({$0.1.lowercased().contains(searchText.lowercased()) || $0.2.lowercased().contains(searchText.lowercased())})
-        
-        searches = [segment0, segment1]
-        
+        if searchText.count < 3 {
+            return
+        }
+            
         searching = true
+
+        clearSearchedItems()
+
+        let items = locations.filter(by: { $0.QRCode.contains(searchText) || $0.locdescription.contains(searchText) })
+        for item in items {
+            processLocationRecord(item)
+        }
         activesTableView.reloadData()
     }
     
@@ -130,6 +134,7 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
         searchBar.text = ""
         searchBar.endEditing(true)
         activesTableView.reloadData()
+        queryDatabase()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -143,114 +148,20 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
 extension ActiveLocations {
 
     @objc func queryDatabase() {
-                
-        dispatchGroup.enter()
-        
-        //reset array
-        displayInfo = [[(CKRecord, String, String)]]()
-        displayInfo.append([(CKRecord, String, String)]())
-        displayInfo.append([(CKRecord, String, String)]())
-         
-        // try to load the records from the locations cache in memory
-        if LocationRecordCache.shared.cacheIsLoaded() {
-            LocationRecordCache.shared.fetchLocationRecordsFromCache(withQRCode: nil,
-                                                                     processRecord: self.processLocationRecord,
-                                                                     completion: self.finishedLoadingCachedLocationRecords)
-            // Fetch only the location records from CloudKit that have a modificationDate after the maximum modified time of
-            // all the cached location records.
-            queryCloudKitForDatabase(afterdModifiedDate: LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate)
+        clearLocationItems()
+        activityIndicator.startAnimating()
+        var items = locations.filter(by: { _ in true })
+        items.sort {
+            ($0.QRCode, $0.locdescription) < ($1.QRCode, $1.locdescription)
         }
-        else if LocationRecordCache.shared.locationRecordCacheFileExists() {
-
-            LocationRecordCache.shared.loadLocationsRecordCacheFile { [self] didLoad in
-                if didLoad {
-                      LocationRecordCache.shared.fetchLocationRecordsFromCache(withQRCode: nil,
-                                                                             processRecord: self.processLocationRecord,
-                                                                             completion: self.finishedLoadingCachedLocationRecords)
-                    
-                    // Fetch only the location records from CloudKit that have a modificationDate after the maximum modified time of
-                    // all the cached location records.
-                    queryCloudKitForDatabase(afterdModifiedDate: LocationRecordCache.shared.maxLocationRecordCacheItemModificationDate)
-                }
-            }
+        for item in items {
+            processLocationRecord(item)
         }
-        else {
-            // Fetch all of the Location records from CloudKit.
-            queryCloudKitForDatabase()
-        }
+        activesTableView.reloadData()
+        activityIndicator.stopAnimating()
    } //end func
-    
-    
+        
   
-    //query locations from CloudKit after a given record modified date,
-    //else fetch all locations if the given record modified date is nil (default)
-    func queryCloudKitForDatabase(afterdModifiedDate recordModifiedDate: Date? = nil) {
-    
-        // Notify the locations cache that we started fetching records from CloudKit.
-        LocationRecordCache.shared.didStartFetchingRecords()
-                         
-        var predicate: NSPredicate?
-        if let modificationDate = recordModifiedDate {
-            predicate = NSPredicate(format: "modificationDate > %@", argumentArray: [modificationDate])
-       }
-        else {
-            predicate = NSPredicate(value: true)
-        }
-        let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
-        //let sort2 = NSSortDescriptor(key: "creationDate", ascending: false)
-        let sort2 = NSSortDescriptor(key: "createdDate", ascending: false) //Ver 1.2
-        let query = CKQuery(recordType: "Location", predicate: predicate!)
-        query.sortDescriptors = [sort1, sort2]
-        let operation = CKQueryOperation(query: query)
-        addOperation(operation: operation)
-    }
-
-    func finishedLoadingCachedLocationRecords() {
-
-        DispatchQueue.main.async {
-            if self.activesTableView != nil {
-                self.activesTableView.refreshControl?.endRefreshing()
-                self.activesTableView.reloadData()
-        
-                //stop activityIndicator
-                self.activityIndicator.stopAnimating()
-            }
-        }
-    }
-    
-    //add query operation
-    func addOperation(operation: CKQueryOperation) {
-        operation.resultsLimit = 200 //max 400; 200 to be safe
-        operation.recordFetchedBlock = self.recordFetchedBlock //to be executed for each fetched record
-        operation.queryCompletionBlock = self.queryCompletionBlock //to be executed after each query (query fetches 200 records at a time)
-        
-        database.add(operation)
-    } //end func
-    
-    
-    //to be executed after each query (query fetches 200 records at a time)
-    func queryCompletionBlock(cursor: CKQueryOperation.Cursor?, error: Error?) {
- 
-        if let error = error {
-            print(error.localizedDescription)
-            return
-        }
-        if let cursor = cursor {
-            let operation = CKQueryOperation(cursor: cursor)
-            addOperation(operation: operation)
-            return
-        }
-
-        DispatchQueue.main.async {
-            if self.activesTableView != nil {
-                self.activesTableView.refreshControl?.endRefreshing()
-                self.activesTableView.reloadData()
-            }
-        }
-        dispatchGroup.leave()
-    } //end func
-    
-    
     // Process a Location record that was fetched from CloudKit
     // or thr local location records cache.
     func processLocationRecord(_ record: LocationRecordDelegate) {
@@ -280,24 +191,18 @@ extension ActiveLocations {
                 //if QRCode is not the same as previous record
                 if currentQR != self.checkQR {
                     //append (QRCode, locdescription) tuple displayInfo
-                    displayInfo[flag].append((record, currentQR, currentLoc))
+                    if searching {
+                        searches[flag].append((record, currentQR, currentLoc))
+                    }
+                    else {
+                        displayInfo[flag].append((record, currentQR, currentLoc))
+                    }
                 }
                 
                 self.checkQR = currentQR
           }
                   
         }
-    } //end func
-    
-    //to be executed for each fetched record
-    //MARK:  Loading Tableview
-    func recordFetchedBlock(record: CKRecord) {
-                
-        // Notify the locations cache that we fetched a record from CloudKit.
-        LocationRecordCache.shared.didFetchLocationRecord(record)
- 
-        processLocationRecord(record)
-
     } //end func
     
 //MARK:  Alert 12
