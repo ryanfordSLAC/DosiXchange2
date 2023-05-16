@@ -294,9 +294,9 @@ extension MapViewController {
                 self.activityIndicator.startAnimating()
             }
                         
-            var items = self.locations.filter(by: { _ in true })
+            var items = self.locations.filter(by: { i in i.createdDate != nil })
             items.sort {
-                ($0.QRCode, $0.locdescription) < ($1.QRCode, $1.locdescription)
+                ($0.QRCode, $0.createdDate!) < ($1.QRCode, $1.createdDate!)
             }
             var annotations = [Artwork]()
             DispatchQueue.main.async {
@@ -372,7 +372,7 @@ extension MapViewController {
             if(self.filters[artwork.markerTintColor]!) {
                 return artwork
             }
-            return nil
+            return artwork
         }
     }
     
