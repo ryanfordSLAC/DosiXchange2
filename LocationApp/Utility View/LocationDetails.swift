@@ -21,7 +21,7 @@ class LocationDetails: UIViewController {
     var active = 0
     
     var records = [LocationRecordDelegate]()
-    var details = [(String, String, String, Int, Int)]()
+    var details = [(String, String, String, Int64, Int64)]()
     
     let dispatchGroup = DispatchGroup()
     let database = CKContainer.default().publicCloudDatabase
@@ -285,6 +285,7 @@ extension LocationDetails: UITableViewDelegate, UITableViewDataSource {
         
         setPopupDetails(record: records[indexPath.section])
         self.popupConstraint.constant = 0
+        self.editRecordPopup.isHidden = false
         
         UIView.animate(withDuration: 0.2, animations: {
             self.view.layoutIfNeeded()
@@ -297,42 +298,28 @@ extension LocationDetails: UITableViewDelegate, UITableViewDataSource {
         dispatchGroup.enter()
         
         records = [LocationRecordDelegate]()
-        details = [(String, String, String, Int, Int)]()
+        details = [(String, String, String, Int64, Int64)]()
         
-        let predicate = NSPredicate(format: "QRCode == %@", QRCode)
-        //let sort = NSSortDescriptor(key: "creationDate", ascending: false)
-        let sort = NSSortDescriptor(key: "createdDate", ascending: false) //Ver 1.2
-        let query = CKQuery(recordType: "Location", predicate: predicate)
-        query.sortDescriptors = [sort]
-        
-        let operation = CKQueryOperation(query: query)
-        operation.resultsLimit = 100 //assume less than 100 records
-        operation.recordFetchedBlock = self.recordFetchedBlock //to be executed for each fetched record
-        operation.queryCompletionBlock = self.queryCompletionBlock //to be executed after each the query
-        
-        database.add(operation)
-    } //end func
-    
-    
-    //to be executed after each query (query fetches 100 records)
-    func queryCompletionBlock(cursor: CKQueryOperation.Cursor?, error: Error?) {
-        if let error = error {
-            print(error.localizedDescription)
-            return
+        var items = locations.filter(by: { l in l.QRCode == QRCode && l.createdDate != nil })
+        items.sort {
+            $0.createdDate! > $1.createdDate!
+        }
+        for item in items {
+            recordFetchedBlock(record: item)
         }
         
         DispatchQueue.main.async {
+            self.dispatchGroup.leave()
             if self.qrTable != nil {
                 self.qrTable.refreshControl?.endRefreshing()
                 self.qrTable.reloadData()
             }
         }
-        dispatchGroup.leave()
     } //end func
-    
+        
     
     //to be executed for each fetched record
-    func recordFetchedBlock(record: CKRecord) {
+    func recordFetchedBlock(record: LocationRecordCacheItem) {
         
         let dateFormatter = DateFormatter()
         //dateFormatter.dateFormat = "MM/dd/yyyy, hh:mm a"
@@ -341,10 +328,10 @@ extension LocationDetails: UITableViewDelegate, UITableViewDataSource {
         //let creationDate = "Record Created: \(dateFormatter.string(from: record.creationDate!))"
         //print(record["createdDate"] as! Date)
         let createdDate = "Record Created: \(dateFormatter.string(from: record["createdDate"] as! Date))" //Ver 1.2"
-        let dosimeter = record["dosinumber"] != "" ? String(describing: record["dosinumber"]!) : "n/a"
-        let wearperiod = record["cycleDate"] != nil && record["cycleDate"] != "" ? String(describing: record["cycleDate"]!) : "n/a"
-        let collectedFlag = record["collectedFlag"] != nil ? record["collectedFlag"]! as Int : 2
-        let modFlag = record["moderator"] != nil ? record["moderator"]! as Int : 2
+        let dosimeter = record.dosinumber != "" ? String(describing: record.dosinumber!) : "n/a"
+        let wearperiod = record.cycleDate != nil && record.cycleDate != "" ? String(describing: record.cycleDate!) : "n/a"
+        let collectedFlag = record.collectedFlag != nil ? record.collectedFlag! as Int64 : 2
+        let modFlag = record.moderator != nil ? record.moderator! as Int64 : 2
         
         self.details.append((createdDate, dosimeter, wearperiod, modFlag, collectedFlag))
         self.records.append(record)
@@ -367,6 +354,7 @@ extension LocationDetails: UITextFieldDelegate {
     @IBAction func popupCancel(_ sender: Any) {
         
         view.endEditing(true)
+        editRecordPopup.isHidden = true
         popupConstraint.constant = 600
         
         UIView.animate(withDuration: 0.2, animations: {
@@ -379,14 +367,7 @@ extension LocationDetails: UITextFieldDelegate {
         
         view.endEditing(true)
         savePopupRecord()
-        //dispatchGroup.wait()
-        
-        //refresh and show Active Locations TableView
-        let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
-        let vc = mainStoryboard.instantiateViewController(withIdentifier: "ActiveLocations") as! ActiveLocations
-        vc.segment = active == 1 ? 0 : 1
-        self.show(vc, sender: self)
-        
+        self.dismiss(animated: true)
     }
     
     func savePopupRecord() {
@@ -396,38 +377,19 @@ extension LocationDetails: UITextFieldDelegate {
         let text = pDescription.text?.replacingOccurrences(of: ",", with: "-")
         
         //set new record information
-        record.setValue(text, forKey: "locdescription")
-        record.setValue(pLatitude.text, forKey: "latitude")
-        record.setValue(pLongitude.text, forKey: "longitude")
-        record.setValue(pDosimeter.text, forKey: "dosinumber")
-        record.setValue(moderator, forKey: "moderator")
+        popupRecord.setValue(text, forKey: "locdescription")
+        popupRecord.setValue(pLatitude.text, forKey: "latitude")
+        popupRecord.setValue(pLongitude.text, forKey: "longitude")
+        popupRecord.setValue(pDosimeter.text, forKey: "dosinumber")
+        popupRecord.setValue(moderator, forKey: "moderator")
         if pDosimeter.text != "" {
-
-            record.setValue(pCycleDate.text, forKey: "cycleDate")
-            record.setValue(collected, forKey: "collectedFlag")
-            record.setValue(mismatch, forKey: "mismatch")
+            popupRecord.setValue(pCycleDate.text, forKey: "cycleDate")
+            popupRecord.setValue(collected, forKey: "collectedFlag")
+            popupRecord.setValue(mismatch, forKey: "mismatch")
         }
         //not handled if dosimeter number is empty.  Therefore can't set collected flag.
    
-        locations.save(item: record as! LocationRecordCacheItem)
-  //      dispatchGroup.leave()
-        //
- /*       #if false
-        // TODO: Handdle saving LocationRecordCacheItem to disk.
-        let operation = CKModifyRecordsOperation(recordsToSave: [popupRecord], recordIDsToDelete: nil)
-        
-        operation.modifyRecordsCompletionBlock = { (records, recordIDs, error) in
-            if let error = error {
-                print(error.localizedDescription)
-            }
-         
-            self.dispatchGroup.leave()
-        }
-        database.add(operation)
-        #else
-        self.dispatchGroup.leave()
-        #endif*/
-        
+        locations.save(item: popupRecord as! LocationRecordCacheItem)        
      } //end saveActiveStatus
     
     func setPopupDetails(record: LocationRecordDelegate) {

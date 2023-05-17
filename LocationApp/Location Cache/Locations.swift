@@ -74,10 +74,10 @@ class LocationsCK : Locations {
         dispatchGroup.wait()
         dispatchGroup.enter()
         self.cache?.addChange(item)
+        dispatchGroup.leave()
         if (self.reachability.connection != .none) {
             self.reachable(self.reachability)
-        }
-        dispatchGroup.leave()
+        }        
     }
     
     private func reachable(_ : Reachability) {

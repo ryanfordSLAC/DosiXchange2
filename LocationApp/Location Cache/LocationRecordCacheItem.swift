@@ -272,9 +272,7 @@ struct LocationRecordCacheItem: Codable, LocationRecordDelegate {
         self[key] = value as? CKRecordValue
     }
 
-    func setValue(_ value: Any?, forKey key: String) {
-        if let valueObject = value as? NSObject {
-           setValue(valueObject, forKey: key)
-        }
+    mutating func setValue(_ value: Any?, forKey key: String) {
+        self[key] = value as? CKRecordValue
     }
 }
