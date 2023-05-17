@@ -12,6 +12,7 @@ import CloudKit
 //MARK:  Class
 class LocationDetails: UIViewController {
     
+    let locations = LocationsCK.shared
     var record: LocationRecordDelegate = CKRecord(recordType: "Location")
     var QRCode = ""
     var loc = ""
@@ -180,13 +181,16 @@ extension LocationDetails {
     
     func saveActiveStatus() {
         
-        dispatchGroup.enter()
+        //dispatchGroup.enter()
         
         //set active flag for all records in current location
-        for var record in records {
+ /*       for var record in records {
             record.setValue(active, forKey: "active")
+            locations.save(item: LocationRecordCacheItem(withRecord: record)!)
         }
+        */
         
+    /*
         #if false       // TODO: Hande saving LocationRecordCacheItem to CloudKit
         let operation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: nil)
         
@@ -208,7 +212,7 @@ extension LocationDetails {
         #else
         self.dispatchGroup.leave()
         #endif
-        
+      */
     } //end saveActiveStatus
     
 }
@@ -375,7 +379,7 @@ extension LocationDetails: UITextFieldDelegate {
         
         view.endEditing(true)
         savePopupRecord()
-        dispatchGroup.wait()
+        //dispatchGroup.wait()
         
         //refresh and show Active Locations TableView
         let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
@@ -387,26 +391,28 @@ extension LocationDetails: UITextFieldDelegate {
     
     func savePopupRecord() {
         
-        dispatchGroup.enter()
+//        dispatchGroup.enter()
         
         let text = pDescription.text?.replacingOccurrences(of: ",", with: "-")
         
         //set new record information
-        popupRecord.setValue(text, forKey: "locdescription")
-        popupRecord.setValue(pLatitude.text, forKey: "latitude")
-        popupRecord.setValue(pLongitude.text, forKey: "longitude")
-        popupRecord.setValue(pDosimeter.text, forKey: "dosinumber")
-        popupRecord.setValue(moderator, forKey: "moderator")
+        record.setValue(text, forKey: "locdescription")
+        record.setValue(pLatitude.text, forKey: "latitude")
+        record.setValue(pLongitude.text, forKey: "longitude")
+        record.setValue(pDosimeter.text, forKey: "dosinumber")
+        record.setValue(moderator, forKey: "moderator")
         if pDosimeter.text != "" {
 
-            popupRecord.setValue(pCycleDate.text, forKey: "cycleDate")
-            popupRecord.setValue(collected, forKey: "collectedFlag")
-            popupRecord.setValue(mismatch, forKey: "mismatch")
+            record.setValue(pCycleDate.text, forKey: "cycleDate")
+            record.setValue(collected, forKey: "collectedFlag")
+            record.setValue(mismatch, forKey: "mismatch")
         }
         //not handled if dosimeter number is empty.  Therefore can't set collected flag.
    
+        locations.save(item: record as! LocationRecordCacheItem)
+  //      dispatchGroup.leave()
         //
-        #if false
+ /*       #if false
         // TODO: Handdle saving LocationRecordCacheItem to disk.
         let operation = CKModifyRecordsOperation(recordsToSave: [popupRecord], recordIDsToDelete: nil)
         
@@ -420,7 +426,7 @@ extension LocationDetails: UITextFieldDelegate {
         database.add(operation)
         #else
         self.dispatchGroup.leave()
-        #endif
+        #endif*/
         
      } //end saveActiveStatus
     

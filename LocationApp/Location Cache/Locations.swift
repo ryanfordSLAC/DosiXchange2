@@ -89,7 +89,7 @@ class LocationsCK : Locations {
         if (!self.cache!.changes.isEmpty) {
             var records = [CKRecord]()
             for item in self.cache!.changes {
-                let newRecord = CKRecord(recordType: "Location")
+                let newRecord = CKRecord(recordType: "Location", recordID: CKRecord.ID(recordName: item.recordName!))
                 newRecord.setValue(item.latitude, forKey: "latitude")
                 newRecord.setValue(item.longitude, forKey: "longitude")
                 newRecord.setValue(item.locdescription, forKey: "locdescription")
