@@ -275,4 +275,20 @@ struct LocationRecordCacheItem: Codable, LocationRecordDelegate {
     mutating func setValue(_ value: Any?, forKey key: String) {
         self[key] = value as? CKRecordValue
     }
+    
+    func toRecord() -> CKRecord {
+        let newRecord = CKRecord(recordType: "Location", recordID: CKRecord.ID(recordName: self.recordName!))
+        newRecord.setValue(self.latitude, forKey: "latitude")
+        newRecord.setValue(self.longitude, forKey: "longitude")
+        newRecord.setValue(self.locdescription, forKey: "locdescription")
+        newRecord.setValue(self.dosinumber, forKey: "dosinumber")
+        newRecord.setValue(self.collectedFlag, forKey: "collectedFlag")
+        newRecord.setValue(self.cycleDate, forKey: "cycleDate")
+        newRecord.setValue(self.QRCode, forKey: "QRCode")
+        newRecord.setValue(self.moderator, forKey: "moderator")
+        newRecord.setValue(self.active, forKey: "active")
+        newRecord.setValue(self.createdDate, forKey: "createdDate")
+        newRecord.setValue(self.modifiedDate, forKey: "modifiedDate")
+        return newRecord
+    }
 }
