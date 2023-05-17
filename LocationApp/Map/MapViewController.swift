@@ -289,33 +289,34 @@ extension MapViewController {
     
     //query active locations
     func queryForMap() {
-        self.activityIndicator.startAnimating()
-        
-        var items = self.locations.filter(by: { _ in true })
+        DispatchQueue.main.async {
+            self.activityIndicator.startAnimating()
+        }
+                    
+        var items = self.locations.filter(by: { i in i.createdDate != nil })
         items.sort {
-            ($0.QRCode, $0.locdescription) < ($1.QRCode, $1.locdescription)
-        }
-        var annotations = [Artwork]()
-        for item in items {
-            let annotation = self.processLocationRecord(item)
-            if annotation != nil {
-                annotations.append(annotation!)
+            if $0.QRCode == $1.QRCode {
+                return $0.createdDate! > $1.createdDate!
             }
+            return $0.QRCode < $1.QRCode
         }
-        self.finishedLoadingCachedLocationRecords(annotations: annotations)
-   } //end func
-  
-    func finishedLoadingCachedLocationRecords(annotations: [Artwork]) {
+    
+        for item in items {
+            self.processLocationRecord(item)
+        }
+        self.finishedLoadingCachedLocationRecords()
+    }
+
+    func finishedLoadingCachedLocationRecords() {
         DispatchQueue.main.async {
             self.activityIndicator.stopAnimating()
             self.filtersButton.isHidden = false
-            self.MapView.addAnnotations(annotations)
         }
     }
     
     // Process a Location record that was fetched from CloudKit
     // or thr local location records cache.
-    func processLocationRecord(_ record: LocationRecordDelegate) -> Artwork? {
+    func processLocationRecord(_ record: LocationRecordDelegate) {
            
         var showErrorAlert = false
         defer {
@@ -329,25 +330,25 @@ extension MapViewController {
         //fetch QRCode
         guard let QRCode:String = record["QRCode"] as? String else {
             showErrorAlert = true
-            return nil
+            return
         }
         
         //if record has the same QRCode as the previous record, skip record
-        if QRCode == self.checkQR { return nil }
+        if QRCode == self.checkQR { return  }
         
         //run whole thing on main thread to prevent "let artwork" line from producing error
         switch record["active"] {
         //handle rare cases when active is nil.  Notify administrator.
         case nil:
             showErrorAlert = true
-            return nil
+            return
         default:
             guard let active:Int64 = record["active"] as? Int64,
                   let latitude:String = record["latitude"] as? String,
                   let longitude:String = record["longitude"] as? String,
                   let description:String = record["locdescription"] as? String else {
                       showErrorAlert = true
-                      return nil
+                      return
             }
                 
             let dosimeter = record["dosinumber"] as? String
@@ -361,11 +362,13 @@ extension MapViewController {
             self.checkQR = QRCode
             
             let dosiLocations = CLLocationCoordinate2D(latitude: CLLocationDegrees(latitude)!, longitude: CLLocationDegrees(longitude)!)
-            let artwork = Artwork(title: fullTitle, locDescription: description, active: active, coordinate: dosiLocations, cycleDate: cycleDate, collected: collected) //this has a location manager and needs main thread.
-            if(self.filters[artwork.markerTintColor]!) {
-                return artwork
+            DispatchQueue.main.async {
+                let artwork = Artwork(title: fullTitle, locDescription: description, active: active, coordinate: dosiLocations, cycleDate: cycleDate, collected: collected) //this has a location manager and needs main thread.
+                if(self.filters[artwork.markerTintColor]!) {
+                    self.MapView.addAnnotation(artwork)
+                }
             }
-            return nil
+            return
         }
     }
     
