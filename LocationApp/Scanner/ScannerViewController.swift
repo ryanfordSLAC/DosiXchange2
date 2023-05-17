@@ -1079,7 +1079,7 @@ extension ScannerViewController {  //alerts
     //MARK:  Alert12
     func alert12() {  //invalid code, rescan
         
-        let message = "The given code is invalid, please rescan!"
+        let message = "Invalid barcode, please rescan!"
         
         //set up alert
         let alert = UIAlertController.init(title: "Invalid code", message: message, preferredStyle: .alert)
