@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import CloudKit
 
 //MARK:  Class
 class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {

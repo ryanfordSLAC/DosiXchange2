@@ -9,14 +9,12 @@
 import Foundation
 import UIKit
 import MessageUI
-import CloudKit
 import AVFoundation
 //MARK:  Class
 class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate {
     
     let locations = LocationsCK.shared
     let readwrite = readWriteText()  //make external class available locally
-    let database = CKContainer.default().publicCloudDatabase  //establish database
     let dispatchGroup = DispatchGroup()
     let saveToCloud = Save()
     let queries = Queries()

@@ -49,16 +49,22 @@ class LocationsCK : Locations {
             self.cache = Cache.load() ?? Cache()
         }
         
-        let lastDate = self.cache!.locations
-            .filter({ $0.modifiedDate != nil })
-            .max(by: { a,b -> Bool in a.modifiedDate! < b.modifiedDate!})
+        if reachability.connection != .none {
+            let lastDate = self.cache!.locations
+                .filter({ $0.modifiedDate != nil })
+                .max(by: { a,b -> Bool in a.modifiedDate! < b.modifiedDate!})
 
-        var predicate = NSPredicate(value: true)
-        if lastDate != nil {
-            predicate = NSPredicate(format: "modifiedDate > %@", argumentArray: [lastDate!.modifiedDate!])
+            var predicate = NSPredicate(value: true)
+            if lastDate != nil {
+                predicate = NSPredicate(format: "modifiedDate > %@", argumentArray: [lastDate!.modifiedDate!])
+            }
+
+            self.query(predicate: predicate, sortDescriptors: [], pageSize: 50, loaded:loaded, completionHandler: self.queryCompletionHandler)
         }
-
-        self.query(predicate: predicate, sortDescriptors: [], pageSize: 50, loaded:loaded, completionHandler: self.queryCompletionHandler)
+        else {
+            dispatchGroup.leave()
+            loaded(self.cache!.locations.count)
+        }
     }
     
     func filter(by: (LocationRecordCacheItem) -> Bool) -> [LocationRecordCacheItem] {

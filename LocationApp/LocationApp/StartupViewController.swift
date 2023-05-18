@@ -14,8 +14,8 @@ import CoreLocation
 
 class StartupViewController: UIViewController, MFMailComposeViewControllerDelegate, CLLocationManagerDelegate {
     
-    let locations = LocationsCK.shared
     let reachability = Reachability()!
+    let locations = LocationsCK.shared    
     let location = CLLocationManager()
     let query = Queries()
     
@@ -65,7 +65,7 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
         let statusTap = UITapGestureRecognizer(target: self, action: #selector(setProgress))
         statusLabel.isUserInteractionEnabled = true
         statusLabel.addGestureRecognizer(statusTap)
-
+        
         // Do any additional setup after loading the view, typically from a nib.
         // Detect Wifi:
         reachability.whenReachable = { reachability in
@@ -75,6 +75,7 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
             else {
                 print("Reachable via Cellular")
             }
+            self.setProgress()
         }
         
         reachability.whenUnreachable = { _ in
@@ -84,7 +85,7 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
             alert.addAction(OK)
             
             DispatchQueue.main.async {
-                self.present(alert, animated: true, completion: nil)
+                self.present(alert, animated: true, completion: { self.setProgress()})
             } //async end
         
         }//end when unreachable
@@ -101,7 +102,7 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
     
     
     override func viewDidAppear(_ animated: Bool) {
-        setProgress()
+        //setProgress()
     }
     
     @IBAction func scanButtonDown(_ sender: Any) {
