@@ -167,7 +167,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
                 print("Code not found")
                 
             }//end switch
-          
+            
             scannerLogic(code: stringValue)
             
         }//end if let
@@ -226,10 +226,21 @@ extension ScannerViewController {
                             if variables.collected == 0 {
                                 self.beep()
                                 if variables.active == 1 {
-                                    self.alert3a() //Exchange Dosimeter (active location)
+                                    let dateFormatter = DateFormatter()
+                                    if(RecordsUpdate.generateCycleDate() == variables.cycle){
+                                        self.alert13(nextFunction: self.alert3a)
+                                    } else {
+                                        self.alert3a() //Exchange Dosimeter (active location)
+                                    }
+                                    
                                 }
                                 else {
-                                    self.alert3i() //Collect Dosimeter (inactive location)
+                                    if(RecordsUpdate.generateCycleDate() == variables.cycle){
+                                        self.alert13(nextFunction: self.alert3i)
+                                    } else {
+                                        self.alert3i() //Collect Dosimeter (inactive location)
+                                    }
+                                    
                                 }
                             }
                             //collected or no dosimeter
@@ -1094,6 +1105,26 @@ extension ScannerViewController {  //alerts
             self.present(alert, animated: true, completion: nil)
         }
     }  //end alert12
+    
+    //MARK:  Alert13
+    func alert13(nextFunction: @escaping () -> Void) {  //invalid cycle date
+        
+        let message = "This dosimeter already exchanged in the current cycle. Are you sure you want to continue?"
+        
+        //set up alert
+        let alert = UIAlertController.init(title: "Invalid cycle date", message: message, preferredStyle: .alert)
+        let cont = UIAlertAction(title: "Continue", style: .destructive) { (_) in
+            nextFunction()
+        }
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: handlerCancel)
+        
+        alert.addAction(cont)
+        alert.addAction(cancel)
+        
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
+    }  //end alert13
     
     
     //mismatch switch
