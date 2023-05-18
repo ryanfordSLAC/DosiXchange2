@@ -893,18 +893,24 @@ extension ScannerViewController {  //alerts
                     label.isHidden = false
                     self.present(alert, animated: true, completion: nil)
                 } else {
-                    self.recordsupdate.saveRecord(latitude: variables.latitude ?? "Nil Latitude",
-                                                  longitude: variables.longitude ?? "Nil Longitude",
-                                                  dosiNumber: variables.dosiNumber ?? "Nil Dosi",
-                                                  text: text,
-                                                  flag: 0,
-                                                  cycle: cycle,
-                                                  QRCode: variables.QRCode ?? "Nil QRCode",
-                                                  mismatch: variables.mismatch ?? 0,
-                                                  moderator: variables.moderator ?? 0,
-                                                  active: 1,
-                                                  createdDate: Date(timeInterval: 0, since: Date()),
-                                                  modifiedDate: Date(timeInterval: 0, since: Date()))
+                   
+                    let newRecord = CKRecord(recordType: "Location")
+                    newRecord.setValue(variables.latitude ?? "Nil Latitude", forKey: "latitude")
+                    newRecord.setValue(variables.longitude ?? "Nil Longitude", forKey: "longitude")
+                    newRecord.setValue(text, forKey: "locdescription")
+                    newRecord.setValue(variables.dosiNumber ?? "Nil Dosi", forKey: "dosinumber")
+                    newRecord.setValue(0, forKey: "collectedFlag")
+                    newRecord.setValue(cycle, forKey: "cycleDate")
+                    newRecord.setValue(variables.QRCode ?? "Nil QRCode", forKey: "QRCode")
+                    newRecord.setValue(variables.moderator ?? 0, forKey: "moderator")
+                    newRecord.setValue(1, forKey: "active")
+                    newRecord.setValue(Date(timeInterval: 0, since: Date()), forKey: "createdDate")
+                    newRecord.setValue(Date(timeInterval: 0, since: Date()), forKey: "modifiedDate")
+                    newRecord.setValue(variables.mismatch ?? 0, forKey: "mismatch")
+                    
+                    self.locations.save(item: LocationRecordCacheItem(withRecord: newRecord)!)
+                    
+                    
                     self.alert10() //Succes
                 }
     
