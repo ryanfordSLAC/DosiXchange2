@@ -144,44 +144,23 @@ class LocationsCK : Locations {
         if (!self.cache!.changes.isEmpty) {
             let changes = self.cache!.changes.count
             var records = [CKRecord]()
-           // let saveDispatch = DispatchGroup()
             for item in self.cache!.changes {
-          /*      saveDispatch.enter()
-                database.save(item.to(), completionHandler: { record, error in
-                    if let error = error {
-                        print(error.localizedDescription)
-                    }
-                    saveDispatch.leave()
-                })
-                saveDispatch.wait()
-            */
-                database.fetch(withRecordID: CKRecord.ID(recordName:item.recordName!), completionHandler: { record, error in
-                    if let error = error {
-                        print(error.localizedDescription)
-                        self.dispatchGroup.leave()
-                        return
-                    }
-                    if let record = record {
-                        item.update(newRecord: record)
-                        records.append(record)
-                        if records.count == changes {
-                            let operation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: nil)
-                            operation.savePolicy = .allKeys
-                            operation.modifyRecordsCompletionBlock = { (_, _, error) in
-                                if let error = error {
-                                    print(error.localizedDescription)
-                                }
-                                
-                                self.cache?.changes.removeAll()
-                                self.cache?.save()
-                                print("Saved \(records.count) locations.")
-                                self.dispatchGroup.leave()
-                            }
-                            self.database.add(operation)
-                            operation.waitUntilFinished()
-                        }
-                    }})
+                records.append(item.to())
             }
+            let operation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: nil)
+            operation.savePolicy = .allKeys
+            operation.modifyRecordsCompletionBlock = { (_, _, error) in
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+                
+                self.cache?.changes.removeAll()
+                self.cache?.save()
+                print("Saved \(records.count) locations.")
+                self.dispatchGroup.leave()
+            }
+            self.database.add(operation)
+            operation.waitUntilFinished()            
         }
         else {
             dispatchGroup.leave()
