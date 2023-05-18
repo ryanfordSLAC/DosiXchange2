@@ -14,6 +14,7 @@ import CoreLocation
 //MARK:  Class
 class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
+    let locations = LocationsCK.shared
     var recordsupdate = RecordsUpdate()
     var zoomFactor:CGFloat = 3
     var captureSession: AVCaptureSession!
@@ -25,7 +26,6 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     var itemRecord:CKRecord?
     var tempRecords = [CKRecord]()
     var locationManager = CLLocationManager()
-    let database = CKContainer.default().publicCloudDatabase
     var alertTextField: UITextField!
     
     @IBOutlet weak var innerView: UIView!
@@ -395,17 +395,8 @@ extension ScannerViewController {
         itemRecord!.setValue(mismatch, forKey: "mismatch")
         itemRecord!.setValue(modifiedDate, forKey: "modifiedDate")
         
-        let operation = CKModifyRecordsOperation(recordsToSave: [itemRecord!], recordIDsToDelete: nil)
-        
-        operation.modifyRecordsCompletionBlock = { (records, recordIDs, error) in
-            if let error = error {
-                print(error.localizedDescription)
-            }
-            self.dispatchGroup.leave()
-        }
-        
-        database.add(operation)
-        
+        let item = LocationRecordCacheItem(withRecord: itemRecord!)!
+        locations.save(item: item)
     } //end collect
     
     
@@ -516,102 +507,95 @@ extension ScannerViewController {  //queries
     
     func queryForDosiFound() {
         dispatchGroup.enter()
-        let predicate = NSPredicate(format: "dosinumber == %@", variables.dosiNumber!)
-        //let sort = NSSortDescriptor(key: "creationDate", ascending: false)
-        let sort = NSSortDescriptor(key: "createdDate", ascending: false) //Ver 1.2
-        let query = CKQuery(recordType: "Location", predicate: predicate)
-        query.sortDescriptors = [sort]
-        database.perform(query, inZoneWith: nil) { (records, _) in
-            guard let records = records else { return }
-            
-            if records != [] {
-                variables.active = records[0]["active"] as? Int64
-                variables.collected = records[0]["collectedFlag"] as? Int64
-                variables.QRCode = records[0]["QRCode"] as? String
-                variables.dosiLocation = records[0]["locdescription"] as? String
-                variables.cycle = records[0]["cycleDate"] as? String
-                if records[0]["moderator"] != nil { variables.moderator = records[0]["moderator"] as? Int64 }
-                if records[0]["mismatch"] != nil { variables.mismatch = records[0]["mismatch"] as? Int64 }
-                
-                self.itemRecord = records[0]
-            }
-            
-            self.records = records
-            self.dispatchGroup.leave()
-            
-        } //end perform query
         
+        let items = locations.filter(by: { l in l.dosinumber == variables.dosiNumber!})
+        var lrecords = [CKRecord]()
+        for item in items {
+            lrecords.append(item.to())
+        }
+
+        if lrecords != [] {
+            variables.active = lrecords[0]["active"] as? Int64
+            variables.collected = lrecords[0]["collectedFlag"] as? Int64
+            variables.QRCode = lrecords[0]["QRCode"] as? String
+            variables.dosiLocation = lrecords[0]["locdescription"] as? String
+            variables.cycle = lrecords[0]["cycleDate"] as? String
+            if lrecords[0]["moderator"] != nil { variables.moderator = lrecords[0]["moderator"] as? Int64 }
+            if lrecords[0]["mismatch"] != nil { variables.mismatch = lrecords[0]["mismatch"] as? Int64 }
+            
+            self.itemRecord = records[0]
+        }
+        
+        self.records = lrecords
+        dispatchGroup.leave()        
     } //end queryforDosiFound
     
     
     func queryForQRFound() {
         dispatchGroup.enter()
-        let predicate = NSPredicate(format: "QRCode == %@", variables.QRCode!)
-        //let sort = NSSortDescriptor(key: "creationDate", ascending: false)
-        let sort = NSSortDescriptor(key: "createdDate", ascending: false) //Ver 1.2
-        let query = CKQuery(recordType: "Location", predicate: predicate)
-        query.sortDescriptors = [sort]
-        database.perform(query, inZoneWith: nil) { (records, _) in
-            guard let records = records else { return }
-            
-            if records != [] {
-                variables.active = records[0]["active"] as? Int64
-                variables.dosiLocation = records[0]["locdescription"] as? String
-                if records[0]["collectedFlag"] != nil { variables.collected = records[0]["collectedFlag"] as? Int64 }
-                if records[0]["dosinumber"] != nil { variables.dosiNumber = records[0]["dosinumber"] as? String }
-                if records[0]["moderator"] != nil { variables.moderator = records[0]["moderator"] as? Int64 }
-                if records[0]["mismatch"] != nil { variables.mismatch = records[0]["mismatch"] as? Int64 }
-                if records[0]["cycleDate"] != nil { variables.cycle = records[0]["cycleDate"] as? String }
-                
-                self.itemRecord = records[0]
-            }
-            
-            self.records = records
-            self.dispatchGroup.leave()
-            
-        }  //end perform query
         
+        var items = locations.filter(by: { l in l.QRCode == variables.QRCode! && l.createdDate != nil})
+        items.sort {
+            $0.createdDate! > $1.createdDate!
+        }
+        var lrecords = [CKRecord]()
+        for item in items {
+            lrecords.append(item.to())
+        }
+        if lrecords != [] {
+            variables.active = lrecords[0]["active"] as? Int64
+            variables.dosiLocation = lrecords[0]["locdescription"] as? String
+            if lrecords[0]["collectedFlag"] != nil { variables.collected = lrecords[0]["collectedFlag"] as? Int64 }
+            if lrecords[0]["dosinumber"] != nil { variables.dosiNumber = lrecords[0]["dosinumber"] as? String }
+            if lrecords[0]["moderator"] != nil { variables.moderator = lrecords[0]["moderator"] as? Int64 }
+            if lrecords[0]["mismatch"] != nil { variables.mismatch = lrecords[0]["mismatch"] as? Int64 }
+            if lrecords[0]["cycleDate"] != nil { variables.cycle = lrecords[0]["cycleDate"] as? String }
+            
+            self.itemRecord = lrecords[0]
+        }
+        
+        self.records = lrecords
+        
+        dispatchGroup.leave()
     } //end queryForQRFound
     
     
     func queryForDosiUsed(tempDosi: String) {
         dispatchGroup.enter()
-        let predicate = NSPredicate(format: "dosinumber == %@", tempDosi)
-        let query = CKQuery(recordType: "Location", predicate: predicate)
-        database.perform(query, inZoneWith: nil) { (records, _) in
-            guard let records = records else { return }
-            
-            self.records = records
-            self.dispatchGroup.leave()
-            
-        } //end perform query
-
+        
+        let items = locations.filter(by: { l in l.dosinumber == tempDosi})
+        var lrecords = [CKRecord]()
+        for item in items {
+            lrecords.append(item.to())
+        }
+        
+        self.records = lrecords
+        dispatchGroup.leave()
     } //end queryForDosiUsed
     
     
     func queryForQRUsed(tempQR: String) {
         dispatchGroup.enter()
-        let predicate = NSPredicate(format: "QRCode == %@", tempQR)
-        //let sort = NSSortDescriptor(key: "creationDate", ascending: false)
-        let sort = NSSortDescriptor(key: "createdDate", ascending: false)
-        let query = CKQuery(recordType: "Location", predicate: predicate)
-        query.sortDescriptors = [sort]
-        database.perform(query, inZoneWith: nil) { (records, _) in
-            guard let records = records else { return }
-            
-            if records != [] {
-                variables.active = records[0]["active"] as? Int64
-                variables.dosiLocation = records[0]["locdescription"] as? String
-                if records[0]["collectedFlag"] != nil { variables.collected = records[0]["collectedFlag"] as? Int64}
-                if records[0]["moderator"] != nil { variables.moderator = records[0]["moderator"] as? Int64 }
-                if records[0]["mismatch"] != nil { variables.mismatch = records[0]["mismatch"] as? Int64 }
-            }
-            
-            self.records = records
-            self.dispatchGroup.leave()
-            
-        }  //end perform query
-
+        
+        var items = locations.filter(by: { l in l.QRCode == tempQR && l.createdDate != nil})
+        items.sort {
+            $0.createdDate! > $1.createdDate!
+        }
+        var lrecords = [CKRecord]()
+        for item in items {
+            lrecords.append(item.to())
+        }
+        if lrecords != [] {
+            variables.active = lrecords[0]["active"] as? Int64
+            variables.dosiLocation = lrecords[0]["locdescription"] as? String
+            if lrecords[0]["collectedFlag"] != nil { variables.collected = lrecords[0]["collectedFlag"] as? Int64}
+            if lrecords[0]["moderator"] != nil { variables.moderator = lrecords[0]["moderator"] as? Int64 }
+            if lrecords[0]["mismatch"] != nil { variables.mismatch = lrecords[0]["mismatch"] as? Int64 }
+        }
+        
+        self.records = lrecords
+        
+        dispatchGroup.leave()
     } //end queryForQRUsed
 
 } //end extension queries

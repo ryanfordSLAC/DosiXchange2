@@ -291,4 +291,11 @@ class LocationRecordCacheItem: Codable, LocationRecordDelegate {
         newRecord.setValue(self.createdDate, forKey: "createdDate")
         newRecord.setValue(self.modifiedDate, forKey: "modifiedDate")
     }
+    
+    func to() -> CKRecord {
+        let result = CKRecord(recordType: "Location", recordID: CKRecord.ID(recordName: self.recordName!))
+        self.update(newRecord: result)
+        
+        return result
+    }
 }
