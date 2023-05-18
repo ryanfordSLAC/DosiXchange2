@@ -444,7 +444,7 @@
                             </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="QGn-nO-09E"/>
-                        <color key="backgroundColor" red="0.58072251080000004" green="0.066734083" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.58075547220000001" green="0.065336786209999997" blue="0.00062786263879999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="C5U-sR-g2Z" firstAttribute="top" secondItem="HdU-d6-efg" secondAttribute="bottom" constant="38" id="3u2-P5-4h2"/>
                             <constraint firstItem="wOM-u4-FVE" firstAttribute="leading" secondItem="QGn-nO-09E" secondAttribute="centerX" constant="-95" id="E3i-Am-1aa"/>
@@ -472,6 +472,7 @@
                     <connections>
                         <outlet property="Tools" destination="2ol-Sj-N2C" id="ecl-iG-8Du"/>
                         <outlet property="activityIndicator" destination="HdU-d6-efg" id="Bjf-mQ-wXL"/>
+                        <outlet property="mainView" destination="Mvd-fQ-Y1c" id="50w-0s-BF7"/>
                         <outlet property="mapButton" destination="dgk-90-ebF" id="mjc-ph-PHy"/>
                         <outlet property="nearestDosiButton" destination="O1Z-lw-q30" id="QH2-ax-Vd0"/>
                         <outlet property="progressView" destination="C5U-sR-g2Z" id="TAu-KM-Q6h"/>
@@ -1098,7 +1099,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="Szf-7B-3OI"/>
+        <segue reference="ar4-0B-Xd6"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Tools" width="512" height="512"/>

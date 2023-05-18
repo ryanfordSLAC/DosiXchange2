@@ -22,6 +22,7 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
     let borderColorUp = UIColor(red: 0.887175, green: 0.887175, blue: 0.887175, alpha: 1).cgColor
     let borderColorDown = UIColor(red: 0.887175, green: 0.887175, blue: 0.887175, alpha: 0.2).cgColor
 
+    @IBOutlet var mainView: UIView!
     @IBOutlet weak var scanButton: UIButton!
     @IBOutlet weak var mapButton: UIButton!
     @IBOutlet weak var nearestDosiButton: UIButton!
@@ -69,6 +70,7 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
         // Do any additional setup after loading the view, typically from a nib.
         // Detect Wifi:
         reachability.whenReachable = { reachability in
+            self.mainView.backgroundColor = UIColor(named: "MainOnline")
             if reachability.connection == .wifi {
                 print("Reachable via WiFi")
             }
@@ -79,6 +81,7 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
         }
         
         reachability.whenUnreachable = { _ in
+            self.mainView.backgroundColor = UIColor(named: "MainOffline")
             print("Not reachable")
             let alert = UIAlertController(title: "WiFi Connection Error", message: "Must be connected to WiFi to identify position and save data to cloud", preferredStyle: .alert)
             let OK = UIAlertAction(title: "OK", style: .default) { (_) in return }
