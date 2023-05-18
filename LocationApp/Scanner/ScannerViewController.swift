@@ -389,14 +389,13 @@ extension ScannerViewController {
     
     func collect(collected: Int64, mismatch: Int64, modifiedDate: Date) {
         
-        self.dispatchGroup.enter()
-        
         itemRecord!.setValue(collected, forKey: "collectedFlag")
         itemRecord!.setValue(mismatch, forKey: "mismatch")
         itemRecord!.setValue(modifiedDate, forKey: "modifiedDate")
         
         let item = LocationRecordCacheItem(withRecord: itemRecord!)!
         locations.save(item: item)
+        
     } //end collect
     
     
@@ -1079,7 +1078,6 @@ extension ScannerViewController {  //alerts
 extension ScannerViewController {  //handlers
     
     func handlerOK(alert: UIAlertAction!) {  //used for OK in the alert prompt.
-        
         self.captureSession.startRunning()
         
     } //end handler
