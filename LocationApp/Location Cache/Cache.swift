@@ -48,7 +48,9 @@ class Cache: Codable {
         }
     }
     
-    
+    func clear() {
+        locations.removeAll()
+    }
     
     func save() {
         guard let cacheData = try? JSONEncoder().encode(self) else {

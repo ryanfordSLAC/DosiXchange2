@@ -19,6 +19,8 @@ protocol Locations {
     func save(item: LocationRecordCacheItem)
     
     func save(items: [LocationRecordCacheItem])
+    
+    func reset(_ loaded: @escaping  ((Int) -> Void))
 }
 
 class LocationsCK : Locations {
@@ -97,6 +99,14 @@ class LocationsCK : Locations {
         if (self.reachability.connection != .none) {
             saveChanges()
         }
+    }
+    
+    func reset(_ loaded: @escaping  ((Int) -> Void)) {
+        dispatchGroup.wait()
+        dispatchGroup.enter()
+        self.cache?.clear()
+        dispatchGroup.leave()
+        self.synchronize(loaded: loaded)
     }
     
     private func reachable(_ : Reachability) {
