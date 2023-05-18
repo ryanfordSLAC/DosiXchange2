@@ -100,7 +100,7 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
     } //end viewDidLoad
     
     
-    override func viewDidAppear(_ makk: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         setProgress()
     }
     
@@ -145,7 +145,7 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
         //start activityIndicator
         activityIndicator.startAnimating()
         
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue.global(qos: .background).async {
             LocationsCK.shared.synchronize(loaded: { _ in
                 
                 self.query.dispatchGroup.notify(queue: .main) {

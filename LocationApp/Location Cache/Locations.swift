@@ -17,6 +17,8 @@ protocol Locations {
     func count(by: (LocationRecordCacheItem) -> Bool) -> Int
     
     func save(item: LocationRecordCacheItem)
+    
+    func save(items: [LocationRecordCacheItem])
 }
 
 class LocationsCK : Locations {
@@ -24,6 +26,7 @@ class LocationsCK : Locations {
     var cache: Cache?
     let reachability = Reachability()!
     let dispatchGroup = DispatchGroup()
+    let saceDispatch = DispatchGroup()
 
     private init() {
         reachability.whenReachable = reachable
@@ -73,11 +76,27 @@ class LocationsCK : Locations {
     func save(item: LocationRecordCacheItem) {
         dispatchGroup.wait()
         dispatchGroup.enter()
+        self.cache?.add(item)
         self.cache?.addChange(item)
+        self.cache?.save()
         dispatchGroup.leave()
         if (self.reachability.connection != .none) {
-            self.reachable(self.reachability)
+            saveChanges()
         }        
+    }
+    
+    func save(items: [LocationRecordCacheItem]) {
+        dispatchGroup.wait()
+        dispatchGroup.enter()
+        for item in items {
+            self.cache?.add(item)
+            self.cache?.addChange(item)
+        }
+        self.cache?.save()
+        dispatchGroup.leave()
+        if (self.reachability.connection != .none) {
+            saveChanges()
+        }
     }
     
     private func reachable(_ : Reachability) {
@@ -86,32 +105,55 @@ class LocationsCK : Locations {
         if self.cache == nil {
             self.cache = Cache.load() ?? Cache()
         }
+        dispatchGroup.leave()
+        saveChanges()
+        self.synchronize(loaded: { _ in print("Synchronization from reachability") })
+    }
+    
+    private func saveChanges() {
+        dispatchGroup.wait()
+        dispatchGroup.enter()
         if (!self.cache!.changes.isEmpty) {
+            let changes = self.cache!.changes.count
             var records = [CKRecord]()
             for item in self.cache!.changes {
-                records.append(item.toRecord())
+                database.fetch(withRecordID: CKRecord.ID(recordName:item.recordName!), completionHandler: { record, error in
+                    if let error = error {
+                        print(error.localizedDescription)
+                        self.dispatchGroup.leave()
+                        return
+                    }
+                    if let record = record {
+                        item.update(newRecord: record)
+                        records.append(record)
+                        if records.count == changes {
+                            let operation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: nil)
+                            operation.modifyRecordsCompletionBlock = { (_, _, error) in
+                                if let error = error {
+                                    print(error.localizedDescription)
+                                }
+                                
+                                self.cache?.changes.removeAll()
+                                self.cache?.save()
+                                print("Saved \(records.count) locations.")
+                                self.dispatchGroup.leave()
+                            }
+                            self.database.add(operation)
+                            operation.waitUntilFinished()
+                        }
+                    }})
             }
-            
-            let operation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: nil)
-            operation.modifyRecordsCompletionBlock = { (records, recordIDs, error) in
-                if let error = error {
-                    print(error.localizedDescription)
-                    return
-                }
-            }
-            
-            self.database.add(operation)
-            self.cache?.changes.removeAll()
-            operation.waitUntilFinished()
         }
-        dispatchGroup.leave()
-        self.synchronize(loaded: { _ in print("Synchronization from reachability") })
+        else {
+            dispatchGroup.leave()
+        }
     }
     
     func queryCompletionHandler(records :[LocationRecordDelegate], completed: Bool?, error: Error?, loaded: @escaping ((Int) -> Void))  {
         if let error = error {
-            dispatchGroup.leave()
             print(error.localizedDescription)
+            loaded(cache!.locations.count)
+            dispatchGroup.leave()
             return
         }
         
@@ -120,7 +162,11 @@ class LocationsCK : Locations {
                 if let item = LocationRecordCacheItem(withRecord: record as! CKRecord) {
                     cache!.add(item)
                 }
+                else {
+                    print("Record isn't acceptable.")
+                }
             }
+            print("Cache new records: \(records.count)")
         }
         
         if let completed = completed {

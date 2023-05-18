@@ -20,7 +20,7 @@ class LocationDetails: UIViewController {
     var long = ""
     var active = 0
     
-    var records = [LocationRecordDelegate]()
+    var records = [LocationRecordCacheItem]()
     var details = [(String, String, String, Int64, Int64)]()
     
     let dispatchGroup = DispatchGroup()
@@ -184,35 +184,10 @@ extension LocationDetails {
         //dispatchGroup.enter()
         
         //set active flag for all records in current location
- /*       for var record in records {
-            record.setValue(active, forKey: "active")
-            locations.save(item: LocationRecordCacheItem(withRecord: record)!)
+        for record in records {
+            record.active = Int64(exactly: active)!
         }
-        */
-        
-    /*
-        #if false       // TODO: Hande saving LocationRecordCacheItem to CloudKit
-        let operation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: nil)
-        
-        operation.perRecordCompletionBlock = { (record, error) in
-            if let error = error {
-                print(error.localizedDescription)
-                return
-            }
-
-        }
-        
-        operation.modifyRecordsCompletionBlock = { (records, recordIDs, error) in
-            if let error = error {
-                print(error.localizedDescription)
-            }
-        }
-        
-        database.add(operation)
-        #else
-        self.dispatchGroup.leave()
-        #endif
-      */
+        locations.save(items: records)
     } //end saveActiveStatus
     
 }
@@ -297,7 +272,7 @@ extension LocationDetails: UITableViewDelegate, UITableViewDataSource {
     func queryLocationTable() {
         dispatchGroup.enter()
         
-        records = [LocationRecordDelegate]()
+        records = [LocationRecordCacheItem]()
         details = [(String, String, String, Int64, Int64)]()
         
         var items = locations.filter(by: { l in l.QRCode == QRCode && l.createdDate != nil })

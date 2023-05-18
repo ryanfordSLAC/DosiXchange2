@@ -37,7 +37,7 @@ extension CKRecord: LocationRecordDelegate {
 }
 
 // Dosimetr Cache Item stores all of the properties of a dosimeter CloudKit record
-struct LocationRecordCacheItem: Codable, LocationRecordDelegate {
+class LocationRecordCacheItem: Codable, LocationRecordDelegate {
 
     // Location Record Fields
     var QRCode:String = ""              // QR Code
@@ -268,16 +268,17 @@ struct LocationRecordCacheItem: Codable, LocationRecordDelegate {
         return self[key]
     }
     
-    mutating func setValue(_ value: AnyObject?, forKey key: String) {
+    func setValue(_ value: AnyObject?, forKey key: String) {
+        self.modifiedDate = Date()
         self[key] = value as? CKRecordValue
     }
 
-    mutating func setValue(_ value: Any?, forKey key: String) {
+    func setValue(_ value: Any?, forKey key: String) {
+        self.modifiedDate = Date()
         self[key] = value as? CKRecordValue
     }
     
-    func toRecord() -> CKRecord {
-        let newRecord = CKRecord(recordType: "Location", recordID: CKRecord.ID(recordName: self.recordName!))
+    func update(newRecord:CKRecord) {
         newRecord.setValue(self.latitude, forKey: "latitude")
         newRecord.setValue(self.longitude, forKey: "longitude")
         newRecord.setValue(self.locdescription, forKey: "locdescription")
@@ -289,6 +290,5 @@ struct LocationRecordCacheItem: Codable, LocationRecordDelegate {
         newRecord.setValue(self.active, forKey: "active")
         newRecord.setValue(self.createdDate, forKey: "createdDate")
         newRecord.setValue(self.modifiedDate, forKey: "modifiedDate")
-        return newRecord
     }
 }
