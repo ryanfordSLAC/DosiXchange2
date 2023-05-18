@@ -508,94 +508,99 @@ extension ScannerViewController {  //queries
     func queryForDosiFound() {
         dispatchGroup.enter()
         
-        let items = locations.filter(by: { l in l.dosinumber == variables.dosiNumber!})
-        var lrecords = [CKRecord]()
-        for item in items {
-            lrecords.append(item.to())
-        }
+        locations.filter(by: { l in l.dosinumber == variables.dosiNumber!}, completionHandler: { items in
+            var lrecords = [CKRecord]()
+            for item in items {
+                lrecords.append(item.to())
+            }
 
-        if lrecords != [] {
-            variables.active = lrecords[0]["active"] as? Int64
-            variables.collected = lrecords[0]["collectedFlag"] as? Int64
-            variables.QRCode = lrecords[0]["QRCode"] as? String
-            variables.dosiLocation = lrecords[0]["locdescription"] as? String
-            variables.cycle = lrecords[0]["cycleDate"] as? String
-            if lrecords[0]["moderator"] != nil { variables.moderator = lrecords[0]["moderator"] as? Int64 }
-            if lrecords[0]["mismatch"] != nil { variables.mismatch = lrecords[0]["mismatch"] as? Int64 }
+            if lrecords != [] {
+                variables.active = lrecords[0]["active"] as? Int64
+                variables.collected = lrecords[0]["collectedFlag"] as? Int64
+                variables.QRCode = lrecords[0]["QRCode"] as? String
+                variables.dosiLocation = lrecords[0]["locdescription"] as? String
+                variables.cycle = lrecords[0]["cycleDate"] as? String
+                if lrecords[0]["moderator"] != nil { variables.moderator = lrecords[0]["moderator"] as? Int64 }
+                if lrecords[0]["mismatch"] != nil { variables.mismatch = lrecords[0]["mismatch"] as? Int64 }
+                
+                self.itemRecord = self.records[0]
+            }
             
-            self.itemRecord = records[0]
-        }
-        
-        self.records = lrecords
-        dispatchGroup.leave()        
+            self.records = lrecords
+            self.dispatchGroup.leave()
+        })
     } //end queryforDosiFound
     
     
     func queryForQRFound() {
         dispatchGroup.enter()
         
-        var items = locations.filter(by: { l in l.QRCode == variables.QRCode! && l.createdDate != nil})
-        items.sort {
-            $0.createdDate! > $1.createdDate!
-        }
-        var lrecords = [CKRecord]()
-        for item in items {
-            lrecords.append(item.to())
-        }
-        if lrecords != [] {
-            variables.active = lrecords[0]["active"] as? Int64
-            variables.dosiLocation = lrecords[0]["locdescription"] as? String
-            if lrecords[0]["collectedFlag"] != nil { variables.collected = lrecords[0]["collectedFlag"] as? Int64 }
-            if lrecords[0]["dosinumber"] != nil { variables.dosiNumber = lrecords[0]["dosinumber"] as? String }
-            if lrecords[0]["moderator"] != nil { variables.moderator = lrecords[0]["moderator"] as? Int64 }
-            if lrecords[0]["mismatch"] != nil { variables.mismatch = lrecords[0]["mismatch"] as? Int64 }
-            if lrecords[0]["cycleDate"] != nil { variables.cycle = lrecords[0]["cycleDate"] as? String }
+        locations.filter(by: { l in l.QRCode == variables.QRCode! && l.createdDate != nil}, completionHandler: { items in
+            var litems = [LocationRecordCacheItem](items)
+            litems.sort {
+                $0.createdDate! > $1.createdDate!
+            }
+            var lrecords = [CKRecord]()
+            for item in litems {
+                lrecords.append(item.to())
+            }
+            if lrecords != [] {
+                variables.active = lrecords[0]["active"] as? Int64
+                variables.dosiLocation = lrecords[0]["locdescription"] as? String
+                if lrecords[0]["collectedFlag"] != nil { variables.collected = lrecords[0]["collectedFlag"] as? Int64 }
+                if lrecords[0]["dosinumber"] != nil { variables.dosiNumber = lrecords[0]["dosinumber"] as? String }
+                if lrecords[0]["moderator"] != nil { variables.moderator = lrecords[0]["moderator"] as? Int64 }
+                if lrecords[0]["mismatch"] != nil { variables.mismatch = lrecords[0]["mismatch"] as? Int64 }
+                if lrecords[0]["cycleDate"] != nil { variables.cycle = lrecords[0]["cycleDate"] as? String }
+                
+                self.itemRecord = lrecords[0]
+            }
             
-            self.itemRecord = lrecords[0]
-        }
-        
-        self.records = lrecords
-        
-        dispatchGroup.leave()
+            self.records = lrecords
+            
+            self.dispatchGroup.leave()
+        })
     } //end queryForQRFound
     
     
     func queryForDosiUsed(tempDosi: String) {
         dispatchGroup.enter()
         
-        let items = locations.filter(by: { l in l.dosinumber == tempDosi})
-        var lrecords = [CKRecord]()
-        for item in items {
-            lrecords.append(item.to())
-        }
-        
-        self.records = lrecords
-        dispatchGroup.leave()
+        locations.filter(by: { l in l.dosinumber == tempDosi}, completionHandler: { items in
+            var lrecords = [CKRecord]()
+            for item in items {
+                lrecords.append(item.to())
+            }
+            
+            self.records = lrecords
+            self.dispatchGroup.leave()
+        })
     } //end queryForDosiUsed
     
     
     func queryForQRUsed(tempQR: String) {
         dispatchGroup.enter()
         
-        var items = locations.filter(by: { l in l.QRCode == tempQR && l.createdDate != nil})
-        items.sort {
-            $0.createdDate! > $1.createdDate!
-        }
-        var lrecords = [CKRecord]()
-        for item in items {
-            lrecords.append(item.to())
-        }
-        if lrecords != [] {
-            variables.active = lrecords[0]["active"] as? Int64
-            variables.dosiLocation = lrecords[0]["locdescription"] as? String
-            if lrecords[0]["collectedFlag"] != nil { variables.collected = lrecords[0]["collectedFlag"] as? Int64}
-            if lrecords[0]["moderator"] != nil { variables.moderator = lrecords[0]["moderator"] as? Int64 }
-            if lrecords[0]["mismatch"] != nil { variables.mismatch = lrecords[0]["mismatch"] as? Int64 }
-        }
-        
-        self.records = lrecords
-        
-        dispatchGroup.leave()
+        locations.filter(by: { l in l.QRCode == tempQR && l.createdDate != nil}, completionHandler: {items in
+            var litems = [LocationRecordCacheItem](items)
+            litems.sort {
+                $0.createdDate! > $1.createdDate!
+            }
+            var lrecords = [CKRecord]()
+            for item in litems {
+                lrecords.append(item.to())
+            }
+            if lrecords != [] {
+                variables.active = lrecords[0]["active"] as? Int64
+                variables.dosiLocation = lrecords[0]["locdescription"] as? String
+                if lrecords[0]["collectedFlag"] != nil { variables.collected = lrecords[0]["collectedFlag"] as? Int64}
+                if lrecords[0]["moderator"] != nil { variables.moderator = lrecords[0]["moderator"] as? Int64 }
+                if lrecords[0]["mismatch"] != nil { variables.mismatch = lrecords[0]["mismatch"] as? Int64 }
+            }
+
+            self.records = lrecords
+            self.dispatchGroup.leave()
+        })
     } //end queryForQRUsed
 
 } //end extension queries
