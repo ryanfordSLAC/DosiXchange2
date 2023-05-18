@@ -142,7 +142,6 @@ class LocationsCK : Locations {
         dispatchGroup.wait()
         dispatchGroup.enter()
         if (!self.cache!.changes.isEmpty) {
-            let changes = self.cache!.changes.count
             var records = [CKRecord]()
             for item in self.cache!.changes {
                 records.append(item.to())
@@ -160,7 +159,7 @@ class LocationsCK : Locations {
                 self.dispatchGroup.leave()
             }
             self.database.add(operation)
-            operation.waitUntilFinished()            
+            operation.waitUntilFinished()
         }
         else {
             dispatchGroup.leave()
