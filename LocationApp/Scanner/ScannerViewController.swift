@@ -564,7 +564,7 @@ extension ScannerViewController {  //queries
                 if lrecords[0]["moderator"] != nil { variables.moderator = lrecords[0]["moderator"] as? Int64 }
                 if lrecords[0]["mismatch"] != nil { variables.mismatch = lrecords[0]["mismatch"] as? Int64 }
                 
-                self.itemRecord = self.records[0]
+                self.itemRecord = lrecords[0]
             }
             
             self.records = lrecords
