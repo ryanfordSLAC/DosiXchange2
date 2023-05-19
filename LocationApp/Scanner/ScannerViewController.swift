@@ -13,6 +13,7 @@ import CoreLocation
 
 //MARK:  Class
 class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
+    let reachability = Reachability()!
     let locations = LocationsCK.shared
     var recordsupdate = RecordsUpdate()
     var zoomFactor:CGFloat = 3
@@ -45,7 +46,6 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         static var moderator:Int64?
         
     } //end struct
-    
     
     override func viewDidLoad() {
         
@@ -110,7 +110,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         videoCaptureDevice.videoZoomFactor = zoomFactor
         videoCaptureDevice.unlockForConfiguration()
         captureSession.startRunning()
-        
+        configReachability()
     }//end viewDidLoad()
     
     @IBAction func done(_ sender: Any) {
@@ -523,6 +523,17 @@ extension ScannerViewController {
             print(error.localizedDescription)
         }
     } //end beep()
+    
+    fileprivate func configReachability() {
+        reachability.whenReachable = { reachability in self.view.backgroundColor = UIColor(named: "MainOnline") }
+        reachability.whenUnreachable = { reachability in self.view.backgroundColor = UIColor(named: "MainOffline") }
+        do {
+            try reachability.startNotifier()
+        }
+        catch {
+            print("Unable to start notifier")
+        }
+    }
     
 } //end extension methods
 /*
