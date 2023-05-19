@@ -119,15 +119,12 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchText.count < 3 {
-            return
-        }
-            
         searching = true
 
         clearSearchedItems()
 
-        let items = locations.filter(by: { $0.QRCode.contains(searchText) || $0.locdescription.contains(searchText) })
+        let items = locations.filter(by: { $0.QRCode.range(of: searchText, options: .caseInsensitive) != nil
+            || $0.locdescription.range(of: searchText, options: .caseInsensitive) != nil})
         for item in items {
             processLocationRecord(item)
         }
