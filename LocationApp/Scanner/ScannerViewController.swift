@@ -107,7 +107,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         previewLayer.frame.size = innerView.frame.size
         innerView.layer.addSublayer(previewLayer)
-        previewLayer.videoGravity = AVLayerVideoGravity.resize
+        previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         videoCaptureDevice.videoZoomFactor = zoomFactor
         videoCaptureDevice.unlockForConfiguration()
         captureSession.startRunning()
