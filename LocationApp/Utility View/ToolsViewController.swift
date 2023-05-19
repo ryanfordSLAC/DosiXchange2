@@ -9,13 +9,12 @@
 import Foundation
 import UIKit
 import MessageUI
-import CloudKit
 import AVFoundation
 //MARK:  Class
 class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate {
     
+    let locations = LocationsCK.shared
     let readwrite = readWriteText()  //make external class available locally
-    let database = CKContainer.default().publicCloudDatabase  //establish database
     let dispatchGroup = DispatchGroup()
     let saveToCloud = Save()
     let queries = Queries()
@@ -122,7 +121,12 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
     }
     
     @IBAction func resetCacheTouchUp(_ sender: Any) {
-        LocationRecordCache.shared.resetCache()
+        activityIndicator.startAnimating()
+        LocationsCK.shared.reset { _ in
+            DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
+            }
+        }
     }
     
     //MARK:  Send Email
@@ -195,63 +199,46 @@ extension ToolsViewController {
         //should separate text file from query
         dispatchGroup.enter()
         self.csvText = "LocationID (QRCode),Latitude,Longitude,Description,Moderator (0/1),Active (0/1),Dosimeter,Collected Flag (0/1),Wear Period,System_Date Deployed,System_Date Collected,Mismatch (0/1), my_Date Deployed, my_Date Collected, recordID\n"
-        var predicate = NSPredicate(value: true)
-        if (cycles > 0) {
-            let cycleDates = RecordsUpdate.getLastCycles(cycles: cycles)
-            predicate = NSPredicate(format: "cycleDate in %@", cycleDates)
-        }
-        let sort1 = NSSortDescriptor(key: "QRCode", ascending: true)
-        //let sort2 = NSSortDescriptor(key: "creationDate", ascending: false)
-        let sort2 = NSSortDescriptor(key: "createdDate", ascending: false)  //Ver 1.2
-        let query = CKQuery(recordType: "Location", predicate: predicate)
-        query.sortDescriptors = [sort1, sort2]
-        let operation = CKQueryOperation(query: query)
-        addOperation(operation: operation)
         
+        var filter: ((LocationRecordCacheItem) -> Bool) = { _ in true}
+        if cycles > 0 {
+            let cycleDates = RecordsUpdate.getLastCycles(cycles: cycles)
+            filter = { l in l.cycleDate != nil && cycleDates.contains(l.cycleDate!) }
+        }
+        var items = locations.filter(by: filter)
+        items.sort {
+            if $0.QRCode == $1.QRCode {
+                return $0.createdDate! > $1.createdDate!
+            }
+            return $0.QRCode < $1.QRCode
+        }
+        for item in items {
+            recordFetchedBlock(record: item)
+        }
+
+        csvText.append("End of File\n")
+        dispatchGroup.leave()
     } //end function
     
     
-    // add query operation
-    func addOperation(operation: CKQueryOperation) {
-        operation.resultsLimit = 200 // max 400; 200 to be safe
-        operation.recordFetchedBlock = self.recordFetchedBlock // to be executed for each fetched record
-        operation.queryCompletionBlock = self.queryCompletionBlock // to be executed after each query (query fetches 200 records at a time)
-        
-        database.add(operation)
-    }
-    
-    // to be executed after each query (query fetches 200 records at a time)
-    func queryCompletionBlock(cursor: CKQueryOperation.Cursor?, error: Error?) {
-        if let error = error {
-            print(error.localizedDescription)
-            return
-        }
-        if let cursor = cursor {
-            let operation = CKQueryOperation(cursor: cursor)
-            addOperation(operation: operation)
-            return
-        }
-        csvText.append("End of File\n")
-        dispatchGroup.leave()
-    }
     
     // to be executed for each fetched record
-    func recordFetchedBlock(record: CKRecord) {
+    func recordFetchedBlock(record: LocationRecordCacheItem) {
         //Careful use of optionals to prevent crashes.
         
         //block 1:  these fields always have a value
-        QRCode = record["QRCode"]!
-        latitude = record["latitude"]!
-        longitude = record["longitude"]!
-        loc = record["locdescription"]!
-        active = record["active"]!
+        QRCode = record.QRCode
+        latitude = record.latitude
+        longitude = record.longitude
+        loc = record.locdescription
+        active = record.active
         
         //block 2:  these fields sometimes have a value
-        if record["dosinumber"] != nil {dosimeter = record["dosinumber"]!}
-        if record["cycleDate"] != nil {cycle = record["cycleDate"]!}
-        if record["collectedFlag"] != nil {collectedFlagStr = String(describing: record["collectedFlag"]!)}
-        if record["mismatch"] != nil {mismatchStr = String(describing: record["mismatch"]!)}
-        if record["moderator"] != nil {moderator = String(describing: record ["moderator"]!)}
+        if record.dosinumber != nil {dosimeter = record.dosinumber!}
+        if record.cycleDate != nil {cycle = record.cycleDate!}
+        if record.collectedFlag != nil {collectedFlagStr = String(describing: record.collectedFlag!)}
+        if record.mismatch != nil {mismatchStr = String(describing: record.mismatch!)}
+        if record.moderator != nil {moderator = String(describing: record.moderator!)}
         
         //my fields for created and modified dates:
 
@@ -287,7 +274,7 @@ extension ToolsViewController {
             myDateModified = Date(timeInterval: -1E15, since: Date())
         }
         let myformattedDateModified = dateFormatter.string(from: myDateModified!)
-        let recordID = record.recordID.recordName
+        let recordID = record.recordName!
         
         //write the data into the file.
         let newline = "\(QRCode),\(latitude),\(longitude),\(loc),\(moderator),\(active),\(dosimeter),\(collectedFlagStr),\(cycle),\(formattedDate),\(formattedDateModified),\(mismatchStr),\(myformattedCreatedDate),\(myformattedDateModified), \(recordID)\n"

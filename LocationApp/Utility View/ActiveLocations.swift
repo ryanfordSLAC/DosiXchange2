@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import CloudKit
 
 //MARK:  Class
 class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
@@ -19,11 +18,13 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
     var checkQR = ""
     var searches : [[(LocationRecordDelegate, String, String)]] = [[],[]]
     var searching = false
+    let refreshControl = UIRefreshControl()
     
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var activesTableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
+    let dispatchGroup = DispatchGroup()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,14 +42,13 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
         segmentedControl.selectedSegmentIndex = segment
         
         //Table View SetUp
-        let refreshControl = UIRefreshControl()
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to Refresh Locations")
         //this query will populate the table when the table is pulled.
         refreshControl.addTarget(self, action: #selector(queryDatabase), for: .valueChanged)
         self.activesTableView.refreshControl = refreshControl
         
         //this query will populate the tableView when the view loads.
-        queryDatabase()
+       // queryDatabase()
         
     } //end viewDidLoad
     
@@ -60,6 +60,10 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
     @IBAction func tableSwitch(_ sender: UISegmentedControl) {
         segment = sender.selectedSegmentIndex
         activesTableView.reloadData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        queryDatabase()
     }
     
     //table functions
@@ -99,6 +103,8 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
         let vc = mainStoryboard.instantiateViewController(withIdentifier: "LocationDetails") as! LocationDetails
         
         vc.record = searching ? searches[segment][indexPath.row].0 : displayInfo[segment][indexPath.row].0
+        vc.transitioningDelegate = self
+        vc.locationDetailDelegate = self
         
         self.present(vc, animated: true)
     }
@@ -114,15 +120,12 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchText.count < 3 {
-            return
-        }
-            
         searching = true
 
         clearSearchedItems()
 
-        let items = locations.filter(by: { $0.QRCode.contains(searchText) || $0.locdescription.contains(searchText) })
+        let items = locations.filter(by: { $0.QRCode.range(of: searchText, options: .caseInsensitive) != nil
+            || $0.locdescription.range(of: searchText, options: .caseInsensitive) != nil})
         for item in items {
             processLocationRecord(item)
         }
@@ -140,14 +143,16 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.endEditing(true)
     }
-    
+
 }
 
 //query and helper functions
 //MARK:  Extensions
-extension ActiveLocations {
+extension ActiveLocations : UIViewControllerTransitioningDelegate{
 
     @objc func queryDatabase() {
+        dispatchGroup.wait()
+        dispatchGroup.enter()
         clearLocationItems()
         activityIndicator.startAnimating()
         var items = locations.filter(by: { _ in true })
@@ -159,6 +164,8 @@ extension ActiveLocations {
         }
         activesTableView.reloadData()
         activityIndicator.stopAnimating()
+        dispatchGroup.leave()
+        refreshControl.endRefreshing()
    } //end func
         
   
@@ -218,5 +225,16 @@ extension ActiveLocations {
         
         }
     } //end alert12
-    
+
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        queryDatabase()
+        return nil
     }
+}
+
+extension ActiveLocations: LocationDetailDelegate {
+    func activeStatusChanged(active: Bool) {
+        segment = active ? 0 : 1
+        segmentedControl.selectedSegmentIndex = segment
+    }
+}

@@ -8,13 +8,14 @@
 
 import Foundation
 import UIKit
-import CloudKit
 import CoreLocation
+import CloudKit
 
 class NearestLocations: UIViewController, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate {
 
     let dispatchGroup = DispatchGroup()
     let recordsupdate = RecordsUpdate()
+    let locations = LocationsCK.shared
 
     var locationManager:CLLocationManager = CLLocationManager()
     var startLocation: CLLocation!
@@ -25,13 +26,12 @@ class NearestLocations: UIViewController, UITableViewDataSource, UITableViewDele
     var loc:String = ""
     var QRCode:String = ""
     var dosimeter:String = ""
-    var mod:Int = 0
+    var mod:Int64 = 0
     var segment:Int = 0
     
     var preSortedRecords = [(Int, String, String)]()
     var sortedRecords = [(Int, String, String)]()
     var abcRecords = [(Int, String, String)]()
-    let database = CKContainer.default().publicCloudDatabase
     
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     @IBOutlet weak var nearestTableView: UITableView!
@@ -156,48 +156,15 @@ class NearestLocations: UIViewController, UITableViewDataSource, UITableViewDele
 extension NearestLocations {
     
     @objc func queryAscendLocations() {
-        
-        dispatchGroup.enter()
-        
         //clear out buffer
         self.preSortedRecords = [(Int, String, String)]()
         self.sortedRecords = [(Int, String, String)]()
-        
+
         let cycleDate = RecordsUpdate.generateCycleDate()
         let priorCycleDate = RecordsUpdate.generatePriorCycleDate(cycleDate: cycleDate)
-        let flag = 0
-        let activeFlag = 1  //ver 1.2 = suppress inactive dosimeters from lists
-        let p1 = NSPredicate(format: "collectedFlag == %d", flag)
-        let p2 = NSPredicate(format: "cycleDate == %@", priorCycleDate)
-        let p3 = NSPredicate(format: "active == %d", activeFlag)
-        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [p1, p2, p3])
-        let query = CKQuery(recordType: "Location", predicate: predicate)
-        let operation = CKQueryOperation(query: query)
-        addOperation(operation: operation)
-    
-    } //end func
-    
-    
-    //add operation
-    func addOperation(operation: CKQueryOperation) {
-        operation.resultsLimit = 200 // max 400; 200 to be safe
-        operation.recordFetchedBlock = self.recordFetchedBlock // to be executed for each fetched record
-        operation.queryCompletionBlock = self.queryCompletionBlock // to be executed after each query (query fetches 200 records at a time)
-        
-        database.add(operation)
-    }
-    
-    
-    //to be executed after each query (query fetches 200 records at a time)
-    func queryCompletionBlock(cursor: CKQueryOperation.Cursor?, error: Error?) {
-        if let error = error {
-            print(error.localizedDescription)
-            return
-        }
-        if let cursor = cursor {
-            let operation = CKQueryOperation(cursor: cursor)
-            addOperation(operation: operation)
-            return
+        let items = locations.filter(by: { $0.collectedFlag == 0 && $0.cycleDate == priorCycleDate && $0.active == 1})
+        for item in items {
+            recordFetchedBlock(record: item)
         }
         
         self.sortedRecords = self.preSortedRecords.sorted { $0.0 < $1.0 }
@@ -210,23 +177,21 @@ extension NearestLocations {
                 self.nearestTableView.reloadData()
             }
         }
-        
-        dispatchGroup.leave()
-    }
-    
+    } //end func
+            
     
     //to be executed for each fetched record
-    func recordFetchedBlock(record: CKRecord) {
+    func recordFetchedBlock(record: LocationRecordCacheItem) {
         //changed nils in string fields to "".
-        if record["QRCode"] != "" {self.QRCode = record["QRCode"]!}
-        if record["latitude"] != "" {self.latitude = record["latitude"]!}
-        if record["longitude"] != "" {self.longitude = record["longitude"]!}
-        if record["dosinumber"] != "" {self.dosimeter = record["dosinumber"]!
-        } else if record["dosinumber"] == "" {
+        if record.QRCode != "" {self.QRCode = record.QRCode }
+        if record.latitude != "" {self.latitude = record.latitude }
+        if record.longitude != "" {self.longitude = record.latitude }
+        if record.dosinumber != "" {self.dosimeter = record.dosinumber!
+        } else if record.dosinumber == "" {
             self.dosimeter = "Active without Dosimeter!"  //show "active no dosimeter" in lists Ver 1.2
         }
-        if record["locdescription"] != "" {self.loc = record["locdescription"]!}
-        if record["moderator"] != nil {self.mod = record["moderator"]!}
+        if record.locdescription != "" {self.loc = record.locdescription}
+        if record.moderator != nil {self.mod = record.moderator! }
         
         //compute distance between start location and the point
         let rowCoordinates = CLLocation(latitude: Double(self.latitude)!, longitude: Double(self.longitude)!)

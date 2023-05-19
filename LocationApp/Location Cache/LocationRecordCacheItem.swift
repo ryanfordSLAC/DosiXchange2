@@ -37,7 +37,7 @@ extension CKRecord: LocationRecordDelegate {
 }
 
 // Dosimetr Cache Item stores all of the properties of a dosimeter CloudKit record
-struct LocationRecordCacheItem: Codable, LocationRecordDelegate {
+class LocationRecordCacheItem: Codable, LocationRecordDelegate {
 
     // Location Record Fields
     var QRCode:String = ""              // QR Code
@@ -268,13 +268,35 @@ struct LocationRecordCacheItem: Codable, LocationRecordDelegate {
         return self[key]
     }
     
-    mutating func setValue(_ value: AnyObject?, forKey key: String) {
+    func setValue(_ value: AnyObject?, forKey key: String) {
+        self.modifiedDate = Date()
         self[key] = value as? CKRecordValue
     }
 
     func setValue(_ value: Any?, forKey key: String) {
-        if let valueObject = value as? NSObject {
-           setValue(valueObject, forKey: key)
-        }
+        self.modifiedDate = Date()
+        self[key] = value as? CKRecordValue
+    }
+    
+    func update(newRecord:CKRecord) {
+        newRecord.setValue(self.latitude, forKey: "latitude")
+        newRecord.setValue(self.longitude, forKey: "longitude")
+        newRecord.setValue(self.locdescription, forKey: "locdescription")
+        newRecord.setValue(self.dosinumber, forKey: "dosinumber")
+        newRecord.setValue(self.collectedFlag, forKey: "collectedFlag")
+        newRecord.setValue(self.cycleDate, forKey: "cycleDate")
+        newRecord.setValue(self.QRCode, forKey: "QRCode")
+        newRecord.setValue(self.moderator, forKey: "moderator")
+        newRecord.setValue(self.active, forKey: "active")
+        newRecord.setValue(self.createdDate, forKey: "createdDate")
+        newRecord.setValue(self.modifiedDate, forKey: "modifiedDate")
+        newRecord.setValue(self.mismatch, forKey: "mismatch")
+    }
+    
+    func to() -> CKRecord {
+        let result = CKRecord(recordType: "Location", recordID: CKRecord.ID(recordName: self.recordName!))
+        self.update(newRecord: result)
+        
+        return result
     }
 }
