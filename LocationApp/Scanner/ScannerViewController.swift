@@ -13,7 +13,6 @@ import CoreLocation
 
 //MARK:  Class
 class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
-    
     var recordsupdate = RecordsUpdate()
     var zoomFactor:CGFloat = 3
     var captureSession: AVCaptureSession!
@@ -27,6 +26,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     var locationManager = CLLocationManager()
     let database = CKContainer.default().publicCloudDatabase
     var alertTextField: UITextField!
+    var isRescan: Bool = false
     
     @IBOutlet weak var innerView: UIView!
     
@@ -43,21 +43,21 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         static var latitude:String?
         static var longitude:String?
         static var moderator:Int64?
-
+        
     } //end struct
-
+    
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
         captureSession = AVCaptureSession()
-    
+        
         guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else { return }
         let videoInput: AVCaptureDeviceInput
- 
         
-    //set zoom factor to 3x
+        
+        //set zoom factor to 3x
         do {
             try    videoCaptureDevice.lockForConfiguration()
             
@@ -65,11 +65,11 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
             // handle error
             return
         }
-
-        // When this point is reached, we can be sure that the locking succeeded
-
         
-    //end set zoom factor to 3X
+        // When this point is reached, we can be sure that the locking succeeded
+        
+        
+        //end set zoom factor to 3X
         
         do {
             videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
@@ -88,7 +88,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         }
         
         let metadataOutput = AVCaptureMetadataOutput()
-
+        
         if (captureSession.canAddOutput(metadataOutput)) {
             captureSession.addOutput(metadataOutput)
             
@@ -151,30 +151,30 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         if let metadataObject = metadataObjects.first {
             
             guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject else { return }
-            guard let stringValue = readableObject.stringValue else { return }
+            let stringValue = readableObject.stringValue
             
             switch readableObject.type {
                 
             case .qr:
-
+                
                 variables.codeType = "QRCode"
                 
             case .code128:
-
+                
                 variables.codeType = "Code128"
-            
+                
             default:
                 print("Code not found")
                 
             }//end switch
-            
+          
             scannerLogic(code: stringValue)
             
         }//end if let
-
+        
     }//end function meetadataOutput
     
-
+    
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
@@ -194,198 +194,229 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
 //MARK:  Extension
 extension ScannerViewController {
     
-    func scannerLogic(code: String) { //see Other Assets Scanner Logic diagrams
+    func scannerLogic(code: String?) { //see Other Assets Scanner Logic diagrams
         
         switch self.counter {
             
-            case 0: //first scan
+        case 0: //first scan
+            if(isRescan){
+                isRescan = false
+            } else {
                 variables.QRCode = nil
                 variables.dosiNumber = nil
                 clearForQR()
-
-                switch variables.codeType {
+            }
+            
+            switch variables.codeType {
+                
+            case "QRCode":
+                
+                if(code != nil ){
                     
-                    case "QRCode":
-
-                        variables.QRCode = code //store the QRCode
-                        queryForQRFound() //use the QRCode to look up record & store values
-
-                        dispatchGroup.notify(queue: .main) {
-                            print("1 - Dispatch QR Code Notify")
-                            
-                            //record found
-                            if self.itemRecord != nil {
-                                
-                                //deployed dosimeter
-                                if variables.collected == 0 {
-                                    self.beep()
-                                    if variables.active == 1 {
-                                        self.alert3a() //Exchange Dosimeter (active location)
-                                    }
-                                    else {
-                                        self.alert3i() //Collect Dosimeter (inactive location)
-                                    }
-                                }
-                                //collected or no dosimeter
-                                else {
-                                    if variables.active == 1 {
-                                        self.beep()
-                                        self.alert2() //Location Found [cancel/deploy]
-                                    }
-                                    else {
-                                        self.beepFail()
-                                        self.alert2a() //Inactive Location (activate to deploy)
-                                    }
-                                }
-                            }
-                            
-                            //no record found
-                            else {
-                                self.beep()
-                                self.alert2() //New Location [cancel/deploy]
-                            }
-                            
-                        } //end dispatch group
-
-                    case "Code128":
+                    variables.QRCode = code //store the QRCode
+                    queryForQRFound() //use the QRCode to look up record & store values
+                    
+                    dispatchGroup.notify(queue: .main) {
+                        print("1 - Dispatch QR Code Notify")
                         
-                        variables.dosiNumber = code //store the dosi number
-                        queryForDosiFound() //use the dosiNumber to look up record & store values
-
-                        dispatchGroup.notify(queue: .main) {
-                            print("1 - Dispatch Code 128 Notify")
+                        //record found
+                        if self.itemRecord != nil {
                             
-                            //record found
-                            if self.itemRecord != nil {
-                                
-                                //deployed dosimeter
-                                if variables.collected == 0 {
-                                    self.beep()
-                                    if variables.active == 1 {
-                                        self.alert3a() //Exchange Dosimeter (active location)
-                                    }
-                                    else {
-                                        self.alert3i() //Collect Dosimeter (inactive location)
-                                    }
+                            //deployed dosimeter
+                            if variables.collected == 0 {
+                                self.beep()
+                                if variables.active == 1 {
+                                    self.alert3a() //Exchange Dosimeter (active location)
                                 }
-                                    
-                                //collected dosimeter
+                                else {
+                                    self.alert3i() //Collect Dosimeter (inactive location)
+                                }
+                            }
+                            //collected or no dosimeter
+                            else {
+                                if variables.active == 1 {
+                                    self.beep()
+                                    self.alert2() //Location Found [cancel/deploy]
+                                }
                                 else {
                                     self.beepFail()
-                                    self.alert9a() //Invalid Dosimeter (already collected)
+                                    self.alert2a() //Inactive Location (activate to deploy)
                                 }
                             }
-                            
-                            //no record found
-                            else {
-                                self.beep()
-                                self.alert1() //Dosimeter Not Found [cancel/deploy]
-                            }
-                            
-                        } //end dispatch group
-
-                    default:
-                        print("Invalid Code") //exhaustive
-                        alert9()
-                    
-                } //end switch
-            
-            case 1: //second scan logic
-                
-                //self.captureSession.startRunning()
-                
-                switch variables.codeType {
-                    
-                    case "QRCode":
+                        }
                         
-                        //looking for QRCode
-                        if variables.QRCode == nil {
-                            clearForQR()
-                            queryForQRUsed(tempQR: code)
+                        //no record found
+                        else {
+                            self.beep()
+                            self.alert2() //New Location [cancel/deploy]
+                        }
+                        
+                    } //end dispatch group
+                    
+                } else {
+                    self.alert12() //Invalid code (rescan)
+                }
+                
+            case "Code128":
+                
+                if(code != nil ){
+                    
+                    variables.dosiNumber = code //store the dosi number
+                    queryForDosiFound() //use the dosiNumber to look up record & store values
+                    
+                    dispatchGroup.notify(queue: .main) {
+                        print("1 - Dispatch Code 128 Notify")
+                        
+                        //record found
+                        if self.itemRecord != nil {
                             
-                            dispatchGroup.notify(queue: .main) {
-                                print("2 - Dispatch QR Code Notify")
-                                
-                                //existing location
-                                if self.records != [] {
-                                    
-                                    //location in use/inactive location
-                                    if variables.collected == 0 || variables.active == 0 {
-                                        self.beepFail()
-                                        self.alert7b(code: code)
-                                    }
-                                        
-                                    //valid location
-                                    else {
-                                        self.beep()
-                                        variables.QRCode = code
-                                        self.alert8()
-                                    }
+                            //deployed dosimeter
+                            if variables.collected == 0 {
+                                self.beep()
+                                if variables.active == 1 {
+                                    self.alert3a() //Exchange Dosimeter (active location)
                                 }
-                                    
-                                //new location
+                                else {
+                                    self.alert3i() //Collect Dosimeter (inactive location)
+                                }
+                            }
+                            
+                            //collected dosimeter
+                            else {
+                                self.beepFail()
+                                self.alert9a() //Invalid Dosimeter (already collected)
+                            }
+                        }
+                        
+                        //no record found
+                        else {
+                            self.beep()
+                            self.alert1() //Dosimeter Not Found [cancel/deploy]
+                        }
+                    }
+                    
+                } //end dispatch group
+                else {
+                    self.alert12() //Invalid code (rescan)
+                }
+                
+            default:
+                print("Invalid Code") //exhaustive
+                alert9()
+                
+            } //end switch
+            
+        case 1: //second scan logic
+            
+            //self.captureSession.startRunning()
+            if(isRescan){
+                isRescan = false
+            }
+            switch variables.codeType {
+                
+            case "QRCode":
+                
+                if(code != nil ){
+                    
+                    //looking for QRCode
+                    if variables.QRCode == nil {
+                        clearForQR()
+                        queryForQRUsed(tempQR: code!)
+                        
+                        dispatchGroup.notify(queue: .main) {
+                            print("2 - Dispatch QR Code Notify")
+                            
+                            //existing location
+                            if self.records != [] {
+                                
+                                //location in use/inactive location
+                                if variables.collected == 0 || variables.active == 0 {
+                                    self.beepFail()
+                                    self.alert7b(code: code!)
+                                }
+                                
+                                //valid location
                                 else {
                                     self.beep()
                                     variables.QRCode = code
                                     self.alert8()
                                 }
-                                
-                            } //end dispatch group
+                            }
                             
-                        }
+                            //new location
+                            else {
+                                self.beep()
+                                variables.QRCode = code
+                                self.alert8()
+                            }
                             
-                        //not looking for QRCode
-                        else {
-                            beepFail()
-                            alert6b()
-                        }
-                    
-                    case "Code128":
+                        } //end dispatch group
                         
-                        //looking for barcode
-                        if variables.dosiNumber == nil {
-                            queryForDosiUsed(tempDosi: code)
-                            
-                            dispatchGroup.notify(queue: .main) {
-                                print("2 - Dispatch Code 128 Notify")
-                                
-                                //duplicate dosimeter
-                                if self.records != [] {
-                                    self.beepFail()
-                                    self.alert7a(code: code)
-                                }
-                                    
-                                //new dosimeter
-                                else {
-                                    self.beep()
-                                    variables.dosiNumber = code
-                                    self.alert8()
-                                }
-                                
-                            } //end dispatch group
-                            
-                        } //looking for barcode
-                            
-                        //not looking for barcode
-                        else {
-                            beepFail()
-                            alert6a()
-                        }
+                    }
                     
-                    default:
-                        print("Invalid Code")
-                        if variables.QRCode == nil { alert6a() }
-                        else if variables.dosiNumber == nil { alert6b() }
+                    //not looking for QRCode
+                    else {
+                        beepFail()
+                        alert6b()
+                    }
+                    
+                } else {
+                    alert12()
                 }
-            
+                
+            case "Code128":
+                if(code != nil ){
+                    //looking for barcode
+                    if variables.dosiNumber == nil {
+                        queryForDosiUsed(tempDosi: code!)
+                        
+                        dispatchGroup.notify(queue: .main) {
+                            print("2 - Dispatch Code 128 Notify")
+                            
+                            //duplicate dosimeter
+                            if self.records != [] {
+                                self.beepFail()
+                                self.alert7a(code: code!)
+                            }
+                            
+                            //new dosimeter
+                            else {
+                                self.beep()
+                                variables.dosiNumber = code
+                                self.alert8()
+                            }
+                            
+                        } //end dispatch group
+                        
+                    } //looking for barcode
+                    
+                    //not looking for barcode
+                    else {
+                        beepFail()
+                        alert6a()
+                    }
+                    
+                } else {
+                    alert12()
+                }
+                
             default:
-                print("Invalid Scan")
-                counter = 0
-                self.captureSession.startRunning()
+                print("Invalid Code")
+                if variables.QRCode == nil { alert6a() }
+                else if variables.dosiNumber == nil { alert6b() }
+            }
+            
+        default:
+            if(isRescan){
+                isRescan = false
+            }
+            print("Invalid Scan")
+            counter = 0
+            self.captureSession.startRunning()
         }
     } //end func
     
-//MARK:  Collect
+    //MARK:  Collect
     
     func collect(collected: Int64, mismatch: Int64, modifiedDate: Date) {
         
@@ -585,7 +616,7 @@ extension ScannerViewController {  //queries
             self.dispatchGroup.leave()
             
         } //end perform query
-
+        
     } //end queryForDosiUsed
     
     
@@ -611,11 +642,11 @@ extension ScannerViewController {  //queries
             self.dispatchGroup.leave()
             
         }  //end perform query
-
+        
     } //end queryForQRUsed
-
-} //end extension queries
     
+} //end extension queries
+
 /*
  
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -624,8 +655,8 @@ extension ScannerViewController {  //queries
 
 
 extension ScannerViewController {  //alerts
-
-        
+    
+    
     func alert1() {
         
         let alert = UIAlertController(title: "Dosimeter Not Found:\n\(variables.dosiNumber ?? "Nil Dosi")", message: nil, preferredStyle: .alert)
@@ -693,7 +724,7 @@ extension ScannerViewController {  //alerts
             self.collect(collected: 1, mismatch: variables.mismatch ?? 0, modifiedDate: Date(timeInterval: 0, since: Date()))
             self.alert11a()
         }
-
+        
         let mismatch = UIAlertAction(title: "Mismatch", style: .default) { (_) in
             self.alert3a()
         }
@@ -882,9 +913,9 @@ extension ScannerViewController {  //alerts
         }
     } //end alert7b
     
-//MARK:  Alert8
+    //MARK:  Alert8
     func alert8() {
-
+        
         let cycle = RecordsUpdate.generateCycleDate()
         variables.cycle = cycle
         getCoordinates()
@@ -923,15 +954,15 @@ extension ScannerViewController {  //alerts
                                                   modifiedDate: Date(timeInterval: 0, since: Date()))
                     self.alert10() //Succes
                 }
-    
-            //text = text?.replacingOccurrences(of: ",", with: "-")
-            //Ver 1.2 - supply default location to prevent empty string in DB.
-            //rather than alert on top of alert for field valication
-            //if text == "" {
-             //   text = "Default Location (field left empty)"
-        
-        } //end if let
-
+                
+                //text = text?.replacingOccurrences(of: ",", with: "-")
+                //Ver 1.2 - supply default location to prevent empty string in DB.
+                //rather than alert on top of alert for field valication
+                //if text == "" {
+                //   text = "Default Location (field left empty)"
+                
+            } //end if let
+            
             
         }  //end let
         
@@ -956,15 +987,15 @@ extension ScannerViewController {  //alerts
     
     
     func alert9() {  //invalid barcode type
-
+        
         let message = "Please scan either a location barcode or a dosimeter."
-      
+        
         //set up alert
         let alert = UIAlertController.init(title: "Invalid Barcode Type", message: message, preferredStyle: .alert)
         let OK = UIAlertAction(title: "OK", style: .cancel, handler: handlerCancel)
-
+        
         alert.addAction(OK)
-
+        
         DispatchQueue.main.async {
             self.present(alert, animated: true, completion: nil)
         }
@@ -1044,6 +1075,25 @@ extension ScannerViewController {  //alerts
             self.present(alert, animated: true, completion: nil)
         }
     }  //end alert11a
+    
+    //MARK:  Alert12
+    func alert12() {  //invalid code, rescan
+        
+        let message = "Invalid barcode, please rescan!"
+        
+        //set up alert
+        let alert = UIAlertController.init(title: "Invalid code", message: message, preferredStyle: .alert)
+        let rescan = UIAlertAction(title: "Rescan", style: .default) { (_) in
+            self.isRescan = true
+            self.captureSession.startRunning()
+        }
+        
+        alert.addAction(rescan)
+        
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
+    }  //end alert12
     
     
     //mismatch switch

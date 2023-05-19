@@ -54,7 +54,6 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
         
         //progress view
         progressView.setProgress(0, animated: true)
-        setProgress()
         
         //tools button
         let toolsTap = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
@@ -100,6 +99,10 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
     } //end viewDidLoad
     
     
+    override func viewDidAppear(_ makk: Bool) {
+        setProgress()
+    }
+    
     @IBAction func scanButtonDown(_ sender: Any) {
         scanButton.layer.borderColor = borderColorDown
     }
@@ -140,14 +143,16 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
         
         //start activityIndicator
         activityIndicator.startAnimating()
-
-        //start the queries
-        query.getPriorCycleCountCFYes()
-        query.getPriorCycleCountCFNo()
         
-        query.dispatchGroup.notify(queue: .main) {
-            let numberCompleted:Float = Float(self.query.countCFYes)
-            let numberRemaining:Float = Float(self.query.countCFNo)
+        LocationsCK.shared.synchronize(loaded: { _ in
+        
+        //start the queries
+   //         self.query.getPriorCycleCountCFYes()
+     //       self.query.getPriorCycleCountCFNo()
+        
+            self.query.dispatchGroup.notify(queue: .main) {
+            let numberCompleted:Float = Float(self.query.getCollectedNum())
+            let numberRemaining:Float = Float(self.query.getNotCollectedNum())
             let numberDeployed:Float = numberCompleted + numberRemaining
             let progress = (numberCompleted / numberDeployed)
             
@@ -174,7 +179,7 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
             
             //stop activityIndicator
             self.activityIndicator.stopAnimating()
-        }
+        }})
         
         
     }// end setProgress
