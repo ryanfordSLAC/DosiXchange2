@@ -30,6 +30,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     var isRescan: Bool = false
     
     @IBOutlet weak var innerView: UIView!
+    @IBOutlet weak var outerView: UIView!
     
     struct variables {  //key variables needed in other classes
         
@@ -525,8 +526,9 @@ extension ScannerViewController {
     } //end beep()
     
     fileprivate func configReachability() {
-        reachability.whenReachable = { reachability in self.view.backgroundColor = UIColor(named: "MainOnline") }
-        reachability.whenUnreachable = { reachability in self.view.backgroundColor = UIColor(named: "MainOffline") }
+        reachability.whenReachable = { reachability in self.outerView.backgroundColor = UIColor(named: "MainOnline") }
+        reachability.whenUnreachable = { reachability in self.outerView.backgroundColor = UIColor(named: "MainOffline") }
+        
         do {
             try reachability.startNotifier()
         }
