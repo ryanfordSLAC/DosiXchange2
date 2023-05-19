@@ -109,7 +109,9 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         previewLayer.videoGravity = AVLayerVideoGravity.resize
         videoCaptureDevice.videoZoomFactor = zoomFactor
         videoCaptureDevice.unlockForConfiguration()
-        captureSession.startRunning()
+        DispatchQueue.global(qos: .background).async {
+            self.captureSession.startRunning()
+        }
         
     }//end viewDidLoad()
     
@@ -131,7 +133,9 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         super.viewWillAppear(animated)
         self.previewLayer.frame.size = self.innerView.frame.size
         if (captureSession?.isRunning == false) {
-            captureSession.startRunning()
+            DispatchQueue.global(qos: .background).async {
+                self.captureSession.startRunning()
+            }
         }
         
     }//end viewWillAppear
@@ -431,7 +435,9 @@ extension ScannerViewController {
             }
             print("Invalid Scan")
             counter = 0
-            self.captureSession.startRunning()
+            DispatchQueue.global(qos: .background).async {
+                self.captureSession.startRunning()
+            }
         }
     } //end func
     
@@ -1104,7 +1110,9 @@ extension ScannerViewController {  //alerts
         let alert = UIAlertController.init(title: "Invalid code", message: message, preferredStyle: .alert)
         let rescan = UIAlertAction(title: "Rescan", style: .default) { (_) in
             self.isRescan = true
-            self.captureSession.startRunning()
+            DispatchQueue.global(qos: .background).async {
+                self.captureSession.startRunning()
+            }
         }
         
         alert.addAction(rescan)
@@ -1174,14 +1182,18 @@ extension ScannerViewController {  //handlers
     
     func handlerOK(alert: UIAlertAction!) {  //used for OK in the alert prompt.
         
-        self.captureSession.startRunning()
+        DispatchQueue.global(qos: .background).async {
+            self.captureSession.startRunning()
+        }
         
     } //end handler
     
     func handlerCancel(alert: UIAlertAction!) {
         
         self.clearData()
-        self.captureSession.startRunning()
+        DispatchQueue.global(qos: .background).async {
+            self.captureSession.startRunning()
+        }
     }
     
 } //end extension
