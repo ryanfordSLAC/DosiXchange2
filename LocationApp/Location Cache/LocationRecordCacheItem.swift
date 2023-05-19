@@ -290,6 +290,7 @@ class LocationRecordCacheItem: Codable, LocationRecordDelegate {
         newRecord.setValue(self.active, forKey: "active")
         newRecord.setValue(self.createdDate, forKey: "createdDate")
         newRecord.setValue(self.modifiedDate, forKey: "modifiedDate")
+        newRecord.setValue(self.mismatch, forKey: "mismatch")
     }
     
     func to() -> CKRecord {

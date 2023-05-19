@@ -152,10 +152,12 @@ class LocationsCK : Locations {
                 if let error = error {
                     print(error.localizedDescription)
                 }
+                else {
+                    print("Saved \(records.count) locations.")
+                }
                 
                 self.cache?.changes.removeAll()
                 self.cache?.save()
-                print("Saved \(records.count) locations.")
                 self.dispatchGroup.leave()
             }
             self.database.add(operation)
