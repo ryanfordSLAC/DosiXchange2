@@ -104,6 +104,7 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
         
         vc.record = searching ? searches[segment][indexPath.row].0 : displayInfo[segment][indexPath.row].0
         vc.transitioningDelegate = self
+        vc.locationDetailDelegate = self
         
         self.present(vc, animated: true)
     }
@@ -228,5 +229,12 @@ extension ActiveLocations : UIViewControllerTransitioningDelegate{
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         queryDatabase()
         return nil
+    }
+}
+
+extension ActiveLocations: LocationDetailDelegate {
+    func activeStatusChanged(active: Bool) {
+        segment = active ? 0 : 1
+        segmentedControl.selectedSegmentIndex = segment
     }
 }

@@ -9,6 +9,10 @@
 import UIKit
 import CloudKit
 
+protocol LocationDetailDelegate {
+    func activeStatusChanged(active: Bool)
+}
+
 //MARK:  Class
 class LocationDetails: UIViewController {
     
@@ -19,6 +23,7 @@ class LocationDetails: UIViewController {
     var lat = ""
     var long = ""
     var active = 0
+    var locationDetailDelegate: LocationDetailDelegate?
     
     var records = [LocationRecordCacheItem]()
     var details = [(String, String, String, Int64, Int64)]()
@@ -160,11 +165,8 @@ extension LocationDetails {
             //wait for records to save
             self.dispatchGroup.wait()
 
-            //refresh and show Active Locations TableView
-            let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
-            let vc = mainStoryboard.instantiateViewController(withIdentifier: "ActiveLocations") as! ActiveLocations
-            vc.segment = self.active == 1 ? 0 : 1
-            self.show(vc, sender: self)
+            self.locationDetailDelegate?.activeStatusChanged(active: self.active == 1)
+            self.dismiss(animated: true, completion: nil)
         }
         
         let cancel = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
