@@ -226,7 +226,7 @@ extension ScannerViewController {
                             if variables.collected == 0 {
                                 self.beep()
                                 if variables.active == 1 {
-                                    let dateFormatter = DateFormatter()
+                                    
                                     if(RecordsUpdate.generateCycleDate() == variables.cycle){
                                         self.alert13(nextFunction: self.alert3a)
                                     } else {
@@ -285,10 +285,18 @@ extension ScannerViewController {
                             if variables.collected == 0 {
                                 self.beep()
                                 if variables.active == 1 {
-                                    self.alert3a() //Exchange Dosimeter (active location)
+                                    if(RecordsUpdate.generateCycleDate() == variables.cycle){
+                                        self.alert13(nextFunction: self.alert3a)
+                                    } else {
+                                        self.alert3a() //Exchange Dosimeter (active location)
+                                    }
                                 }
                                 else {
-                                    self.alert3i() //Collect Dosimeter (inactive location)
+                                    if(RecordsUpdate.generateCycleDate() == variables.cycle){
+                                        self.alert13(nextFunction: self.alert3i)
+                                    } else {
+                                        self.alert3i() //Collect Dosimeter (inactive location)
+                                    }
                                 }
                             }
                             
