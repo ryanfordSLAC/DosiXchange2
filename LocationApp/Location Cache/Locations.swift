@@ -61,7 +61,10 @@ class LocationsCK : Locations {
                 predicate = NSPredicate(format: "modifiedDate > %@", argumentArray: [lastDate!.modifiedDate!])
             }
 
-            self.query(predicate: predicate, sortDescriptors: [], pageSize: 50, loaded:loaded, completionHandler: self.queryCompletionHandler)
+            self.query(predicate: predicate, sortDescriptors: [], pageSize: 50, loaded:{
+                self.dispatchGroup.leave()
+                loaded($0)
+            }, completionHandler: self.queryCompletionHandler)
         }
         else {
             dispatchGroup.leave()
@@ -128,43 +131,50 @@ class LocationsCK : Locations {
     }
     
     private func reachable(_ : Reachability) {
-        dispatchGroup.wait()
-        dispatchGroup.enter()
-        if self.cache == nil {
-            self.cache = Cache.load() ?? Cache()
+        DispatchQueue.global(qos: .background).async {
+            self.dispatchGroup.wait()
+            self.dispatchGroup.enter()
+            if self.cache == nil {
+                self.cache = Cache.load() ?? Cache()
+            }
+            self.dispatchGroup.leave()
+            self.setUser(completionHandler: {
+                self.cache?.setUser(name: $0)
+                self.saveChanges()
+            })
+            self.synchronize(loaded: { _ in print("Synchronization from reachability") })
         }
-        dispatchGroup.leave()
-        saveChanges()
-        self.synchronize(loaded: { _ in print("Synchronization from reachability") })
     }
     
     private func saveChanges() {
-        dispatchGroup.wait()
-        dispatchGroup.enter()
-        if (!self.cache!.changes.isEmpty) {
-            var records = [CKRecord]()
-            for item in self.cache!.changes {
-                records.append(item.to())
+        DispatchQueue.global(qos: .background).async {
+            self.dispatchGroup.wait()
+            self.dispatchGroup.enter()
+            if (!self.cache!.changes.isEmpty) {
+                var records = [CKRecord]()
+                for item in self.cache!.changes {
+                    records.append(item.to())
+                }
+                let operation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: nil)
+                operation.savePolicy = .allKeys
+                operation.modifyRecordsCompletionBlock = { (_, _, error) in
+                    if let error = error {
+                        print(error.localizedDescription)
+                    }
+                    else {
+                        print("Saved \(records.count) locations.")
+                    }
+                    
+                    self.cache?.changes.removeAll()
+                    self.cache?.save()
+                    self.dispatchGroup.leave()
+                }
+                self.database.add(operation)
+                operation.waitUntilFinished()
             }
-            let operation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: nil)
-            operation.savePolicy = .allKeys
-            operation.modifyRecordsCompletionBlock = { (_, _, error) in
-                if let error = error {
-                    print(error.localizedDescription)
-                }
-                else {
-                    print("Saved \(records.count) locations.")
-                }
-                
-                self.cache?.changes.removeAll()
-                self.cache?.save()
+            else {
                 self.dispatchGroup.leave()
             }
-            self.database.add(operation)
-            operation.waitUntilFinished()
-        }
-        else {
-            dispatchGroup.leave()
         }
     }
     
@@ -172,7 +182,6 @@ class LocationsCK : Locations {
         if let error = error {
             print(error.localizedDescription)
             loaded(cache!.locations.count)
-            dispatchGroup.leave()
             return
         }
         
@@ -193,7 +202,6 @@ class LocationsCK : Locations {
                 print("Location query completed.")
                 cache!.save()
                 loaded(cache!.locations.count)
-                dispatchGroup.leave()
             }
         }
     }
@@ -225,5 +233,28 @@ class LocationsCK : Locations {
             completionHandler(result, true, nil, loaded)
         }
         database.add(operation)
+    }
+    
+    private func setUser(completionHandler: @escaping (String) -> Void) {
+        DispatchQueue.main.async {
+            CKContainer.default().requestApplicationPermission(.userDiscoverability) { (status, error) in
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+                if status == .granted {
+                        CKContainer.default().fetchUserRecordID { (record, error) in
+                            CKContainer.default().discoverUserIdentity(withUserRecordID: record!, completionHandler: { (userID, error) in
+                                if let givenName = userID?.nameComponents?.givenName, let familyName = userID?.nameComponents?.familyName {
+                                    completionHandler("\(givenName) \(familyName)")
+                                }
+                                else {
+                                    completionHandler(userID?.lookupInfo?.emailAddress ?? "")
+                                }
+                            })
+                        }
+                    }
+                completionHandler("")
+            }
+        }
     }
 }
