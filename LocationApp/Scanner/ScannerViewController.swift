@@ -967,11 +967,11 @@ extension ScannerViewController {  //alerts
                     label.isHidden = false
                     self.present(alert, animated: true, completion: nil)
                 } else {
-                   
+                    let description = text.replacingOccurrences(of: ",", with: "-")
                     let newRecord = CKRecord(recordType: "Location")
                     newRecord.setValue(variables.latitude ?? "Nil Latitude", forKey: "latitude")
                     newRecord.setValue(variables.longitude ?? "Nil Longitude", forKey: "longitude")
-                    newRecord.setValue(text, forKey: "locdescription")
+                    newRecord.setValue(description, forKey: "locdescription")
                     newRecord.setValue(variables.dosiNumber ?? "Nil Dosi", forKey: "dosinumber")
                     newRecord.setValue(0, forKey: "collectedFlag")
                     newRecord.setValue(cycle, forKey: "cycleDate")
