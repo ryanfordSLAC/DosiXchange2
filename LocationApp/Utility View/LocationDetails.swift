@@ -56,6 +56,10 @@ class LocationDetails: UIViewController {
     @IBOutlet weak var pModerator: UISwitch!
     @IBOutlet weak var pCollected: UISwitch!
     @IBOutlet weak var pMismatch: UISwitch!
+    @IBOutlet weak var pReportGroup: UITextField!
+    
+    var pickerview = UIPickerView()
+    var pickerViewData = [String]()
     
     var popupRecord: LocationRecordDelegate = CKRecord(recordType: "Location")
     var moderator = 0
@@ -79,6 +83,16 @@ class LocationDetails: UIViewController {
         
         qrTable.delegate = self
         qrTable.dataSource = self
+        
+        pickerview.delegate = self
+        pickerview.dataSource = self
+        
+        pReportGroup.inputView = pickerview
+        
+        locations.groups(completionHandler: {
+            self.pickerViewData = [String]($0)
+            self.pickerViewData.insert("", at: 0)// Provide an empty option
+        })
         
         showDetails()
         
@@ -138,11 +152,6 @@ class LocationDetails: UIViewController {
             }
         }
         
-        locations.groups(completionHandler: {
-            for group in $0 {
-                print(group)
-            }
-        })
     }
     
 }
@@ -328,6 +337,27 @@ extension LocationDetails: UITableViewDelegate, UITableViewDataSource {
     
 }
 
+//pickerview functions and helpers
+//MARK:  Extension 3
+extension LocationDetails: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        pickerViewData.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        pickerViewData.count == 0 ? "" : pickerViewData[row]
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        pReportGroup.text = pickerViewData.count == 0 ? "" : pickerViewData[row]
+        pReportGroup.resignFirstResponder()
+    }
+}
+
 
 //edit record pop-up controls
 extension LocationDetails: UITextFieldDelegate {
@@ -368,6 +398,7 @@ extension LocationDetails: UITextFieldDelegate {
         popupRecord.setValue(pLongitude.text, forKey: "longitude")
         popupRecord.setValue(pDosimeter.text, forKey: "dosinumber")
         popupRecord.setValue(moderator, forKey: "moderator")
+        popupRecord.setValue(pReportGroup.text, forKey: "reportGroup")
         if pDosimeter.text != "" {
             popupRecord.setValue(pCycleDate.text, forKey: "cycleDate")
             popupRecord.setValue(collected, forKey: "collectedFlag")
@@ -434,6 +465,13 @@ extension LocationDetails: UITextFieldDelegate {
         }
         else {
             self.mismatch = 0
+        }
+        
+        if let reportGroup = record["reportGroup"]  as? String {
+            pReportGroup.text = String(describing: reportGroup)
+        }
+        else {
+            pReportGroup.text = ""
         }
         
         pModerator.isOn = moderator == 1 ? true : false
