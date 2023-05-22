@@ -15,12 +15,14 @@ import CoreLocation
 class StartupViewController: UIViewController, MFMailComposeViewControllerDelegate, CLLocationManagerDelegate {
     
     let reachability = Reachability()!
+    let locations = LocationsCK.shared    
     let location = CLLocationManager()
     let query = Queries()
     
     let borderColorUp = UIColor(red: 0.887175, green: 0.887175, blue: 0.887175, alpha: 1).cgColor
     let borderColorDown = UIColor(red: 0.887175, green: 0.887175, blue: 0.887175, alpha: 0.2).cgColor
 
+    @IBOutlet var mainView: UIView!
     @IBOutlet weak var scanButton: UIButton!
     @IBOutlet weak var mapButton: UIButton!
     @IBOutlet weak var nearestDosiButton: UIButton!
@@ -64,26 +66,29 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
         let statusTap = UITapGestureRecognizer(target: self, action: #selector(setProgress))
         statusLabel.isUserInteractionEnabled = true
         statusLabel.addGestureRecognizer(statusTap)
-
+        
         // Do any additional setup after loading the view, typically from a nib.
         // Detect Wifi:
         reachability.whenReachable = { reachability in
+            self.mainView.backgroundColor = UIColor(named: "MainOnline")
             if reachability.connection == .wifi {
                 print("Reachable via WiFi")
             }
             else {
                 print("Reachable via Cellular")
             }
+            self.setProgress()
         }
         
         reachability.whenUnreachable = { _ in
+            self.mainView.backgroundColor = UIColor(named: "MainOffline")
             print("Not reachable")
             let alert = UIAlertController(title: "WiFi Connection Error", message: "Must be connected to WiFi to identify position and save data to cloud", preferredStyle: .alert)
             let OK = UIAlertAction(title: "OK", style: .default) { (_) in return }
             alert.addAction(OK)
             
             DispatchQueue.main.async {
-                self.present(alert, animated: true, completion: nil)
+                self.present(alert, animated: true, completion: { self.setProgress()})
             } //async end
         
         }//end when unreachable
@@ -99,8 +104,8 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
     } //end viewDidLoad
     
     
-    override func viewDidAppear(_ makk: Bool) {
-        setProgress()
+    override func viewDidAppear(_ animated: Bool) {
+        //setProgress()
     }
     
     @IBAction func scanButtonDown(_ sender: Any) {
@@ -144,43 +149,40 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
         //start activityIndicator
         activityIndicator.startAnimating()
         
-        LocationsCK.shared.synchronize(loaded: { _ in
-        
-        //start the queries
-   //         self.query.getPriorCycleCountCFYes()
-     //       self.query.getPriorCycleCountCFNo()
-        
-            self.query.dispatchGroup.notify(queue: .main) {
-            let numberCompleted:Float = Float(self.query.getCollectedNum())
-            let numberRemaining:Float = Float(self.query.getNotCollectedNum())
-            let numberDeployed:Float = numberCompleted + numberRemaining
-            let progress = (numberCompleted / numberDeployed)
-            
-            switch progress {
+        DispatchQueue.global(qos: .background).async {
+            LocationsCK.shared.synchronize(loaded: { _ in
                 
-                case 0:
-                    self.statusLabel.text = "Ready to begin collection of \(Int(numberRemaining)) dosimeters!"
+                self.query.dispatchGroup.notify(queue: .main) {
+                let numberCompleted:Float = Float(self.query.getCollectedNum())
+                let numberRemaining:Float = Float(self.query.getNotCollectedNum())
+                let numberDeployed:Float = numberCompleted + numberRemaining
+                let progress = (numberCompleted / numberDeployed)
                 
-                case 1:
-                    self.statusLabel.text = "All dosimeters from the prior period have been collected!"
-                    print("Completed: \(numberCompleted)")
-                    print("Deployed: \(numberDeployed)")
-                    print("Progress: \(progress)")
+                switch progress {
+                    
+                    case 0:
+                        self.statusLabel.text = "Ready to begin collection of \(Int(numberRemaining)) dosimeters!"
+                    
+                    case 1:
+                        self.statusLabel.text = "All dosimeters from the prior period have been collected!"
+                        print("Completed: \(numberCompleted)")
+                        print("Deployed: \(numberDeployed)")
+                        print("Progress: \(progress)")
+                    
+                    default:
+                        self.statusLabel.text = "Green Pins: \(Int(numberRemaining)) remaining out of \(Int(numberDeployed)) are ready for collection"
+                        print("Completed: \(numberCompleted)")
+                        print("Deployed: \(numberDeployed)")
+                        print("Progress: \(progress)")
+                    
+                } //end switch
                 
-                default:
-                    self.statusLabel.text = "Green Pins: \(Int(numberRemaining)) remaining out of \(Int(numberDeployed)) are ready for collection"
-                    print("Completed: \(numberCompleted)")
-                    print("Deployed: \(numberDeployed)")
-                    print("Progress: \(progress)")
+                self.progressView.progress = progress
                 
-            } //end switch
-            
-            self.progressView.progress = progress
-            
-            //stop activityIndicator
-            self.activityIndicator.stopAnimating()
-        }})
-        
+                //stop activityIndicator
+                self.activityIndicator.stopAnimating()
+            }})
+        }
         
     }// end setProgress
 

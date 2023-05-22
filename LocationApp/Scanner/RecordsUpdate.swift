@@ -60,56 +60,8 @@ class RecordsUpdate: UIViewController {
     
     //MARK:  Cycle Date
     static func generateCycleDate() -> String {
-
-        //return the dosimeter wear date for the CKRecord as a string (date format not necessary - will be converted in excel)
-        //The wear date is important for post processing the CSV file
-        //And for color coding the map pins.
-        //There are two cycles per year:  one is January 1 wear date, the other is July 1 wear date
-        //(The dosimeters aren't always deployed in January and June)
-        
-        let currentDate = Date()
-        
-        let dateFormatterMonth = DateFormatter()
-        dateFormatterMonth.dateFormat = "MMMM"
-        let dateStringMonth = dateFormatterMonth.string(from: currentDate)
-        
-        let dateFormatterYear = DateFormatter()
-        dateFormatterYear.dateFormat = "yyyy"
-        let dateStringYear = dateFormatterYear.string(from: currentDate)
-        
-        switch dateStringMonth {
-            
-        case "January":
-            return "1-1-\(dateStringYear)"
-        case "February":
-            return "1-1-\(dateStringYear)"
-        case "March":
-            return "1-1-\(dateStringYear)"
-        case "April":
-            return "1-1-\(dateStringYear)"
-        case "May":
-            return "1-1-\(dateStringYear)"
-        case "June":
-            return "1-1-\(dateStringYear)" //temp update to 7-1 to allow early deployment.
-                                            //rescinded 9/29/2020 
-        case "July":
-            return "7-1-\(dateStringYear)"
-        case "August":
-            return "7-1-\(dateStringYear)"
-        case "September":
-            return "7-1-\(dateStringYear)"
-        case "October":
-            return "7-1-\(dateStringYear)"
-        case "November":
-            return "7-1-\(dateStringYear)"
-        case "December":
-            return "7-1-\(dateStringYear)"
-        default:
-            return "Cycle Date Error"
-            
-        } //end switch
-        
-    } //end generateCycleDate
+        return getLastCycles(cycles: 1)[0]
+    }
     
     //MARK:  Prior Cycle Date
     static func generatePriorCycleDate(cycleDate: String) -> String {
@@ -144,10 +96,12 @@ class RecordsUpdate: UIViewController {
         date = calendar.date(from: components)!
         
         var result = ["\(components.month!)-1-\(components.year!)"]
-        for _ in 2...cycles {
-            date = calendar.date(byAdding: Calendar.Component.month, value: -6, to: date)!
-            components = calendar.dateComponents([.year, .month], from: date)
-            result.append("\(components.month!)-1-\(components.year!)")
+        if(cycles > 1){
+            for _ in 2...cycles {
+                date = calendar.date(byAdding: Calendar.Component.month, value: -6, to: date)!
+                components = calendar.dateComponents([.year, .month], from: date)
+                result.append("\(components.month!)-1-\(components.year!)")
+            }
         }
         return result
     }
