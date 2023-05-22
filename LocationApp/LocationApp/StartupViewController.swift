@@ -83,7 +83,7 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
         reachability.whenUnreachable = { _ in
             self.mainView.backgroundColor = UIColor(named: "MainOffline")
             print("Not reachable")
-            let alert = UIAlertController(title: "WiFi Connection Error", message: "Must be connected to WiFi to identify position and save data to cloud", preferredStyle: .alert)
+            let alert = UIAlertController(title: "WiFi Connection Error", message: "Must be connected to WiFi to identify position and save data to the cloud.  Working in offline mode until connection reestablished.", preferredStyle: .alert)
             let OK = UIAlertAction(title: "OK", style: .default) { (_) in return }
             alert.addAction(OK)
             
