@@ -1136,7 +1136,10 @@ extension ScannerViewController {  //alerts
         let message = "This dosimeter already exchanged in the current cycle. Are you sure you want to continue?"
         
         //set up alert
-        let alert = UIAlertController.init(title: "Invalid cycle date", message: message, preferredStyle: .alert)
+        let alert = UIAlertController.init(title: "Warning", message: message, preferredStyle: .alert)
+        
+        alert.view.subviews.first?.subviews.first?.subviews.first?.backgroundColor = UIColor(named: "WarningDialogBackground")
+        
         let cont = UIAlertAction(title: "Continue", style: .destructive) { (_) in
             nextFunction()
         }
