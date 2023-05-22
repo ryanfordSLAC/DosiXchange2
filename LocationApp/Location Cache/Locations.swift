@@ -16,6 +16,8 @@ protocol Locations {
     
     func filter(by: @escaping (LocationRecordCacheItem) -> Bool, completionHandler: @escaping ([LocationRecordCacheItem]) -> Void)
     
+    func groups(completionHandler: @escaping ([String]) -> Void)
+    
     func count(by: (LocationRecordCacheItem) -> Bool) -> Int
     
     func save(item: LocationRecordCacheItem)
@@ -83,6 +85,16 @@ class LocationsCK : Locations {
             let items = self.cache!.locations.filter(by)
             completionHandler(items)
             self.dispatchGroup.leave()
+        }
+    }
+    
+    func groups(completionHandler: @escaping ([String]) -> Void) {
+        dispatchGroup.wait()
+        dispatchGroup.enter()
+        DispatchQueue.global(qos: .background).async {
+            let items = self.cache!.locations.filter({ $0.reportGroup != nil }).map({ $0.reportGroup! })
+            self.dispatchGroup.leave()
+            completionHandler(Array(Set(items)))
         }
     }
     

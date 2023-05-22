@@ -138,6 +138,11 @@ class LocationDetails: UIViewController {
             }
         }
         
+        locations.groups(completionHandler: {
+            for group in $0 {
+                print(group)
+            }
+        })
     }
     
 }
