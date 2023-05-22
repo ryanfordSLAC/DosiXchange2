@@ -62,7 +62,7 @@ class LocationDetails: UIViewController {
     var collected = 0
     var mismatch = 0
     
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -164,7 +164,7 @@ extension LocationDetails {
             
             //wait for records to save
             self.dispatchGroup.wait()
-
+            
             self.locationDetailDelegate?.activeStatusChanged(active: self.active == 1)
             self.dismiss(animated: true, completion: nil)
         }
@@ -293,7 +293,7 @@ extension LocationDetails: UITableViewDelegate, UITableViewDataSource {
             }
         }
     } //end func
-        
+    
     
     //to be executed for each fetched record
     func recordFetchedBlock(record: LocationRecordCacheItem) {
@@ -341,15 +341,19 @@ extension LocationDetails: UITextFieldDelegate {
     }
     
     @IBAction func popupSave(_ sender: Any) {
+        if(pDosimeter.text != nil && self.validateDosimeterField(value: pDosimeter.text!)){
+            view.endEditing(true)
+            savePopupRecord()
+            self.dismiss(animated: true)
+        } else {
+            self.showDosimeterValidationWarning()
+        }
         
-        view.endEditing(true)
-        savePopupRecord()
-        self.dismiss(animated: true)
     }
     
     func savePopupRecord() {
         
-//        dispatchGroup.enter()
+        //        dispatchGroup.enter()
         
         let text = pDescription.text?.replacingOccurrences(of: ",", with: "-")
         
@@ -365,9 +369,9 @@ extension LocationDetails: UITextFieldDelegate {
             popupRecord.setValue(mismatch, forKey: "mismatch")
         }
         //not handled if dosimeter number is empty.  Therefore can't set collected flag.
-   
-        locations.save(item: popupRecord as! LocationRecordCacheItem)        
-     } //end saveActiveStatus
+        
+        locations.save(item: popupRecord as! LocationRecordCacheItem)
+    } //end saveActiveStatus
     
     func setPopupDetails(record: LocationRecordDelegate) {
         
@@ -398,7 +402,7 @@ extension LocationDetails: UITextFieldDelegate {
         else {
             pDosimeter.text = ""
         }
-       
+        
         if let cycleDate = record["cycleDate"]  as? String {
             pCycleDate.text = String(describing: cycleDate)
         }
@@ -426,11 +430,33 @@ extension LocationDetails: UITextFieldDelegate {
         else {
             self.mismatch = 0
         }
-
+        
         pModerator.isOn = moderator == 1 ? true : false
         pCollected.isOn = collected == 1 ? true : false
         pMismatch.isOn = mismatch == 1 ? true : false
         
+    }
+    
+    public func validateDosimeterField(value: String) ->Bool {
+        // Length must be 11.
+        let regex = "^\\w{11,11}$"
+        let validate = NSPredicate(format: "SELF MATCHES %@", regex)
+        return validate.evaluate(with: value)
+    }
+    
+    func showDosimeterValidationWarning() {
+        
+        let message = "The Dosimeter field must be at least 11 character"
+        
+        //set up alert
+        let alert = UIAlertController.init(title: "Error", message: message, preferredStyle: .alert)
+        let OK = UIAlertAction(title: "Ok", style: .cancel)
+        
+        alert.addAction(OK)
+        
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
     @objc func moderatorSwitch(_ sender: UISwitch!) {
