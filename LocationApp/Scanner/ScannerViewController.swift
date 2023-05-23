@@ -110,7 +110,9 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         videoCaptureDevice.videoZoomFactor = zoomFactor
         videoCaptureDevice.unlockForConfiguration()
-        captureSession.startRunning()
+        DispatchQueue.global(qos: .background).async {
+            self.captureSession.startRunning()
+        }
         configReachability()
     }//end viewDidLoad()
     
@@ -132,7 +134,9 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         super.viewWillAppear(animated)
         self.previewLayer.frame.size = self.innerView.frame.size
         if (captureSession?.isRunning == false) {
-            captureSession.startRunning()
+            DispatchQueue.global(qos: .background).async {
+                self.captureSession.startRunning()
+            }
         }
         
     }//end viewWillAppear
@@ -432,7 +436,9 @@ extension ScannerViewController {
             }
             print("Invalid Scan")
             counter = 0
-            self.captureSession.startRunning()
+            DispatchQueue.global(qos: .background).async {
+                self.captureSession.startRunning()
+            }
         }
     } //end func
     
@@ -961,11 +967,11 @@ extension ScannerViewController {  //alerts
                     label.isHidden = false
                     self.present(alert, animated: true, completion: nil)
                 } else {
-                   
+                    let description = text.replacingOccurrences(of: ",", with: "-")
                     let newRecord = CKRecord(recordType: "Location")
                     newRecord.setValue(variables.latitude ?? "Nil Latitude", forKey: "latitude")
                     newRecord.setValue(variables.longitude ?? "Nil Longitude", forKey: "longitude")
-                    newRecord.setValue(text, forKey: "locdescription")
+                    newRecord.setValue(description, forKey: "locdescription")
                     newRecord.setValue(variables.dosiNumber ?? "Nil Dosi", forKey: "dosinumber")
                     newRecord.setValue(0, forKey: "collectedFlag")
                     newRecord.setValue(cycle, forKey: "cycleDate")
@@ -1117,7 +1123,9 @@ extension ScannerViewController {  //alerts
         let alert = UIAlertController.init(title: "Invalid code", message: message, preferredStyle: .alert)
         let rescan = UIAlertAction(title: "Rescan", style: .default) { (_) in
             self.isRescan = true
-            self.captureSession.startRunning()
+            DispatchQueue.global(qos: .background).async {
+                self.captureSession.startRunning()
+            }
         }
         
         alert.addAction(rescan)
@@ -1133,7 +1141,10 @@ extension ScannerViewController {  //alerts
         let message = "This dosimeter already exchanged in the current cycle. Are you sure you want to continue?"
         
         //set up alert
-        let alert = UIAlertController.init(title: "Invalid cycle date", message: message, preferredStyle: .alert)
+        let alert = UIAlertController.init(title: "Warning", message: message, preferredStyle: .alert)
+        
+        alert.view.subviews.first?.subviews.first?.subviews.first?.backgroundColor = UIColor(named: "WarningDialogBackground")
+        
         let cont = UIAlertAction(title: "Continue", style: .destructive) { (_) in
             nextFunction()
         }
@@ -1186,14 +1197,19 @@ extension ScannerViewController {  //alerts
 extension ScannerViewController {  //handlers
     
     func handlerOK(alert: UIAlertAction!) {  //used for OK in the alert prompt.
-        self.captureSession.startRunning()
+        
+        DispatchQueue.global(qos: .background).async {
+            self.captureSession.startRunning()
+        }
         
     } //end handler
     
     func handlerCancel(alert: UIAlertAction!) {
         
         self.clearData()
-        self.captureSession.startRunning()
+        DispatchQueue.global(qos: .background).async {
+            self.captureSession.startRunning()
+        }
     }
     
 } //end extension

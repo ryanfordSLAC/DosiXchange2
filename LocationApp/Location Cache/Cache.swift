@@ -10,6 +10,7 @@ import Foundation
 
 class Cache: Codable {
     var version = "1.0"
+    var user = ""
     var locations = [LocationRecordCacheItem]()
     var changes = [LocationRecordCacheItem]()
     
@@ -40,6 +41,7 @@ class Cache: Codable {
     }
     
     func addChange(_ item: LocationRecordCacheItem) {
+        item.setValue(user, forKey: "modifiedBy")
         if let index = changes.firstIndex(where: { l in l.recordName == item.recordName}) {
             changes[index] = item
         }
@@ -66,6 +68,11 @@ class Cache: Codable {
         guard let _ = try? cacheData.write(to: cacheFileURL) else {
             return
         }
+    }
+    
+    func setUser(name: String){
+        user = name
+        print("Cloudkit user: \(name)")
     }
     
     private static func locationRecordCacheFileExists() -> Bool {
