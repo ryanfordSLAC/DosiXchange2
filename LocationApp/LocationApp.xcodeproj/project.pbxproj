@@ -49,6 +49,7 @@
 		E404C0C52A124558000D2D14 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = E404C0C32A124558000D2D14 /* Cache.swift */; };
 		E404C0C62A124558000D2D14 /* Locations.swift in Sources */ = {isa = PBXBuildFile; fileRef = E404C0C42A124558000D2D14 /* Locations.swift */; };
 		E40663E22A1CC2AF00AA3BC1 /* UpdateGroups.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40663E12A1CC2AE00AA3BC1 /* UpdateGroups.swift */; };
+		E40663E02A1CB77100AA3BC1 /* Groups.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40663DF2A1CB77100AA3BC1 /* Groups.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -117,7 +118,7 @@
 		84F9180122211C9B00D25634 /* NearestDosimeters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearestDosimeters.swift; sourceTree = "<group>"; };
 		E404C0C32A124558000D2D14 /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
 		E404C0C42A124558000D2D14 /* Locations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Locations.swift; sourceTree = "<group>"; };
-		E40663E12A1CC2AE00AA3BC1 /* UpdateGroups.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateGroups.swift; sourceTree = "<group>"; };
+		E40663DF2A1CB77100AA3BC1 /* Groups.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Groups.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +154,7 @@
 				E404C0C32A124558000D2D14 /* Cache.swift */,
 				E404C0C42A124558000D2D14 /* Locations.swift */,
 				449A7E9C271341B2005AF1F7 /* LocationRecordCacheItem.swift */,
+				E40663DF2A1CB77100AA3BC1 /* Groups.swift */,
 			);
 			path = "Location Cache";
 			sourceTree = "<group>";
@@ -502,6 +504,7 @@
 				5C7925A122DE9B1900B981B2 /* LocationDetails.swift in Sources */,
 				84F5ED6721B2024900381E76 /* RecordsUpdate.swift in Sources */,
 				846606C321AA5C380049814C /* MapViewController.swift in Sources */,
+				E40663E02A1CB77100AA3BC1 /* Groups.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
