@@ -48,6 +48,7 @@
 		84F9180222211C9B00D25634 /* NearestDosimeters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F9180122211C9B00D25634 /* NearestDosimeters.swift */; };
 		E404C0C52A124558000D2D14 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = E404C0C32A124558000D2D14 /* Cache.swift */; };
 		E404C0C62A124558000D2D14 /* Locations.swift in Sources */ = {isa = PBXBuildFile; fileRef = E404C0C42A124558000D2D14 /* Locations.swift */; };
+		E40663E22A1CC2AF00AA3BC1 /* UpdateGroups.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40663E12A1CC2AE00AA3BC1 /* UpdateGroups.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -116,6 +117,7 @@
 		84F9180122211C9B00D25634 /* NearestDosimeters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearestDosimeters.swift; sourceTree = "<group>"; };
 		E404C0C32A124558000D2D14 /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
 		E404C0C42A124558000D2D14 /* Locations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Locations.swift; sourceTree = "<group>"; };
+		E40663E12A1CC2AE00AA3BC1 /* UpdateGroups.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateGroups.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -308,6 +310,7 @@
 			children = (
 				84B58D4C21FD69C80013D5F3 /* UploadToCloud.swift */,
 				8434D57A25956DE800B2E413 /* RepairCycleDate.swift */,
+				E40663E12A1CC2AE00AA3BC1 /* UpdateGroups.swift */,
 			);
 			path = "Populate Database";
 			sourceTree = "<group>";
@@ -475,6 +478,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E40663E22A1CC2AF00AA3BC1 /* UpdateGroups.swift in Sources */,
 				E404C0C52A124558000D2D14 /* Cache.swift in Sources */,
 				5CF01FDE22D92F19004604BC /* ToolsViewController.swift in Sources */,
 				84F477962167173A00A63336 /* LocationApp.xcdatamodeld in Sources */,
