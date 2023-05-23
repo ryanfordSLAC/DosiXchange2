@@ -198,7 +198,7 @@ extension ToolsViewController {
         //set first line of text file
         //should separate text file from query
         dispatchGroup.enter()
-        self.csvText = "LocationID (QRCode),Latitude,Longitude,Description,Moderator (0/1),Active (0/1),Dosimeter,Collected Flag (0/1),Wear Period,System_Date Deployed,System_Date Collected,Mismatch (0/1), my_Date Deployed, my_Date Collected, recordID\n"
+        self.csvText = "LocationID (QRCode),Latitude,Longitude,Description,Moderator (0/1),Active (0/1),Dosimeter,Collected Flag (0/1),Wear Period,System_Date Deployed,System_Date Collected,Mismatch (0/1), my_Date Deployed, my_Date Collected, recordID, ModifiedBy\n"
         
         var filter: ((LocationRecordCacheItem) -> Bool) = { _ in true}
         if cycles > 0 {
@@ -275,9 +275,10 @@ extension ToolsViewController {
         }
         let myformattedDateModified = dateFormatter.string(from: myDateModified!)
         let recordID = record.recordName!
+        let modifiedBy = record.modifiedBy ?? ""
         
         //write the data into the file.
-        let newline = "\(QRCode),\(latitude),\(longitude),\(loc),\(moderator),\(active),\(dosimeter),\(collectedFlagStr),\(cycle),\(formattedDate),\(formattedDateModified),\(mismatchStr),\(myformattedCreatedDate),\(myformattedDateModified), \(recordID)\n"
+        let newline = "\(QRCode),\(latitude),\(longitude),\(loc),\(moderator),\(active),\(dosimeter),\(collectedFlagStr),\(cycle),\(formattedDate),\(formattedDateModified),\(mismatchStr),\(myformattedCreatedDate),\(myformattedDateModified), \(recordID), \(modifiedBy)\n"
         csvText.append(contentsOf: newline)
         clear()
     }
