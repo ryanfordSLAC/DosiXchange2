@@ -47,6 +47,14 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
     let borderColorUp = UIColor(red: 0.580723, green: 0.0667341, blue: 0, alpha: 1).cgColor
     let borderColorDown = UIColor(red: 0.580723, green: 0.0667341, blue: 0, alpha: 0.25).cgColor
     
+    fileprivate func registerDevMode() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.devTap(_:)))
+        tap.numberOfTapsRequired = 5
+        self.view.addGestureRecognizer(tap)
+        
+        view.isUserInteractionEnabled = true        
+    }
+    
     override func viewDidLoad() {
         
         super.viewDidLoad()
@@ -68,6 +76,10 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
         resetCacheButton.layer.borderWidth = 1.5
         resetCacheButton.layer.borderColor = borderColorUp
         resetCacheButton.layer.cornerRadius = 22
+        
+        registerDevMode()
+
+        // function which is triggered when handleTap is called
     }
     
     //@IBAction func uploadToCloud(_ sender: Any) {
@@ -298,5 +310,10 @@ extension ToolsViewController {
         mismatchStr = ""
         //not clearing date fields?
     }
+    
+    @objc func devTap(_ sender: UITapGestureRecognizer) {
+        UpdateGroups.update()
+    }
+
     
 } //end class

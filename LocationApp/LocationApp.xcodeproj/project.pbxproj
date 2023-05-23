@@ -48,8 +48,9 @@
 		84F9180222211C9B00D25634 /* NearestDosimeters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F9180122211C9B00D25634 /* NearestDosimeters.swift */; };
 		E404C0C52A124558000D2D14 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = E404C0C32A124558000D2D14 /* Cache.swift */; };
 		E404C0C62A124558000D2D14 /* Locations.swift in Sources */ = {isa = PBXBuildFile; fileRef = E404C0C42A124558000D2D14 /* Locations.swift */; };
-		E40663E22A1CC2AF00AA3BC1 /* UpdateGroups.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40663E12A1CC2AE00AA3BC1 /* UpdateGroups.swift */; };
 		E40663E02A1CB77100AA3BC1 /* Groups.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40663DF2A1CB77100AA3BC1 /* Groups.swift */; };
+		E40663E22A1CC2AF00AA3BC1 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		E465C7C62A1CC9E600B7465B /* UpdateGroups.swift in Sources */ = {isa = PBXBuildFile; fileRef = E465C7C52A1CC9E600B7465B /* UpdateGroups.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -119,6 +120,7 @@
 		E404C0C32A124558000D2D14 /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
 		E404C0C42A124558000D2D14 /* Locations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Locations.swift; sourceTree = "<group>"; };
 		E40663DF2A1CB77100AA3BC1 /* Groups.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Groups.swift; sourceTree = "<group>"; };
+		E465C7C52A1CC9E600B7465B /* UpdateGroups.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateGroups.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -310,9 +312,9 @@
 		84B58D5021FD7F580013D5F3 /* Populate Database */ = {
 			isa = PBXGroup;
 			children = (
+				E465C7C52A1CC9E600B7465B /* UpdateGroups.swift */,
 				84B58D4C21FD69C80013D5F3 /* UploadToCloud.swift */,
 				8434D57A25956DE800B2E413 /* RepairCycleDate.swift */,
-				E40663E12A1CC2AE00AA3BC1 /* UpdateGroups.swift */,
 			);
 			path = "Populate Database";
 			sourceTree = "<group>";
@@ -480,10 +482,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E40663E22A1CC2AF00AA3BC1 /* UpdateGroups.swift in Sources */,
+				E40663E22A1CC2AF00AA3BC1 /* (null) in Sources */,
 				E404C0C52A124558000D2D14 /* Cache.swift in Sources */,
 				5CF01FDE22D92F19004604BC /* ToolsViewController.swift in Sources */,
 				84F477962167173A00A63336 /* LocationApp.xcdatamodeld in Sources */,
+				E465C7C62A1CC9E600B7465B /* UpdateGroups.swift in Sources */,
 				84B58D4D21FD69C80013D5F3 /* UploadToCloud.swift in Sources */,
 				84A6671421E7162200FC1892 /* Artwork.swift in Sources */,
 				E404C0C62A124558000D2D14 /* Locations.swift in Sources */,

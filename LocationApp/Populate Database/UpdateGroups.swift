@@ -10,12 +10,19 @@ import Foundation
 
 class UpdateGroups {
     
-    func update() {
+    static func update() {
         let locations = LocationsCK.shared
         
         let items = locations.filter(by: { _ in true })
+        var changed = [LocationRecordCacheItem]()
         for item in items {
-            item.setValue(Groups[item.QRCode], forKey: <#T##String#>)
+            if let group = Groups[item.QRCode], group != item.reportGroup {
+                item.setValue(group, forKey: "reportGroup")
+                changed.append(item)
+            }
+        }
+        if !changed.isEmpty {
+            locations.save(items: changed)
         }
     }
 }
