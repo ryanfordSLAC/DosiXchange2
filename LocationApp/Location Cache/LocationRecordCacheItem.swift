@@ -55,6 +55,7 @@ class LocationRecordCacheItem: Codable, LocationRecordDelegate {
     var modificationDate:Date?          // modification date
     var recordName: String?             // record name (record.recordID.recordName)
     var modifiedBy: String?
+    var reportGroup: String?
 
     // Location Record Metadata
     
@@ -140,6 +141,8 @@ class LocationRecordCacheItem: Codable, LocationRecordDelegate {
         
         self.modifiedBy = record["modifiedBy"] as? String
         
+        self.reportGroup = record["reportGroup"] as? String
+        
         // set the record name
         self.recordName = record.recordID.recordName
  }
@@ -223,6 +226,15 @@ class LocationRecordCacheItem: Codable, LocationRecordDelegate {
                         return modifiedBy! as CKRecordValue
                     }
                     return nil
+                
+            case "reportGroup":
+                 if reportGroup != nil {
+                     return reportGroup! as CKRecordValue
+                 }
+                 else {
+                     return nil
+                 }
+
                default:
                   return nil
                }
@@ -267,6 +279,9 @@ class LocationRecordCacheItem: Codable, LocationRecordDelegate {
                
                 case "modifiedBy":
                     modifiedBy = newValue as? String
+                
+                case "reportGroup":
+                    reportGroup = newValue as? String
 
             default:
                     print("Unknown key = \(key) in LocationRecordCacheItem subscript setter")
@@ -302,6 +317,7 @@ class LocationRecordCacheItem: Codable, LocationRecordDelegate {
         newRecord.setValue(self.modifiedDate, forKey: "modifiedDate")
         newRecord.setValue(self.mismatch, forKey: "mismatch")
         newRecord.setValue(self.modifiedBy, forKey: "modifiedBy")
+        newRecord.setValue(self.reportGroup, forKey: "reportGroup")
     }
     
     func to() -> CKRecord {

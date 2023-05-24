@@ -56,13 +56,17 @@ class LocationDetails: UIViewController {
     @IBOutlet weak var pModerator: UISwitch!
     @IBOutlet weak var pCollected: UISwitch!
     @IBOutlet weak var pMismatch: UISwitch!
+    @IBOutlet weak var pReportGroup: UITextField!
+    
+    var pickerview = UIPickerView()
+    var pickerViewData = [String]()
     
     var popupRecord: LocationRecordDelegate = CKRecord(recordType: "Location")
     var moderator = 0
     var collected = 0
     var mismatch = 0
     
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -79,6 +83,16 @@ class LocationDetails: UIViewController {
         
         qrTable.delegate = self
         qrTable.dataSource = self
+        
+        pickerview.delegate = self
+        pickerview.dataSource = self
+        
+        pReportGroup.inputView = pickerview
+        
+        locations.groups(completionHandler: {
+            self.pickerViewData = [String]($0)
+            self.pickerViewData.insert("", at: 0)// Provide an empty option
+        })
         
         showDetails()
         
@@ -164,7 +178,7 @@ extension LocationDetails {
             
             //wait for records to save
             self.dispatchGroup.wait()
-
+            
             self.locationDetailDelegate?.activeStatusChanged(active: self.active == 1)
             self.dismiss(animated: true, completion: nil)
         }
@@ -293,7 +307,7 @@ extension LocationDetails: UITableViewDelegate, UITableViewDataSource {
             }
         }
     } //end func
-        
+    
     
     //to be executed for each fetched record
     func recordFetchedBlock(record: LocationRecordCacheItem) {
@@ -323,6 +337,27 @@ extension LocationDetails: UITableViewDelegate, UITableViewDataSource {
     
 }
 
+//pickerview functions and helpers
+//MARK:  Extension 3
+extension LocationDetails: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        pickerViewData.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        pickerViewData.count == 0 ? "" : pickerViewData[row]
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        pReportGroup.text = pickerViewData.count == 0 ? "" : pickerViewData[row]
+        pReportGroup.resignFirstResponder()
+    }
+}
+
 
 //edit record pop-up controls
 extension LocationDetails: UITextFieldDelegate {
@@ -341,15 +376,19 @@ extension LocationDetails: UITextFieldDelegate {
     }
     
     @IBAction func popupSave(_ sender: Any) {
+        if(pDosimeter.text != nil && self.validateDosimeterField(value: pDosimeter.text!)){
+            view.endEditing(true)
+            savePopupRecord()
+            self.dismiss(animated: true)
+        } else {
+            self.showDosimeterValidationWarning()
+        }
         
-        view.endEditing(true)
-        savePopupRecord()
-        self.dismiss(animated: true)
     }
     
     func savePopupRecord() {
         
-//        dispatchGroup.enter()
+        //        dispatchGroup.enter()
         
         let text = pDescription.text?.replacingOccurrences(of: ",", with: "-")
         
@@ -359,15 +398,16 @@ extension LocationDetails: UITextFieldDelegate {
         popupRecord.setValue(pLongitude.text, forKey: "longitude")
         popupRecord.setValue(pDosimeter.text, forKey: "dosinumber")
         popupRecord.setValue(moderator, forKey: "moderator")
+        popupRecord.setValue(pReportGroup.text, forKey: "reportGroup")
         if pDosimeter.text != "" {
             popupRecord.setValue(pCycleDate.text, forKey: "cycleDate")
             popupRecord.setValue(collected, forKey: "collectedFlag")
             popupRecord.setValue(mismatch, forKey: "mismatch")
         }
         //not handled if dosimeter number is empty.  Therefore can't set collected flag.
-   
-        locations.save(item: popupRecord as! LocationRecordCacheItem)        
-     } //end saveActiveStatus
+        
+        locations.save(item: popupRecord as! LocationRecordCacheItem)
+    } //end saveActiveStatus
     
     func setPopupDetails(record: LocationRecordDelegate) {
         
@@ -398,7 +438,7 @@ extension LocationDetails: UITextFieldDelegate {
         else {
             pDosimeter.text = ""
         }
-       
+        
         if let cycleDate = record["cycleDate"]  as? String {
             pCycleDate.text = String(describing: cycleDate)
         }
@@ -426,11 +466,40 @@ extension LocationDetails: UITextFieldDelegate {
         else {
             self.mismatch = 0
         }
-
+        
+        if let reportGroup = record["reportGroup"]  as? String {
+            pReportGroup.text = String(describing: reportGroup)
+        }
+        else {
+            pReportGroup.text = ""
+        }
+        
         pModerator.isOn = moderator == 1 ? true : false
         pCollected.isOn = collected == 1 ? true : false
         pMismatch.isOn = mismatch == 1 ? true : false
         
+    }
+    
+    public func validateDosimeterField(value: String) ->Bool {
+        // Length must be 11.
+        let regex = "^\\w{11,11}$"
+        let validate = NSPredicate(format: "SELF MATCHES %@", regex)
+        return validate.evaluate(with: value)
+    }
+    
+    func showDosimeterValidationWarning() {
+        
+        let message = "The Dosimeter field must be at least 11 character"
+        
+        //set up alert
+        let alert = UIAlertController.init(title: "Error", message: message, preferredStyle: .alert)
+        let OK = UIAlertAction(title: "Ok", style: .cancel)
+        
+        alert.addAction(OK)
+        
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
     @objc func moderatorSwitch(_ sender: UISwitch!) {

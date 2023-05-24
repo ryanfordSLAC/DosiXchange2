@@ -982,6 +982,11 @@ extension ScannerViewController {  //alerts
                     newRecord.setValue(Date(timeInterval: 0, since: Date()), forKey: "modifiedDate")
                     newRecord.setValue(variables.mismatch ?? 0, forKey: "mismatch")
                     
+                    if let qrCode =  variables.QRCode {
+                        let reportGroup = Groups[qrCode]
+                        newRecord.setValue(reportGroup, forKey: "reportGroup")
+                    }
+                    
                     self.locations.save(item: LocationRecordCacheItem(withRecord: newRecord)!)
                     
                     
