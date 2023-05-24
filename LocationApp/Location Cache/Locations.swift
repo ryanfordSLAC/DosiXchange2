@@ -27,6 +27,8 @@ protocol Locations {
 
 class LocationsCK : Locations {
     let database = CKContainer.default().publicCloudDatabase
+    var timer: Timer?
+    let timerSec = 500.0
     var cache: Cache?
     let reachability = Reachability()!
     let dispatchGroup = DispatchGroup()
@@ -34,6 +36,12 @@ class LocationsCK : Locations {
 
     private init() {
         reachability.whenReachable = reachable
+        timer = Timer.scheduledTimer(withTimeInterval: timerSec, repeats: true) { _ in
+            if self.reachability.connection != .none {
+                print("Synchronization from timer")
+                self.synchronize(loaded: { _ in })
+            }
+        }
         do {
             try reachability.startNotifier()
         }
@@ -62,8 +70,8 @@ class LocationsCK : Locations {
             }
 
             self.query(predicate: predicate, sortDescriptors: [], pageSize: 50, loaded:{
-                self.dispatchGroup.leave()
                 loaded($0)
+                self.dispatchGroup.leave()
             }, completionHandler: self.queryCompletionHandler)
         }
         else {
@@ -257,4 +265,9 @@ class LocationsCK : Locations {
             }
         }
     }
+                                         
+     @objc func fireTimer() {
+         print("Synchronization timer")
+         self.synchronize(loaded: { _ in })
+     }
 }
