@@ -30,11 +30,10 @@ protocol Locations {
 class LocationsCK : Locations {
     let database = CKContainer.default().publicCloudDatabase
     var timer: Timer?
-    let timerSec = 500.0
+    let timerSec = 300.0
     var cache: Cache?
     let reachability = Reachability()!
-    let dispatchGroup = DispatchGroup()
-    let saceDispatch = DispatchGroup()
+    let semaphore = DispatchSemaphore(value: 1)
 
     private init() {
         reachability.whenReachable = reachable
@@ -55,8 +54,7 @@ class LocationsCK : Locations {
     static var shared: Locations = LocationsCK()
     
     func synchronize(loaded: @escaping  ((Int) -> Void)) {
-        dispatchGroup.wait()
-        dispatchGroup.enter()
+        semaphore.wait()
         if self.cache == nil {
             self.cache = Cache.load() ?? Cache()
         }
@@ -71,93 +69,86 @@ class LocationsCK : Locations {
                 predicate = NSPredicate(format: "modifiedDate > %@", argumentArray: [lastDate!.modifiedDate!])
             }
 
+            print("Location query started")
             self.query(predicate: predicate, sortDescriptors: [], pageSize: 50, loaded:{
                 loaded($0)
-                self.dispatchGroup.leave()
+                self.semaphore.signal()
             }, completionHandler: self.queryCompletionHandler)
         }
         else {
-            dispatchGroup.leave()
+            semaphore.signal()
             loaded(self.cache!.locations.count)
         }
     }
     
     func filter(by: (LocationRecordCacheItem) -> Bool) -> [LocationRecordCacheItem] {
-        dispatchGroup.wait()
-        dispatchGroup.enter()
-        defer { dispatchGroup.leave() }
+        semaphore.wait()
+        defer { semaphore.signal() }
         return self.cache!.locations.filter(by)
     }
     
     func filter(by: @escaping (LocationRecordCacheItem) -> Bool, completionHandler: @escaping ([LocationRecordCacheItem]) -> Void) {
-        dispatchGroup.wait()
-        dispatchGroup.enter()
+        semaphore.wait()
         DispatchQueue.global(qos: .background).async {
             let items = self.cache!.locations.filter(by)
+            self.semaphore.signal()
             completionHandler(items)
-            self.dispatchGroup.leave()
         }
     }
     
     func groups(completionHandler: @escaping ([String]) -> Void) {
-        dispatchGroup.wait()
-        dispatchGroup.enter()
+        semaphore.wait()
         DispatchQueue.global(qos: .background).async {
             let items = self.cache!.locations.filter({ $0.reportGroup != nil }).map({ $0.reportGroup! })
-            self.dispatchGroup.leave()
+            self.semaphore.signal()
             completionHandler(Array(Set(items)))
         }
     }
     
     func count(by: (LocationRecordCacheItem) -> Bool) -> Int {
-        dispatchGroup.wait()
-        dispatchGroup.enter()
-        defer { dispatchGroup.leave() }
+        semaphore.wait()
+        defer { semaphore.signal() }
         return self.cache!.locations.reduce(0, { (count, e) in count + (by(e) ? 1 : 0) })
     }
     
     func save(item: LocationRecordCacheItem) {
-        dispatchGroup.wait()
-        dispatchGroup.enter()
+        semaphore.wait()
         self.cache?.add(item)
         self.cache?.addChange(item)
         self.cache?.save()
-        dispatchGroup.leave()
+        semaphore.signal()
         if (self.reachability.connection != .none) {
             saveChanges()
         }        
     }
     
     func save(items: [LocationRecordCacheItem]) {
-        dispatchGroup.wait()
-        dispatchGroup.enter()
+        semaphore.wait()
         for item in items {
             self.cache?.add(item)
             self.cache?.addChange(item)
         }
         self.cache?.save()
-        dispatchGroup.leave()
+        semaphore.signal()
         if (self.reachability.connection != .none) {
             saveChanges()
         }
     }
     
     func reset(_ loaded: @escaping  ((Int) -> Void)) {
-        dispatchGroup.wait()
-        dispatchGroup.enter()
+        semaphore.wait()
         self.cache?.clear()
-        dispatchGroup.leave()
+        semaphore.signal()
         self.synchronize(loaded: loaded)
     }
     
     private func reachable(_ : Reachability) {
         DispatchQueue.global(qos: .background).async {
-            self.dispatchGroup.wait()
-            self.dispatchGroup.enter()
+            self.semaphore.wait()
             if self.cache == nil {
                 self.cache = Cache.load() ?? Cache()
             }
-            self.dispatchGroup.leave()
+            self.semaphore.signal()
             self.setUser(completionHandler: {
                 self.cache?.setUser(name: $0)
                 self.saveChanges()
@@ -168,8 +159,7 @@ class LocationsCK : Locations {
     
     private func saveChanges() {
         DispatchQueue.global(qos: .background).async {
-            self.dispatchGroup.wait()
-            self.dispatchGroup.enter()
+            self.semaphore.wait()
             if (!self.cache!.changes.isEmpty) {
                 var records = [CKRecord]()
                 for item in self.cache!.changes {
@@ -187,13 +177,13 @@ class LocationsCK : Locations {
                     
                     self.cache?.changes.removeAll()
                     self.cache?.save()
-                    self.dispatchGroup.leave()
+                    self.semaphore.signal()
                 }
                 self.database.add(operation)
                 operation.waitUntilFinished()
             }
             else {
-                self.dispatchGroup.leave()
+                self.semaphore.signal()
             }
         }
     }
