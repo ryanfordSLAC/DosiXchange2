@@ -30,7 +30,7 @@ protocol Locations {
 class LocationsCK : Locations {
     let database = CKContainer.default().publicCloudDatabase
     var timer: Timer?
-    let timerSec = 500.0
+    let timerSec = 300.0
     var cache: Cache?
     let reachability = Reachability()!
     let semaphore = DispatchSemaphore(value: 1)
