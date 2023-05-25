@@ -38,8 +38,17 @@ Version 2.0 / May 2023:
   - Simulator bug fix (map coordinates)
   - Reset cache button sizing
   - Data export limit by number of cycles (2, 3, 4 or All Data)
-  - Refactor cache
+  - Refactor cache, full offline mode
   - Fix Nil QRCode and Nil Dosi issue for bad scans
+  - Saving edited records, Active toggle fix
+  - Capture Apple User ID Name in new CloudKit column
+  - Capture new group code in new CloudKit column, add picker to Save Record
+  - Load Time All Locations
+  - Warning for re-deployment of a dosimeter at the same location in the same cycle
+  - All locations alphabetization
+  - Remove commas from record saves, new records
+  - Fix map view loading issues
+  - QC Testing and closeout
 
 
 Version 1.3 / October 2021:
