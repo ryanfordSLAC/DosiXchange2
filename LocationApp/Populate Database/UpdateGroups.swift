@@ -10,7 +10,7 @@ import Foundation
 
 class UpdateGroups {
     
-    static func update() {
+    static func update(completionHandler: (() -> Void)?) {
         let locations = LocationsCK.shared
         
         let items = locations.filter(by: { _ in true })
@@ -22,7 +22,7 @@ class UpdateGroups {
             }
         }
         if !changed.isEmpty {
-            locations.save(items: changed)
+            locations.save(items: changed, completionHandler: completionHandler)
         }
     }
 }

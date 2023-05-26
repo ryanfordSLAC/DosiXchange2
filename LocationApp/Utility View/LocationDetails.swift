@@ -203,7 +203,7 @@ extension LocationDetails {
         for record in records {
             record.active = Int64(exactly: active)!
         }
-        locations.save(items: records)
+        locations.save(items: records, completionHandler: nil)
     } //end saveActiveStatus
     
 }
@@ -406,7 +406,8 @@ extension LocationDetails: UITextFieldDelegate {
         }
         //not handled if dosimeter number is empty.  Therefore can't set collected flag.
         
-        locations.save(item: popupRecord as! LocationRecordCacheItem)
+        activityIndicator.startAnimating()
+        locations.save(item: popupRecord as! LocationRecordCacheItem, completionHandler: { self.activityIndicator.stopAnimating() })
     } //end saveActiveStatus
     
     func setPopupDetails(record: LocationRecordDelegate) {
