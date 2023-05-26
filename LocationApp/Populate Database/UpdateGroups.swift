@@ -24,5 +24,10 @@ class UpdateGroups {
         if !changed.isEmpty {
             locations.save(items: changed, completionHandler: completionHandler)
         }
+        else {
+            DispatchQueue.main.async {
+                completionHandler?()
+            }
+        }
     }
 }

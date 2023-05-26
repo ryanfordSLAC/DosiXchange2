@@ -164,7 +164,7 @@ class LocationsCK : Locations {
             let slice = Array(records[total...total + count - 1])
             total = page * size
             page += 1
-         
+   
             let operation = CKModifyRecordsOperation(recordsToSave: slice, recordIDsToDelete: nil)
             operation.savePolicy = .allKeys
             operation.modifyRecordsCompletionBlock = { (_, _, error) in
