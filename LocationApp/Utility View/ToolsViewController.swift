@@ -291,7 +291,7 @@ extension ToolsViewController {
         let group = record.reportGroup ?? ""
         
         //write the data into the file.
-        let newline = "\(QRCode),\(latitude),\(longitude),\(loc),\(moderator),\(active),\(dosimeter),\(collectedFlagStr),\(cycle),\(formattedDate),\(formattedDateModified),\(mismatchStr),\(myformattedCreatedDate),\(myformattedDateModified), \(recordID), \(modifiedBy), \(group)\n"
+        let newline = "\(QRCode),\(latitude),\(longitude),\(loc),\(moderator),\(active),\(dosimeter),\(collectedFlagStr),\(cycle),\(formattedDate),\(formattedDateModified),\(mismatchStr),\(myformattedCreatedDate),\(myformattedDateModified),\(recordID),\(modifiedBy),\(group)\n"
         csvText.append(contentsOf: newline)
         clear()
     }
@@ -313,12 +313,12 @@ extension ToolsViewController {
     }
     
     @objc func devTap(_ sender: UITapGestureRecognizer) {
-        activityIndicator.startAnimating()
+ /*       activityIndicator.startAnimating()
         DispatchQueue.global(qos: .background).async {
             UpdateGroups.update(completionHandler: {
                 self.activityIndicator.stopAnimating()
             })
-        }
+        }*/
     }
 
     
