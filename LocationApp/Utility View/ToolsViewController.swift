@@ -313,7 +313,12 @@ extension ToolsViewController {
     }
     
     @objc func devTap(_ sender: UITapGestureRecognizer) {
-        UpdateGroups.update()
+        activityIndicator.startAnimating()
+        DispatchQueue.global(qos: .background).async {
+            UpdateGroups.update(completionHandler: {
+                self.activityIndicator.stopAnimating()
+            })
+        }
     }
 
     

@@ -202,10 +202,6 @@
                                     <action selector="emailTouchUp:" destination="M89-R5-CVf" eventType="touchUpInside" id="7jh-m2-6eS"/>
                                 </connections>
                             </button>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="12k-op-bR2">
-                                <rect key="frame" x="195.66666666666666" y="359" width="37" height="37"/>
-                                <color key="color" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </activityIndicatorView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f4q-J5-UJn">
                                 <rect key="frame" x="122" y="171" width="184" height="44"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -238,6 +234,10 @@
                                     <action selector="resetCacheTouchUp:" destination="M89-R5-CVf" eventType="touchUpInside" id="IUB-yW-ET9"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="12k-op-bR2">
+                                <rect key="frame" x="204" y="359" width="20" height="20"/>
+                                <color key="color" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="8cu-87-6eq"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -478,7 +478,7 @@
                         <outlet property="progressView" destination="C5U-sR-g2Z" id="TAu-KM-Q6h"/>
                         <outlet property="scanButton" destination="wOM-u4-FVE" id="MLU-kG-PiW"/>
                         <outlet property="statusLabel" destination="Yg7-fX-lCZ" id="IB8-3Q-Jxf"/>
-                        <outlet property="versionLabel" destination="zuC-3j-mde" id="wfs-Z9-ceX"/>
+                        <outlet property="versionLabel" destination="zuC-3j-mde" id="Qi6-dP-Vjw"/>
                         <segue destination="M89-R5-CVf" kind="show" identifier="segueToTools" id="zta-o7-k1W"/>
                     </connections>
                 </viewController>
@@ -1119,7 +1119,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="Szf-7B-3OI"/>
+        <segue reference="ar4-0B-Xd6"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Tools" width="512" height="512"/>

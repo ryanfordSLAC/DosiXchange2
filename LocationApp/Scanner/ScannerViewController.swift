@@ -451,7 +451,7 @@ extension ScannerViewController {
         itemRecord!.setValue(modifiedDate, forKey: "modifiedDate")
         
         let item = LocationRecordCacheItem(withRecord: itemRecord!)!
-        locations.save(item: item)
+        locations.save(item: item, completionHandler: nil)
         
     } //end collect
     
@@ -987,7 +987,7 @@ extension ScannerViewController {  //alerts
                         newRecord.setValue(reportGroup, forKey: "reportGroup")
                     }
                     
-                    self.locations.save(item: LocationRecordCacheItem(withRecord: newRecord)!)
+                    self.locations.save(item: LocationRecordCacheItem(withRecord: newRecord)!, completionHandler: nil)
                     
                     
                     self.alert10() //Succes

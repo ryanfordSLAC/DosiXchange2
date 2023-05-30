@@ -20,9 +20,9 @@ protocol Locations {
     
     func count(by: (LocationRecordCacheItem) -> Bool) -> Int
     
-    func save(item: LocationRecordCacheItem)
+    func save(item: LocationRecordCacheItem, completionHandler: (() -> Void)?)
     
-    func save(items: [LocationRecordCacheItem])
+    func save(items: [LocationRecordCacheItem], completionHandler: (() -> Void)?)
     
     func reset(_ loaded: @escaping  ((Int) -> Void))
 }
@@ -74,6 +74,7 @@ class LocationsCK : Locations {
                 loaded($0)
                 self.semaphore.signal()
             }, completionHandler: self.queryCompletionHandler)
+            self.saveChanges()
         }
         else {
             semaphore.signal()
@@ -111,27 +112,23 @@ class LocationsCK : Locations {
         return self.cache!.locations.reduce(0, { (count, e) in count + (by(e) ? 1 : 0) })
     }
     
-    func save(item: LocationRecordCacheItem) {
-        semaphore.wait()
-        self.cache?.add(item)
-        self.cache?.addChange(item)
-        self.cache?.save()
-        semaphore.signal()
-        if (self.reachability.connection != .none) {
-            saveChanges()
-        }        
+    func save(item: LocationRecordCacheItem, completionHandler: (() -> Void)?) {
+        self.save(items: [item], completionHandler: completionHandler)
     }
     
-    func save(items: [LocationRecordCacheItem]) {
-        semaphore.wait()
-        for item in items {
-            self.cache?.add(item)
-            self.cache?.addChange(item)
-        }
-        self.cache?.save()
-        semaphore.signal()
-        if (self.reachability.connection != .none) {
-            saveChanges()
+    func save(items: [LocationRecordCacheItem], completionHandler: (() -> Void)?) {
+        DispatchQueue.global(qos: .background).async {
+            self.semaphore.wait()
+            for item in items {
+                self.cache?.add(item)
+                self.cache?.addChange(item)
+            }
+            self.cache?.save()
+            self.semaphore.signal()
+            self.saveChanges()
+            DispatchQueue.main.async {
+                completionHandler?()
+            }
         }
     }
     
@@ -157,33 +154,50 @@ class LocationsCK : Locations {
         }
     }
     
-    private func saveChanges() {
-        DispatchQueue.global(qos: .background).async {
-            self.semaphore.wait()
-            if (!self.cache!.changes.isEmpty) {
-                var records = [CKRecord]()
-                for item in self.cache!.changes {
-                    records.append(item.to())
+    fileprivate func uploadChanges(_ records: [CKRecord]) {
+        let size = 400
+        var page = 1
+        var total = 0
+        print("Prepare to save \(records.count) records.")
+        while (records.count > total) {
+            let count = records.count >= page * size ? size : records.count - total
+            let slice = Array(records[total...total + count - 1])
+            total = page * size
+            page += 1
+   
+            let operation = CKModifyRecordsOperation(recordsToSave: slice, recordIDsToDelete: nil)
+            operation.savePolicy = .allKeys
+            operation.modifyRecordsCompletionBlock = { (_, _, error) in
+                if let error = error {
+                    print(error.localizedDescription)
                 }
-                let operation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: nil)
-                operation.savePolicy = .allKeys
-                operation.modifyRecordsCompletionBlock = { (_, _, error) in
-                    if let error = error {
-                        print(error.localizedDescription)
-                    }
-                    else {
-                        print("Saved \(records.count) locations.")
+                else {
+                    print("Saved \(slice.count) locations.")
+                }
+            }
+            self.database.add(operation)
+            operation.waitUntilFinished()
+        }
+    }
+    
+    private func saveChanges() {
+        if reachability.connection != .none {
+            DispatchQueue.global(qos: .background).async {
+                self.semaphore.wait()
+                if (!self.cache!.changes.isEmpty) {
+                    var records = [CKRecord]()
+                    for item in self.cache!.changes {
+                        records.append(item.to())
                     }
                     
+                    self.uploadChanges(records)
                     self.cache?.changes.removeAll()
                     self.cache?.save()
                     self.semaphore.signal()
                 }
-                self.database.add(operation)
-                operation.waitUntilFinished()
-            }
-            else {
-                self.semaphore.signal()
+                else {
+                    self.semaphore.signal()
+                }
             }
         }
     }
