@@ -31,6 +31,7 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
     @IBOutlet weak var progressView: UIProgressView!
     @IBOutlet weak var statusLabel: UILabel!
     
+    @IBOutlet weak var versionLabel: UILabel!
     @IBOutlet weak var Tools: UIImageView!
     
     override func viewDidLoad() {
@@ -40,6 +41,9 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
         location.requestAlwaysAuthorization()
         //location.startUpdatingLocation()    
         //end location manager setup
+        
+        //version
+        versionLabel.text = "Version: \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?.?")"
         
         //format buttons
         scanButton.layer.borderWidth = 1.5

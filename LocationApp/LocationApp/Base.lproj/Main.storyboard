@@ -217,8 +217,8 @@
                                     <segue destination="BYZ-38-t0r" kind="presentation" id="cs9-V2-lMJ"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="October, 2021" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3FX-rC-9sw">
-                                <rect key="frame" x="168.33333333333334" y="879" width="91.666666666666657" height="17"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="May, 2023" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3FX-rC-9sw">
+                                <rect key="frame" x="180.33333333333334" y="879" width="67.666666666666657" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -478,6 +478,7 @@
                         <outlet property="progressView" destination="C5U-sR-g2Z" id="TAu-KM-Q6h"/>
                         <outlet property="scanButton" destination="wOM-u4-FVE" id="MLU-kG-PiW"/>
                         <outlet property="statusLabel" destination="Yg7-fX-lCZ" id="IB8-3Q-Jxf"/>
+                        <outlet property="versionLabel" destination="zuC-3j-mde" id="Qi6-dP-Vjw"/>
                         <segue destination="M89-R5-CVf" kind="show" identifier="segueToTools" id="zta-o7-k1W"/>
                     </connections>
                 </viewController>
