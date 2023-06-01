@@ -14,7 +14,8 @@ import CoreLocation
 //MARK:  Class
 class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     let reachability = Reachability()!
-    let locations = LocationsCK.shared
+    let locations = container.locations
+    let settingsService = container.settings
     var recordsupdate = RecordsUpdate()
     var zoomFactor:CGFloat = 3
     var captureSession: AVCaptureSession!
@@ -30,6 +31,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     var isRescan: Bool = false
     var outOfRangeCounter: Int = 0
     let numberOfGPSReTry: Int = 2
+    var settings: Settings?
     
     @IBOutlet weak var innerView: UIView!
     @IBOutlet weak var outerView: UIView!
@@ -116,6 +118,8 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
             self.captureSession.startRunning()
         }
         configReachability()
+        
+        settingsService.getSettings(completionHandler: { self.settings = $0 })
     }//end viewDidLoad()
     
     @IBAction func done(_ sender: Any) {

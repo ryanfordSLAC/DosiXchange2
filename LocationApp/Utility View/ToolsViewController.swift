@@ -13,7 +13,7 @@ import AVFoundation
 //MARK:  Class
 class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate {
     
-    let locations = LocationsCK.shared
+    let locations = container.locations
     let readwrite = readWriteText()  //make external class available locally
     let dispatchGroup = DispatchGroup()
     let saveToCloud = Save()
@@ -134,7 +134,7 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
     
     @IBAction func resetCacheTouchUp(_ sender: Any) {
         activityIndicator.startAnimating()
-        LocationsCK.shared.reset { _ in
+        locations.reset { _ in
             DispatchQueue.main.async {
                 self.activityIndicator.stopAnimating()
             }

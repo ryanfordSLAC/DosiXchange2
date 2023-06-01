@@ -15,7 +15,7 @@ import CoreLocation
 class StartupViewController: UIViewController, MFMailComposeViewControllerDelegate, CLLocationManagerDelegate {
     
     let reachability = Reachability()!
-    let locations = LocationsCK.shared    
+    let locations = container.locations
     let location = CLLocationManager()
     let query = Queries()
     
@@ -154,7 +154,7 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
         activityIndicator.startAnimating()
         
         DispatchQueue.global(qos: .background).async {
-            LocationsCK.shared.synchronize(loaded: { _ in
+            self.locations.synchronize(loaded: { _ in
                 
                 self.query.dispatchGroup.notify(queue: .main) {
                 let numberCompleted:Float = Float(self.query.getCollectedNum())

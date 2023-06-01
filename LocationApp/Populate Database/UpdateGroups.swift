@@ -11,7 +11,7 @@ import Foundation
 class UpdateGroups {
     
     static func update(completionHandler: (() -> Void)?) {
-        let locations = LocationsCK.shared
+        let locations = container.locations
         
         let items = locations.filter(by: { _ in true })
         var changed = [LocationRecordCacheItem]()

@@ -16,7 +16,7 @@ protocol LocationDetailDelegate {
 //MARK:  Class
 class LocationDetails: UIViewController {
     
-    let locations = LocationsCK.shared
+    let locations = container.locations
     var record: LocationRecordDelegate = CKRecord(recordType: "Location")
     var QRCode = ""
     var loc = ""

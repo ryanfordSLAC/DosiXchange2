@@ -11,7 +11,7 @@ import UIKit
 //MARK:  Class
 class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
-    let locations = LocationsCK.shared
+    let locations = container.locations
     
     var segment:Int = 0
     var displayInfo :[[(LocationRecordDelegate, String, String)]] = [[],[]]

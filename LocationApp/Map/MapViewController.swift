@@ -15,7 +15,7 @@ import CloudKit
 
 //MARK:  Class
 class MapViewController: UIViewController {
-    let locations = LocationsCK.shared
+    let locations = container.locations
     @IBOutlet weak var MapView: MKMapView!
     @IBOutlet weak var filtersButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!

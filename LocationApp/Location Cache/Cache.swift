@@ -13,6 +13,7 @@ class Cache: Codable {
     var user = ""
     var locations = [LocationRecordCacheItem]()
     var changes = [LocationRecordCacheItem]()
+    var settings = Settings()
     
     static func load() -> Cache? {
         if Cache.locationRecordCacheFileExists() {
@@ -73,6 +74,10 @@ class Cache: Codable {
     func setUser(name: String){
         user = name
         print("Cloudkit user: \(name)")
+    }
+    
+    func setSettings(settings: Settings){
+        self.settings = settings
     }
     
     private static func locationRecordCacheFileExists() -> Bool {
