@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		449A7E9D271341B2005AF1F7 /* LocationRecordCacheItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449A7E9C271341B2005AF1F7 /* LocationRecordCacheItem.swift */; };
+		5ABDFBF92A273AD50059C0D8 /* DosimetersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABDFBF82A273AD50059C0D8 /* DosimetersViewController.swift */; };
 		5C7925A122DE9B1900B981B2 /* LocationDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C7925A022DE9B1900B981B2 /* LocationDetails.swift */; };
 		5C941E5522D93335008C9B3E /* LocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C941E5422D93335008C9B3E /* LocationViewController.swift */; };
 		5CF01FDE22D92F19004604BC /* ToolsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CF01FDD22D92F19004604BC /* ToolsViewController.swift */; };
@@ -73,6 +74,7 @@
 
 /* Begin PBXFileReference section */
 		449A7E9C271341B2005AF1F7 /* LocationRecordCacheItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationRecordCacheItem.swift; sourceTree = "<group>"; };
+		5ABDFBF82A273AD50059C0D8 /* DosimetersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DosimetersViewController.swift; sourceTree = "<group>"; };
 		5C7925A022DE9B1900B981B2 /* LocationDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetails.swift; sourceTree = "<group>"; };
 		5C941E5422D93335008C9B3E /* LocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationViewController.swift; sourceTree = "<group>"; };
 		5CF01FDD22D92F19004604BC /* ToolsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsViewController.swift; sourceTree = "<group>"; };
@@ -299,6 +301,7 @@
 				84571FE4258FE29C009AC936 /* BriefCase.swift */,
 				5CFF888A22CAA5B700611F60 /* ActiveLocations.swift */,
 				5C7925A022DE9B1900B981B2 /* LocationDetails.swift */,
+				5ABDFBF82A273AD50059C0D8 /* DosimetersViewController.swift */,
 			);
 			path = "Utility View";
 			sourceTree = "<group>";
@@ -509,6 +512,7 @@
 				5CFF888B22CAA5B700611F60 /* ActiveLocations.swift in Sources */,
 				8409F52422022A3900B78BCC /* Queries.swift in Sources */,
 				5C7925A122DE9B1900B981B2 /* LocationDetails.swift in Sources */,
+				5ABDFBF92A273AD50059C0D8 /* DosimetersViewController.swift in Sources */,
 				84F5ED6721B2024900381E76 /* RecordsUpdate.swift in Sources */,
 				846606C321AA5C380049814C /* MapViewController.swift in Sources */,
 				E40663E02A1CB77100AA3BC1 /* Groups.swift in Sources */,
