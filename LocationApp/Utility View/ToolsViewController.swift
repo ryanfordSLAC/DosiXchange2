@@ -42,7 +42,7 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
     @IBOutlet weak var button2: UIButton!
     @IBOutlet weak var button3: UIButton!
     @IBOutlet weak var resetCacheButton: UIButton!
-
+    @IBOutlet weak var dosimeters: UIButton!
     
     let borderColorUp = UIColor(red: 0.580723, green: 0.0667341, blue: 0, alpha: 1).cgColor
     let borderColorDown = UIColor(red: 0.580723, green: 0.0667341, blue: 0, alpha: 0.25).cgColor
@@ -59,27 +59,23 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
         
         super.viewDidLoad()
         activityIndicator.hidesWhenStopped = true
-        
+
         //format buttons
-        button1.layer.borderWidth = 1.5
-        button1.layer.borderColor = borderColorUp
-        button1.layer.cornerRadius = 22
-        
-        button2.layer.borderWidth = 1.5
-        button2.layer.borderColor = borderColorUp
-        button2.layer.cornerRadius = 22
-        
-        button3.layer.borderWidth = 1.5
-        button3.layer.borderColor = borderColorUp
-        button3.layer.cornerRadius = 22
- 
-        resetCacheButton.layer.borderWidth = 1.5
-        resetCacheButton.layer.borderColor = borderColorUp
-        resetCacheButton.layer.cornerRadius = 22
+        addBorderToButton(button: button1)
+        addBorderToButton(button: button2)
+        addBorderToButton(button: button3)
+        addBorderToButton(button: resetCacheButton)
+        addBorderToButton(button: dosimeters)
         
         registerDevMode()
 
         // function which is triggered when handleTap is called
+    }
+    
+    private func addBorderToButton(button: UIButton) {
+        button.layer.borderWidth = 1.5
+        button.layer.borderColor = borderColorUp
+        button.layer.cornerRadius = 22
     }
     
     //@IBAction func uploadToCloud(_ sender: Any) {
@@ -91,21 +87,16 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
         self.dismiss(animated: true, completion: nil)
     }
     
-    //}
-    @IBAction func button1down(_ sender: Any) {
-        button1.layer.borderColor = borderColorDown
+    @IBAction func buttondown(_ sender: Any) {
+        if let button = sender as? UIButton {
+            button.layer.borderColor = borderColorDown
+        }
     }
     
-    @IBAction func button1up(_ sender: Any) {
-        button1.layer.borderColor = borderColorUp
-    }
-    
-    @IBAction func button2down(_ sender: Any) {
-        button2.layer.borderColor = borderColorDown
-    }
-    
-    @IBAction func button2up(_ sender: Any) {
-        button2.layer.borderColor = borderColorUp
+    @IBAction func buttonup(_ sender: Any) {
+        if let button = sender as? UIButton {
+            button.layer.borderColor = borderColorUp
+        }
     }
     
     @IBAction func button3down(_ sender: Any) {

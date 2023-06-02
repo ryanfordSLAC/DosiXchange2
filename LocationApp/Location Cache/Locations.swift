@@ -72,8 +72,8 @@ class LocationsCK : Locations, SettingsService {
 
             print("Location query started")
             self.query(predicate: predicate, sortDescriptors: [], pageSize: 50, loaded:{
-                loaded($0)
                 self.semaphore.signal()
+                loaded($0)
             }, completionHandler: self.queryCompletionHandler)
             self.saveChanges()
         }

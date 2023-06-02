@@ -18,6 +18,7 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
     let locations = container.locations
     let location = CLLocationManager()
     let query = Queries()
+    let dispatchGroup = DispatchGroup()
     
     let borderColorUp = UIColor(red: 0.887175, green: 0.887175, blue: 0.887175, alpha: 1).cgColor
     let borderColorDown = UIColor(red: 0.887175, green: 0.887175, blue: 0.887175, alpha: 0.2).cgColor
@@ -153,38 +154,38 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
         //start activityIndicator
         activityIndicator.startAnimating()
         
+        
         DispatchQueue.global(qos: .background).async {
             self.locations.synchronize(loaded: { _ in
-                
-                self.query.dispatchGroup.notify(queue: .main) {
                 let numberCompleted:Float = Float(self.query.getCollectedNum())
                 let numberRemaining:Float = Float(self.query.getNotCollectedNum())
                 let numberDeployed:Float = numberCompleted + numberRemaining
                 let progress = (numberCompleted / numberDeployed)
                 
-                switch progress {
+                self.query.dispatchGroup.notify(queue: .main) {
+                    switch progress {
+                        
+                        case 0:
+                            self.statusLabel.text = "Ready to begin collection of \(Int(numberRemaining)) dosimeters!"
+                        
+                        case 1:
+                            self.statusLabel.text = "All dosimeters from the prior period have been collected!"
+                            print("Completed: \(numberCompleted)")
+                            print("Deployed: \(numberDeployed)")
+                            print("Progress: \(progress)")
+                        
+                        default:
+                            self.statusLabel.text = "Green Pins: \(Int(numberRemaining)) remaining out of \(Int(numberDeployed)) are ready for collection"
+                            print("Completed: \(numberCompleted)")
+                            print("Deployed: \(numberDeployed)")
+                            print("Progress: \(progress)")
+                        
+                    } //end switch
                     
-                    case 0:
-                        self.statusLabel.text = "Ready to begin collection of \(Int(numberRemaining)) dosimeters!"
+                    self.progressView.progress = progress
                     
-                    case 1:
-                        self.statusLabel.text = "All dosimeters from the prior period have been collected!"
-                        print("Completed: \(numberCompleted)")
-                        print("Deployed: \(numberDeployed)")
-                        print("Progress: \(progress)")
-                    
-                    default:
-                        self.statusLabel.text = "Green Pins: \(Int(numberRemaining)) remaining out of \(Int(numberDeployed)) are ready for collection"
-                        print("Completed: \(numberCompleted)")
-                        print("Deployed: \(numberDeployed)")
-                        print("Progress: \(progress)")
-                    
-                } //end switch
-                
-                self.progressView.progress = progress
-                
-                //stop activityIndicator
-                self.activityIndicator.stopAnimating()
+                    //stop activityIndicator
+                    self.activityIndicator.stopAnimating()
             }})
         }
         
