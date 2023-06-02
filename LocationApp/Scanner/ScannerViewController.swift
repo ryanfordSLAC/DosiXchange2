@@ -29,7 +29,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     var alertTextField: UITextField!
     var isRescan: Bool = false
     var outOfRangeCounter: Int = 0
-    let numberOfGPSReTry: Int = 2
+    let numberOfGPSRetry: Int = 2
     
     @IBOutlet weak var innerView: UIView!
     @IBOutlet weak var outerView: UIView!
@@ -502,11 +502,12 @@ extension ScannerViewController {
             currentLocation = locationManager.location!
         }
         
-        if(Slac.isLocationInRange(location: currentLocation) || outOfRangeCounter >= numberOfGPSReTry ) {
-            setCoordinates(currentLocation: (outOfRangeCounter >= numberOfGPSReTry ? Slac.defaultCoordinates : currentLocation))
+        if(Slac.isLocationInRange(location: currentLocation) || outOfRangeCounter >= numberOfGPSRetry ) {
+            setCoordinates(currentLocation: (outOfRangeCounter >= numberOfGPSRetry ? Slac.defaultCoordinates : currentLocation))
             self.alert8()
         } else{
             //Wrong Location, Show Try Again alert
+            self.outOfRangeCounter+=1
             self.alert15()
         }
     }
@@ -1167,12 +1168,11 @@ extension ScannerViewController {  //alerts
     
     //MARK:  Alert15
     func alert15() { //Outside of SLAC
-        let message = (outOfRangeCounter-1 == numberOfGPSReTry) ? "Your fix is still outside of SLAC property. Please tap Try Again for a final attempt, and if it’s still out of range then standard coordinates will be assigned.  These can be adjusted later in the Tools menu. " : "Your fix is not on SLAC property.  Please tap Try Again."
+        let message = (outOfRangeCounter-1 == numberOfGPSRetry) ? "Your fix is still outside of SLAC property. Please tap Try Again for a final attempt, and if it’s still out of range then standard coordinates will be assigned.  These can be adjusted later in the Tools menu. " : "Your fix is not on SLAC property.  Please tap Try Again."
         
         let alert = UIAlertController(title: "GPS Coordinate Error\n", message: message, preferredStyle: .alert)
         
         let tryAgain = UIAlertAction(title: "Try Again", style: .cancel){ (_) in
-            self.outOfRangeCounter+=1
             self.save()
         }
         
