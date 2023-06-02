@@ -17,6 +17,7 @@ protocol LocationDetailDelegate {
 class LocationDetails: UIViewController {
     
     let locations = container.locations
+    let settingsService = container.settings
     var record: LocationRecordDelegate = CKRecord(recordType: "Location")
     var QRCode = ""
     var loc = ""
@@ -65,6 +66,7 @@ class LocationDetails: UIViewController {
     var moderator = 0
     var collected = 0
     var mismatch = 0
+    var settings: Settings?
     
     
     override func viewDidLoad() {
@@ -77,7 +79,7 @@ class LocationDetails: UIViewController {
             // Fallback on earlier versions
         }
         
-        
+        settingsService.getSettings(completionHandler: { self.settings = $0 })
         
         //Do any additional setup after loading the view.
         
@@ -482,15 +484,19 @@ extension LocationDetails: UITextFieldDelegate {
     }
     
     public func validateDosimeterField(value: String) ->Bool {
-        // Length must be 11.
-        let regex = "^\\w{11,11}$"
+        let regex = "^\\w{\(settings?.dosimeterMinimumLength ?? 11),\(settings?.dosimeterMaximumLength ?? 11)}$"
         let validate = NSPredicate(format: "SELF MATCHES %@", regex)
         return validate.evaluate(with: value)
     }
     
     func showDosimeterValidationWarning() {
         
-        let message = "The Dosimeter field must be at least 11 character"
+        let min = settings?.dosimeterMinimumLength ?? 11
+        let max = settings?.dosimeterMaximumLength ?? 11
+        var message = "The length of the dosimeter barcodes must be "
+        
+        message += min == max ? "\(min)." :
+        "at least \(min), and maximum \(max)."
         
         //set up alert
         let alert = UIAlertController.init(title: "Error", message: message, preferredStyle: .alert)

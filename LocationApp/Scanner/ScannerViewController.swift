@@ -171,8 +171,13 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
                 variables.codeType = "QRCode"
                 
             case .code128:
+                if(stringValue?.count ?? 11 >= settings?.dosimeterMinimumLength ?? 11 && stringValue?.count ?? 11 <= settings?.dosimeterMaximumLength ?? 11){
+                    variables.codeType = "Code128"
+                } else {
+                    alert14()
+                    return
+                }
                 
-                variables.codeType = "Code128"
                 
             default:
                 print("Code not found")
@@ -1184,6 +1189,33 @@ extension ScannerViewController {  //alerts
             self.present(alert, animated: true, completion: nil)
         }
     }  //end alert13
+    
+    //MARK:  Alert14
+    func alert14() {  //invalid code length, rescan
+        let min = settings?.dosimeterMinimumLength ?? 11
+        let max = settings?.dosimeterMaximumLength ?? 11
+        var message = "The length of the dosimeter barcodes must be "
+        
+        message += min == max ? "\(min)." :
+        "at least \(min), and maximum \(max)."
+        
+        message += " Please rescan!"
+        
+        //set up alert
+        let alert = UIAlertController.init(title: "Invalid length", message: message, preferredStyle: .alert)
+        let rescan = UIAlertAction(title: "Rescan", style: .default) { (_) in
+            self.isRescan = true
+            DispatchQueue.global(qos: .background).async {
+                self.captureSession.startRunning()
+            }
+        }
+        
+        alert.addAction(rescan)
+        
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
+    }  //end alert14
     
     
     //mismatch switch
