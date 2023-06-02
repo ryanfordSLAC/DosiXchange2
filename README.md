@@ -49,6 +49,9 @@ Version 2.0 / May 2023:
   - Remove commas from record saves, new records
   - Fix map view loading issues
   - QC Testing and closeout
+  - Code128 barcode validation, 11 characters configurable in CloudKit
+  - GPS coordinate validation on Second Scan with new Alert 15, # retries configurable
+  - Search by Dosimeter Number
 
 
 Version 1.3 / October 2021:
