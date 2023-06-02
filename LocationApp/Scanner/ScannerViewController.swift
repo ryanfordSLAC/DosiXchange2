@@ -365,7 +365,7 @@ extension ScannerViewController {
                                 else {
                                     self.beep()
                                     variables.QRCode = code
-                                    self.alert8()
+                                    self.save()
                                 }
                             }
                             
@@ -373,7 +373,7 @@ extension ScannerViewController {
                             else {
                                 self.beep()
                                 variables.QRCode = code
-                                self.alert8()
+                                self.save()
                             }
                             
                         } //end dispatch group
@@ -409,7 +409,7 @@ extension ScannerViewController {
                             else {
                                 self.beep()
                                 variables.dosiNumber = code
-                                self.alert8()
+                                self.save()
                             }
                             
                         } //end dispatch group
@@ -490,6 +490,25 @@ extension ScannerViewController {
         variables.mismatch = nil
         variables.active = nil
         variables.moderator = nil
+    }
+    
+    func save(){
+        variables.cycle = RecordsUpdate.generateCycleDate()
+        
+        locationManager.requestAlwaysAuthorization()
+        var currentLocation = CLLocation()
+        if (CLLocationManager.authorizationStatus() == .authorizedWhenInUse ||
+            CLLocationManager.authorizationStatus() ==  .authorizedAlways) {
+            currentLocation = locationManager.location!
+        }
+        
+        if(Slac.isLocationInRange(location: currentLocation) || outOfRangeCounter >= numberOfGPSReTry ) {
+            setCoordinates(currentLocation: (outOfRangeCounter >= numberOfGPSReTry ? Slac.defaultCoordinates : currentLocation))
+            self.alert8()
+        } else{
+            //Wrong Location, Show Try Again alert
+            self.alert15()
+        }
     }
     
     func setCoordinates(currentLocation: CLLocation) {
@@ -933,115 +952,80 @@ extension ScannerViewController {  //alerts
     
     //MARK:  Alert8
     func alert8() {
+        let alert = UIAlertController(title: "Deploy Dosimeter:\n\(variables.dosiNumber ?? "Nil Dosi")", message: "\nLocation: \(variables.QRCode ?? "Nil QRCode")", preferredStyle: .alert)
         
-        let cycle = RecordsUpdate.generateCycleDate()
-        variables.cycle = cycle
-        
-        locationManager.requestAlwaysAuthorization()
-        var currentLocation = CLLocation()
-        if (CLLocationManager.authorizationStatus() == .authorizedWhenInUse ||
-            CLLocationManager.authorizationStatus() ==  .authorizedAlways) {
-            
-            currentLocation = locationManager.location!
-            
+        let moderator = UIAlertAction(title: "Moderator", style: .default) { (_) in
+            self.alert8()
         }
         
-        if(Slac.isLocationInRange(location: currentLocation) || outOfRangeCounter >= numberOfGPSReTry ) {
-            
-            setCoordinates(currentLocation: (outOfRangeCounter >= numberOfGPSReTry ? Slac.defaultCoordinates : currentLocation))
-            
-            let alert = UIAlertController(title: "Deploy Dosimeter:\n\(variables.dosiNumber ?? "Nil Dosi")", message: "\nLocation: \(variables.QRCode ?? "Nil QRCode")", preferredStyle: .alert)
-            
-            let moderator = UIAlertAction(title: "Moderator", style: .default) { (_) in
-                self.alert8()
-            }
-            
-            let saveRecord = UIAlertAction(title: "Save", style: .default) { (_) in
-                if let text = alert.textFields?.first?.text {
-                    let label = UILabel(frame: CGRect(x: 0, y: 97, width: 270, height:18))
-                    label.textAlignment = .center
-                    label.textColor = .red
-                    //label.font = label.font.withSize(12)
-                    label.font = .boldSystemFont(ofSize: 14)
-                    alert.view.addSubview(label)
-                    label.isHidden = true
-                    if text == ""{
-                        label.text = "Please enter a location"
-                        label.isHidden = false
-                        self.present(alert, animated: true, completion: nil)
-                    } else {
-                        let description = text.replacingOccurrences(of: ",", with: "-")
-                        let newRecord = CKRecord(recordType: "Location")
-                        newRecord.setValue(variables.latitude ?? "Nil Latitude", forKey: "latitude")
-                        newRecord.setValue(variables.longitude ?? "Nil Longitude", forKey: "longitude")
-                        newRecord.setValue(description, forKey: "locdescription")
-                        newRecord.setValue(variables.dosiNumber ?? "Nil Dosi", forKey: "dosinumber")
-                        newRecord.setValue(0, forKey: "collectedFlag")
-                        newRecord.setValue(cycle, forKey: "cycleDate")
-                        newRecord.setValue(variables.QRCode ?? "Nil QRCode", forKey: "QRCode")
-                        newRecord.setValue(variables.moderator ?? 0, forKey: "moderator")
-                        newRecord.setValue(1, forKey: "active")
-                        newRecord.setValue(Date(timeInterval: 0, since: Date()), forKey: "createdDate")
-                        newRecord.setValue(Date(timeInterval: 0, since: Date()), forKey: "modifiedDate")
-                        newRecord.setValue(variables.mismatch ?? 0, forKey: "mismatch")
-                        
-                        if let qrCode =  variables.QRCode {
-                            let reportGroup = Groups[qrCode]
-                            newRecord.setValue(reportGroup, forKey: "reportGroup")
-                        }
-                        
-                        self.locations.save(item: LocationRecordCacheItem(withRecord: newRecord)!, completionHandler: nil)
-                        
-                        self.outOfRangeCounter = 0
-                        
-                        self.alert10() //Succes
+        let saveRecord = UIAlertAction(title: "Save", style: .default) { (_) in
+            if let text = alert.textFields?.first?.text {
+                let label = UILabel(frame: CGRect(x: 0, y: 97, width: 270, height:18))
+                label.textAlignment = .center
+                label.textColor = .red
+                //label.font = label.font.withSize(12)
+                label.font = .boldSystemFont(ofSize: 14)
+                alert.view.addSubview(label)
+                label.isHidden = true
+                if text == ""{
+                    label.text = "Please enter a location"
+                    label.isHidden = false
+                    self.present(alert, animated: true, completion: nil)
+                } else {
+                    let description = text.replacingOccurrences(of: ",", with: "-")
+                    let newRecord = CKRecord(recordType: "Location")
+                    newRecord.setValue(variables.latitude ?? "Nil Latitude", forKey: "latitude")
+                    newRecord.setValue(variables.longitude ?? "Nil Longitude", forKey: "longitude")
+                    newRecord.setValue(description, forKey: "locdescription")
+                    newRecord.setValue(variables.dosiNumber ?? "Nil Dosi", forKey: "dosinumber")
+                    newRecord.setValue(0, forKey: "collectedFlag")
+                    newRecord.setValue(variables.cycle, forKey: "cycleDate")
+                    newRecord.setValue(variables.QRCode ?? "Nil QRCode", forKey: "QRCode")
+                    newRecord.setValue(variables.moderator ?? 0, forKey: "moderator")
+                    newRecord.setValue(1, forKey: "active")
+                    newRecord.setValue(Date(timeInterval: 0, since: Date()), forKey: "createdDate")
+                    newRecord.setValue(Date(timeInterval: 0, since: Date()), forKey: "modifiedDate")
+                    newRecord.setValue(variables.mismatch ?? 0, forKey: "mismatch")
+                    
+                    if let qrCode =  variables.QRCode {
+                        let reportGroup = Groups[qrCode]
+                        newRecord.setValue(reportGroup, forKey: "reportGroup")
                     }
                     
-                    //text = text?.replacingOccurrences(of: ",", with: "-")
-                    //Ver 1.2 - supply default location to prevent empty string in DB.
-                    //rather than alert on top of alert for field valication
-                    //if text == "" {
-                    //   text = "Default Location (field left empty)"
+                    self.locations.save(item: LocationRecordCacheItem(withRecord: newRecord)!, completionHandler: nil)
                     
-                } //end if let
-                
-                
-            }  //end let
-            
-            let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: handlerCancel)
-            
-            alert.addTextField { (textfield) in
-                if variables.dosiLocation != nil {
-                    textfield.text = variables.dosiLocation // assign self.description with the textfield information
+                    self.outOfRangeCounter = 0
+                    
+                    self.alert10() //Succes
                 }
-                textfield.placeholder = "Type or dictate location details" //assign self.description with the textfield information
-            } // end addTextField
+                
+                //text = text?.replacingOccurrences(of: ",", with: "-")
+                //Ver 1.2 - supply default location to prevent empty string in DB.
+                //rather than alert on top of alert for field valication
+                //if text == "" {
+                //   text = "Default Location (field left empty)"
+                
+            } //end if let
             
-            alert.addAction(moderator)
-            alert.view.addSubview(modSwitch())
-            alert.addAction(saveRecord)
-            alert.addAction(cancel)
             
-            DispatchQueue.main.async {   //UIAlerts need to be shown on the main thread.
-                self.present(alert, animated: true, completion: nil)
+        }  //end let
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: handlerCancel)
+        
+        alert.addTextField { (textfield) in
+            if variables.dosiLocation != nil {
+                textfield.text = variables.dosiLocation // assign self.description with the textfield information
             }
-        } else{
-            //Show Try Again alert
-           
-                let alert = UIAlertController(title: "Wrong location\n", message: "You are outside of slac.", preferredStyle: .alert)
-                
-                let tryAgain = UIAlertAction(title: "Try Again", style: .cancel){ (_) in
-                    self.alert8()
-                }
-                
-                alert.addAction(tryAgain)
-                
-                outOfRangeCounter+=1
-                
-                DispatchQueue.main.async {   //UIAlerts need to be shown on the main thread.
-                    self.present(alert, animated: true, completion: nil)
-                }
-            
+            textfield.placeholder = "Type or dictate location details" //assign self.description with the textfield information
+        } // end addTextField
+        
+        alert.addAction(moderator)
+        alert.view.addSubview(modSwitch())
+        alert.addAction(saveRecord)
+        alert.addAction(cancel)
+        
+        DispatchQueue.main.async {   //UIAlerts need to be shown on the main thread.
+            self.present(alert, animated: true, completion: nil)
         }
         
     }  //end alert8
@@ -1181,6 +1165,23 @@ extension ScannerViewController {  //alerts
         }
     }  //end alert13
     
+    //MARK:  Alert15
+    func alert15() { //Outside of SLAC
+        let message = (outOfRangeCounter-1 == numberOfGPSReTry) ? "Your fix is still outside of SLAC property. Please tap Try Again for a final attempt, and if it’s still out of range then standard coordinates will be assigned.  These can be adjusted later in the Tools menu. " : "Your fix is not on SLAC property.  Please tap Try Again."
+        
+        let alert = UIAlertController(title: "GPS Coordinate Error\n", message: message, preferredStyle: .alert)
+        
+        let tryAgain = UIAlertAction(title: "Try Again", style: .cancel){ (_) in
+            self.outOfRangeCounter+=1
+            self.save()
+        }
+        
+        alert.addAction(tryAgain)
+        
+        DispatchQueue.main.async {   //UIAlerts need to be shown on the main thread.
+            self.present(alert, animated: true, completion: nil)
+        }
+    } //end alert15
     
     //mismatch switch
     func mismatchSwitch() -> UISwitch {
