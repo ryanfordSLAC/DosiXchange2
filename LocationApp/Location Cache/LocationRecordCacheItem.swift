@@ -294,12 +294,10 @@ class LocationRecordCacheItem: Codable, LocationRecordDelegate {
     }
     
     func setValue(_ value: AnyObject?, forKey key: String) {
-        self.modifiedDate = Date()
         self[key] = value as? CKRecordValue
     }
 
     func setValue(_ value: Any?, forKey key: String) {
-        self.modifiedDate = Date()
         self[key] = value as? CKRecordValue
     }
     

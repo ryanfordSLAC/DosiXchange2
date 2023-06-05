@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		449A7E9D271341B2005AF1F7 /* LocationRecordCacheItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449A7E9C271341B2005AF1F7 /* LocationRecordCacheItem.swift */; };
 		5ABDFBF92A273AD50059C0D8 /* DosimetersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ABDFBF82A273AD50059C0D8 /* DosimetersViewController.swift */; };
+		5AC96E102A2E07330022068C /* BackupLocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC96E0F2A2E07330022068C /* BackupLocations.swift */; };
+		5AC96E122A2E09F10022068C /* RestoreLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC96E112A2E09F10022068C /* RestoreLocation.swift */; };
 		5C7925A122DE9B1900B981B2 /* LocationDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C7925A022DE9B1900B981B2 /* LocationDetails.swift */; };
 		5C941E5522D93335008C9B3E /* LocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C941E5422D93335008C9B3E /* LocationViewController.swift */; };
 		5CF01FDE22D92F19004604BC /* ToolsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CF01FDD22D92F19004604BC /* ToolsViewController.swift */; };
@@ -75,6 +77,8 @@
 /* Begin PBXFileReference section */
 		449A7E9C271341B2005AF1F7 /* LocationRecordCacheItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationRecordCacheItem.swift; sourceTree = "<group>"; };
 		5ABDFBF82A273AD50059C0D8 /* DosimetersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DosimetersViewController.swift; sourceTree = "<group>"; };
+		5AC96E0F2A2E07330022068C /* BackupLocations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupLocations.swift; sourceTree = "<group>"; };
+		5AC96E112A2E09F10022068C /* RestoreLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreLocation.swift; sourceTree = "<group>"; };
 		5C7925A022DE9B1900B981B2 /* LocationDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetails.swift; sourceTree = "<group>"; };
 		5C941E5422D93335008C9B3E /* LocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationViewController.swift; sourceTree = "<group>"; };
 		5CF01FDD22D92F19004604BC /* ToolsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsViewController.swift; sourceTree = "<group>"; };
@@ -161,6 +165,7 @@
 				E404C0C42A124558000D2D14 /* Locations.swift */,
 				449A7E9C271341B2005AF1F7 /* LocationRecordCacheItem.swift */,
 				E40663DF2A1CB77100AA3BC1 /* Groups.swift */,
+				5AC96E0F2A2E07330022068C /* BackupLocations.swift */,
 			);
 			path = "Location Cache";
 			sourceTree = "<group>";
@@ -321,6 +326,7 @@
 				E465C7C52A1CC9E600B7465B /* UpdateGroups.swift */,
 				84B58D4C21FD69C80013D5F3 /* UploadToCloud.swift */,
 				8434D57A25956DE800B2E413 /* RepairCycleDate.swift */,
+				5AC96E112A2E09F10022068C /* RestoreLocation.swift */,
 			);
 			path = "Populate Database";
 			sourceTree = "<group>";
@@ -496,6 +502,8 @@
 				84B58D4D21FD69C80013D5F3 /* UploadToCloud.swift in Sources */,
 				84A6671421E7162200FC1892 /* Artwork.swift in Sources */,
 				E404C0C62A124558000D2D14 /* Locations.swift in Sources */,
+				5AC96E102A2E07330022068C /* BackupLocations.swift in Sources */,
+				5AC96E122A2E09F10022068C /* RestoreLocation.swift in Sources */,
 				84571FE5258FE29C009AC936 /* BriefCase.swift in Sources */,
 				84F9180222211C9B00D25634 /* NearestDosimeters.swift in Sources */,
 				79A5CB15270E77E9007309EF /* DebugLocations.swift in Sources */,
