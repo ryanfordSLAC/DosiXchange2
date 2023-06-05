@@ -12,25 +12,26 @@ import UIKit
 class Dosimeter {
     var qrCode: String
     var moderator: String?
-    var locationDesc: String?
+    var dosinumber: String?
     var cycleDate: String?
-    var collected: Bool
+    var collected: String?
     var createdDate:Date
     
     init(item: LocationRecordCacheItem) {
         qrCode = item.QRCode
-        if let moderator = item.moderator {
-            self.moderator = "\(moderator)"
-        }
-        locationDesc = item.locdescription
+        self.moderator = Dosimeter.fromInt(item.moderator)
+        self.collected = Dosimeter.fromInt(item.collectedFlag)
+        dosinumber = item.dosinumber
         cycleDate = item.cycleDate
-        if let collected = item.collectedFlag {
-            self.collected = collected == 1
-        }
-        else {
-            self.collected = false
-        }
         createdDate = item.createdDate!
+    }
+    
+    private static func fromInt(_ value:Int64?) -> String {
+        var result = "No"
+        if let value = value, value == 1 {
+            result = "Yes"
+        }
+        return result
     }
 }
 
@@ -39,7 +40,7 @@ class DosimetersCell : UITableViewCell {
     @IBOutlet weak var moderator: UILabel!
     @IBOutlet weak var locationDesc: UILabel!
     @IBOutlet weak var cycleDate: UILabel!
-    @IBOutlet weak var collected: UISwitch!
+    @IBOutlet weak var collected: UILabel!
 }
 
 class DosimetersViewController: UIViewController {
@@ -62,8 +63,6 @@ class DosimetersViewController: UIViewController {
             // Fallback on earlier versions
         }
                 
-        tableView.estimatedRowHeight = 100
-        tableView.rowHeight = UITableView.automaticDimension
         tableView.delegate = self
         tableView.dataSource = self
         searchBar.delegate = self
@@ -107,7 +106,7 @@ class DosimetersViewController: UIViewController {
 
 extension DosimetersViewController : UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        queryDatabase({ $0.QRCode.range(of: searchText, options: .caseInsensitive) != nil})
+        queryDatabase({ $0.dosinumber?.range(of: searchText, options: .caseInsensitive) != nil})
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
@@ -122,6 +121,10 @@ extension DosimetersViewController : UISearchBarDelegate {
 }
 
 extension DosimetersViewController : UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 105
+    }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -138,9 +141,9 @@ extension DosimetersViewController : UITableViewDataSource {
             let dosimeter = dosimeters[indexPath.row]
             cell.qrCode.text = dosimeter.qrCode
             cell.cycleDate.text = dosimeter.cycleDate
-            cell.locationDesc.text = dosimeter.locationDesc
+            cell.locationDesc.text = dosimeter.dosinumber
             cell.moderator.text = dosimeter.moderator
-            cell.collected.isOn = dosimeter.collected
+            cell.collected.text = dosimeter.collected
             
             return cell
         }

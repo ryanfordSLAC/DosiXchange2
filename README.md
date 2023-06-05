@@ -49,6 +49,9 @@ Version 2.0 / May 2023:
   - Remove commas from record saves, new records
   - Fix map view loading issues
   - QC Testing and closeout
+  - Search by Dosinumber
+  - GPS Validation on Second Scan with new Alert 15
+  - Code128 barcode validation with configurable number of character check.
 
 
 Version 1.3 / October 2021:
