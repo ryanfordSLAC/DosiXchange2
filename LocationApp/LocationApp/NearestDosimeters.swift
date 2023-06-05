@@ -15,7 +15,7 @@ class NearestLocations: UIViewController, UITableViewDataSource, UITableViewDele
 
     let dispatchGroup = DispatchGroup()
     let recordsupdate = RecordsUpdate()
-    let locations = LocationsCK.shared
+    let locations = container.locations
 
     var locationManager:CLLocationManager = CLLocationManager()
     var startLocation: CLLocation!

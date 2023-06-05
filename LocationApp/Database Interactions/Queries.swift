@@ -53,7 +53,7 @@ class Queries {
     } //end func
     
     func getCollectedNum() -> Int {
-        let locations = LocationsCK.shared
+        let locations = container.locations
         let cycleDate = RecordsUpdate.generateCycleDate()
         let priorCycleDate = RecordsUpdate.generatePriorCycleDate(cycleDate: cycleDate)
         return locations.count(by: { $0.collectedFlag == 1 && $0.active == 1 && $0.cycleDate == priorCycleDate})
@@ -84,7 +84,7 @@ class Queries {
     } //end func
     
     func getNotCollectedNum() -> Int {
-        let locations = LocationsCK.shared
+        let locations = container.locations
         let cycleDate = RecordsUpdate.generateCycleDate()
         let priorCycleDate = RecordsUpdate.generatePriorCycleDate(cycleDate: cycleDate)
         return locations.count(by: { $0.collectedFlag == 0 && $0.active == 1 && $0.cycleDate == priorCycleDate})

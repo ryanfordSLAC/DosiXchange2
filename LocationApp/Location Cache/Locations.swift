@@ -10,6 +10,7 @@ import Foundation
 import CloudKit
 
 protocol Locations {
+        
     func synchronize(loaded: @escaping ((Int) -> Void))
     
     func filter(by: (LocationRecordCacheItem) -> Bool) -> [LocationRecordCacheItem]
@@ -27,7 +28,8 @@ protocol Locations {
     func reset(_ loaded: @escaping  ((Int) -> Void))
 }
 
-class LocationsCK : Locations {
+class LocationsCK : Locations, SettingsService {
+    
     let database = CKContainer.default().publicCloudDatabase
     var timer: Timer?
     let timerSec = 300.0
@@ -35,7 +37,7 @@ class LocationsCK : Locations {
     let reachability = Reachability()!
     let semaphore = DispatchSemaphore(value: 1)
 
-    private init() {
+    init() {
         reachability.whenReachable = reachable
         timer = Timer.scheduledTimer(withTimeInterval: timerSec, repeats: true) { _ in
             if self.reachability.connection != .none {
@@ -50,9 +52,7 @@ class LocationsCK : Locations {
             print("Unable to start notifier")
         }
     }
-    
-    static var shared: Locations = LocationsCK()
-    
+        
     func synchronize(loaded: @escaping  ((Int) -> Void)) {
         semaphore.wait()
         if self.cache == nil {
@@ -60,6 +60,7 @@ class LocationsCK : Locations {
         }
         
         if reachability.connection != .none {
+            updateSettings()
             let lastDate = self.cache!.locations
                 .filter({ $0.modifiedDate != nil })
                 .max(by: { a,b -> Bool in a.modifiedDate! < b.modifiedDate!})
@@ -237,6 +238,15 @@ class LocationsCK : Locations {
         add(operation, loaded: loaded, completionHandler: completionHandler)
     }
     
+    func getSettings(completionHandler: @escaping (Settings) -> Void) {
+        semaphore.wait()
+        DispatchQueue.global(qos: .background).async {
+            let settings = self.cache!.settings
+            self.semaphore.signal()
+            completionHandler(settings)
+        }
+    }
+    
     private func add(_ query : CKQueryOperation, loaded: @escaping ((Int) -> Void), completionHandler: @escaping ([LocationRecordDelegate], Bool?, Error?,@escaping ((Int) -> Void)) -> Void) {
         var result: [LocationRecordDelegate] = []
         let operation = query
@@ -281,9 +291,28 @@ class LocationsCK : Locations {
             }
         }
     }
+    
+    private func updateSettings() {
+        let dispatchgroup = DispatchGroup()
+        dispatchgroup.enter()
+        let query = CKQuery(recordType: "Settings", predicate: NSPredicate(value: true))
+        database.perform(query, inZoneWith: nil, completionHandler: { records, error in
+            if let error = error {
+                print(error.localizedDescription)
+            }
+            else if let records, !records.isEmpty {
+                let settings = Settings()
+                settings.dosimeterMinimumLength = records.first?["dosimeterMinimumLength"] as? Int ?? 11
+                settings.dosimeterMaximumLength = records.first?["dosimeterMaximumLength"] as? Int ?? 11
+                self.cache!.setSettings(settings: settings)
+            }
+            dispatchgroup.leave()
+        })
+        dispatchgroup.wait()
+    }
                                          
-     @objc func fireTimer() {
-         print("Synchronization timer")
-         self.synchronize(loaded: { _ in })
-     }
+    @objc func fireTimer() {
+     print("Synchronization timer")
+     self.synchronize(loaded: { _ in })
+    }
 }
