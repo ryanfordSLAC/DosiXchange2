@@ -1179,7 +1179,10 @@ extension ScannerViewController {  //alerts
         alert.addAction(tryAgain)
         
         DispatchQueue.main.async {   //UIAlerts need to be shown on the main thread.
-            self.present(alert, animated: true, completion: nil)
+            
+            self.present(alert, animated: true){
+                alert.view.superview?.subviews[0].isUserInteractionEnabled = false
+            }
         }
     } //end alert15
     
