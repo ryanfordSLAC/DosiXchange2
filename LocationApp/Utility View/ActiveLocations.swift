@@ -15,7 +15,6 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
     
     var segment:Int = 0
     var displayInfo :[[(LocationRecordDelegate, String, String)]] = [[],[]]
-    var checkQR = ""
     var searches : [[(LocationRecordDelegate, String, String)]] = [[],[]]
     var searching = false
     let refreshControl = UIRefreshControl()
@@ -123,12 +122,11 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
         searching = true
 
         clearSearchedItems()
-
-        let items = locations.filter(by: { $0.QRCode.range(of: searchText, options: .caseInsensitive) != nil
-            || $0.locdescription.range(of: searchText, options: .caseInsensitive) != nil})
-        for item in items {
-            processLocationRecord(item)
-        }
+        
+        searches[0] = displayInfo[0].filter( { $0.1.range(of: searchText, options: .caseInsensitive) != nil
+                                            || $0.2.range(of: searchText, options: .caseInsensitive) != nil})
+        searches[1] = displayInfo[1].filter( { $0.1.range(of: searchText, options: .caseInsensitive) != nil
+                                            || $0.2.range(of: searchText, options: .caseInsensitive) != nil})
         activesTableView.reloadData()
     }
     
@@ -149,69 +147,32 @@ class ActiveLocations: UIViewController, UITableViewDataSource, UITableViewDeleg
 //query and helper functions
 //MARK:  Extensions
 extension ActiveLocations : UIViewControllerTransitioningDelegate{
-
+    
     @objc func queryDatabase() {
         dispatchGroup.wait()
         dispatchGroup.enter()
         clearLocationItems()
         activityIndicator.startAnimating()
-        var items = locations.filter(by: { _ in true })
-        items.sort {
-            ($0.QRCode, $0.locdescription) < ($1.QRCode, $1.locdescription)
+        let items = locations.filter(by: { l in l.createdDate != nil })
+        let dictionary = Dictionary(grouping: items, by: {i in i.QRCode})
+        for item in dictionary {
+            addLocation(item.value.filter({ $0.createdDate != nil }))
         }
-        for item in items {
-            processLocationRecord(item)
-        }
+        displayInfo[0].sort { ($0.1, $0.2) < ($1.1, $1.2) }
+        displayInfo[1].sort { ($0.1, $0.2) < ($1.1, $1.2) }
         activesTableView.reloadData()
         activityIndicator.stopAnimating()
         dispatchGroup.leave()
         refreshControl.endRefreshing()
    } //end func
         
-  
-    // Process a Location record that was fetched from CloudKit
-    // or thr local location records cache.
-    func processLocationRecord(_ record: LocationRecordDelegate) {
- 
-        //if record is active ("active" = 1), record is appended to the first array (flag = 0)
-        //else record is appended to the second array (flag = 1)
-        
-        switch record["active"] {
-        
-        case nil:
-            //handle rare cases where active is nil, prevent app crashes.
-            print("record skipped")
-            alert12()
-            return
-            
-            
-        default:
-            
-            //fetch active flag, QRCode and locdescription.
-            if let active:Int64 = record["active"] as? Int64,
-               let currentQR:String = record["QRCode"] as? String,
-               let currentLoc:String = record["locdescription"] as? String {
-                
-                //Original
-                let flag = active == 1 ? 0 : 1
-                                
-                //if QRCode is not the same as previous record
-                if currentQR != self.checkQR {
-                    //append (QRCode, locdescription) tuple displayInfo
-                    if searching {
-                        searches[flag].append((record, currentQR, currentLoc))
-                    }
-                    else {
-                        displayInfo[flag].append((record, currentQR, currentLoc))
-                    }
-                }
-                
-                self.checkQR = currentQR
-          }
-                  
+    func addLocation(_ records: [LocationRecordCacheItem]) {
+        if let item = records.max(by: { $0.createdDate! < $1.createdDate! }) {
+            let flag = item.active == 1 ? 0 : 1
+            displayInfo[flag].append((item, item.QRCode, item.locdescription))
         }
-    } //end func
-    
+    }
+      
 //MARK:  Alert 12
     
     //Handle nils in active field (rare - set by system)
