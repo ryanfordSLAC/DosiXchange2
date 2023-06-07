@@ -236,7 +236,7 @@
                                 </connections>
                             </button>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="12k-op-bR2">
-                                <rect key="frame" x="204" y="423" width="20" height="20"/>
+                                <rect key="frame" x="204" y="487" width="20" height="20"/>
                                 <color key="color" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </activityIndicatorView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="08g-6x-YOH">
@@ -271,7 +271,7 @@
                             <constraint firstItem="RcM-5r-EfG" firstAttribute="leading" secondItem="8cu-87-6eq" secondAttribute="centerX" constant="-90" id="btq-o1-rUX"/>
                             <constraint firstItem="iL3-Xk-1J0" firstAttribute="trailing" secondItem="8cu-87-6eq" secondAttribute="centerX" constant="80" id="dUa-8w-h9i"/>
                             <constraint firstItem="8cu-87-6eq" firstAttribute="bottom" secondItem="3FX-rC-9sw" secondAttribute="bottom" constant="20" id="dVq-SL-gBz"/>
-                            <constraint firstItem="12k-op-bR2" firstAttribute="top" secondItem="iL3-Xk-1J0" secondAttribute="bottom" constant="50" id="eAl-df-2zj"/>
+                            <constraint firstItem="12k-op-bR2" firstAttribute="top" secondItem="RcM-5r-EfG" secondAttribute="bottom" constant="30" id="eAl-df-2zj"/>
                             <constraint firstItem="P1C-rk-auY" firstAttribute="top" secondItem="zZL-V9-XtT" secondAttribute="bottom" constant="21" id="fxf-KM-3yN"/>
                             <constraint firstItem="iL3-Xk-1J0" firstAttribute="leading" secondItem="8cu-87-6eq" secondAttribute="centerX" constant="-80" id="g45-4J-oW3"/>
                             <constraint firstItem="3FX-rC-9sw" firstAttribute="centerX" secondItem="Kob-bg-1b1" secondAttribute="centerX" id="gf8-t8-hfs"/>

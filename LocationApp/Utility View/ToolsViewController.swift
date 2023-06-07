@@ -173,7 +173,7 @@ class ToolsViewController: UIViewController, MFMailComposeViewControllerDelegate
         alert.addAction(UIAlertAction(title: "3 cycles", style: .default, handler: { _ in self.sendEmail(3) }))
         alert.addAction(UIAlertAction(title: "4 cycles", style: .default, handler: { _ in self.sendEmail(4) }))
         alert.addAction(UIAlertAction(title: "All cycles", style: .default, handler: { _ in self.sendEmail(0) }))
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in self.activityIndicator.stopAnimating() }))
         
         self.present(alert, animated: true)
     }
