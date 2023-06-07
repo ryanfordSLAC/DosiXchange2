@@ -1204,7 +1204,7 @@ extension ScannerViewController {  //alerts
     
     //MARK:  Alert15
     func alert15() { //Outside of SLAC
-        let message = (outOfRangeCounter-1 == numberOfGPSRetry) ? "Your fix is still outside of SLAC property. Please tap Try Again for a final attempt, and if it’s still out of range then standard coordinates will be assigned.  These can be adjusted later in the Tools menu. " : "Your fix is not on SLAC property.  Please tap Try Again."
+        let message = (outOfRangeCounter == numberOfGPSRetry) ? "Your fix is still outside of SLAC property. Please tap Try Again for a final attempt, and if it’s still out of range then standard coordinates will be assigned.  These can be adjusted later in the Tools menu. " : "Your fix is not on SLAC property.  Please tap Try Again."
         
         let alert = UIAlertController(title: "GPS Coordinate Error\n", message: message, preferredStyle: .alert)
         
@@ -1215,7 +1215,10 @@ extension ScannerViewController {  //alerts
         alert.addAction(tryAgain)
         
         DispatchQueue.main.async {   //UIAlerts need to be shown on the main thread.
-            self.present(alert, animated: true, completion: nil)
+            
+            self.present(alert, animated: true){
+                alert.view.superview?.subviews[0].isUserInteractionEnabled = false
+            }
         }
     } //end alert15
     
