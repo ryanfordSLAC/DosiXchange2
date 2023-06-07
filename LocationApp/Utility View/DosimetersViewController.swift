@@ -44,7 +44,7 @@ class DosimetersCell : UITableViewCell {
 }
 
 class DosimetersViewController: UIViewController {
-    let locations = LocationsCK.shared
+    let locations = container.locations
     var dosimeters = [Dosimeter]()
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
