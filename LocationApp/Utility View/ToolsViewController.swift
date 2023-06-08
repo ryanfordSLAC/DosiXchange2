@@ -306,8 +306,7 @@ extension ToolsViewController {
     @objc func devTap(_ sender: UITapGestureRecognizer) {
         activityIndicator.startAnimating()
         RestoreLocation.restore(completionHandler: {
-            DispatchQueue.main.async {
-                self.activityIndicator.stopAnimating()
-            }})
+            self.activityIndicator.stopAnimating()
+        })
     }
 } //end class

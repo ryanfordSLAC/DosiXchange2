@@ -14,29 +14,41 @@ class RestoreLocation {
         let database = CKContainer.default().publicCloudDatabase
         
         DispatchQueue.global(qos: .background).async {
+            let dispatchGroup = DispatchGroup()
             print("Restoring locations.")
             for location in BackupLocations {
+                dispatchGroup.enter()
                 database.fetch(withRecordID: CKRecord.ID(recordName:location.key),
                                completionHandler: { record, error in
                     if let error = error {
                         print("Failed to read record from CK: \(location.key), \(error.localizedDescription)")
+                        dispatchGroup.leave()
                     }
-                    if let record = record {
-                        let dateFormatter = DateFormatter()
-                        dateFormatter.timeStyle = .none
-                        dateFormatter.dateFormat = "MM/dd/yy"
-                        let modifiedDate = dateFormatter.date(from: location.value)
-                        record.setValue(modifiedDate, forKey: "modifiedDate")
-                        database.save(record, completionHandler: { record, error in
-                         if let error = error {
-                             print("Failed to save record to CK: \(location.key), \(error.localizedDescription)")
-                         }
-                         })
+                    else {
+                        if let record = record {
+                            let dateFormatter = DateFormatter()
+                            dateFormatter.timeStyle = .none
+                            dateFormatter.dateFormat = "MM/dd/yy"
+                            let modifiedDate = dateFormatter.date(from: location.value)
+                            record.setValue(modifiedDate, forKey: "modifiedDate")
+                            database.save(record, completionHandler: { record, error in
+                                if let error = error {
+                                    print("Failed to save record to CK: \(location.key), \(error.localizedDescription)")
+                                }
+                                else {
+                                    print("Record \(record?.recordID) updated.")
+                                }
+                                dispatchGroup.leave()
+                            })
+                        }
                     }
                 })
             }
-            print("Restore ended.")
-            completionHandler?()
+            dispatchGroup.notify(queue: .main)
+            {
+                print("Restore ended.")
+                completionHandler?()
+            }
         }
     }
 }
