@@ -1181,8 +1181,8 @@ extension ScannerViewController {  //alerts
         let max = settings?.dosimeterMaximumLength ?? 11
         var message = "The length of the dosimeter barcodes must be "
         
-        message += min == max ? "\(min)." :
-        "at least \(min), and maximum \(max)."
+        message += min == max ? "\(min)."
+                                : "\(min) or between \(min) and \(max) characters."
         
         message += " Please rescan!"
         
