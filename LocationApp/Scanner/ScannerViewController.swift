@@ -171,7 +171,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
                 variables.codeType = "QRCode"
                 
             case .code128:
-                if(stringValue?.count ?? 11 >= settings?.dosimeterMinimumLength ?? 11 && stringValue?.count ?? 11 <= settings?.dosimeterMaximumLength ?? 11){
+                if(stringValue?.count ?? 0 >= settings!.dosimeterMinimumLength && stringValue?.count ?? 0 <= settings!.dosimeterMaximumLength){
                     variables.codeType = "Code128"
                 } else {
                     alert14()
@@ -1177,14 +1177,12 @@ extension ScannerViewController {  //alerts
     
     //MARK:  Alert14
     func alert14() {  //invalid code length, rescan
-        let min = settings?.dosimeterMinimumLength ?? 11
-        let max = settings?.dosimeterMaximumLength ?? 11
+        let min = settings!.dosimeterMinimumLength
+        let max = settings!.dosimeterMaximumLength
         var message = "The length of the dosimeter barcodes must be "
-        
-        message += min == max ? "\(min)." :
-        "at least \(min), and maximum \(max)."
-        
-        message += " Please rescan!"
+        message += min == max ? "\(min) "
+                                : "between \(min) and \(max) "
+        message += "characters. Please rescan!"
         
         //set up alert
         let alert = UIAlertController.init(title: "Invalid length", message: message, preferredStyle: .alert)

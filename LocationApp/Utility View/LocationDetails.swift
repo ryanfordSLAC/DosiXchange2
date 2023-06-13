@@ -484,23 +484,24 @@ extension LocationDetails: UITextFieldDelegate {
     }
     
     public func validateDosimeterField(value: String) ->Bool {
-        let regex = "^\\w{\(settings?.dosimeterMinimumLength ?? 11),\(settings?.dosimeterMaximumLength ?? 11)}$"
+        let regex = "^\\w{\(settings!.dosimeterMinimumLength),\(settings!.dosimeterMaximumLength)}$"
         let validate = NSPredicate(format: "SELF MATCHES %@", regex)
         return validate.evaluate(with: value)
     }
     
     func showDosimeterValidationWarning() {
         
-        let min = settings?.dosimeterMinimumLength ?? 11
-        let max = settings?.dosimeterMaximumLength ?? 11
-        var message = "The length of the dosimeter barcodes must be "
+        let min = settings!.dosimeterMinimumLength
+        let max = settings!.dosimeterMaximumLength
         
-        message += min == max ? "\(min)." :
-        "at least \(min), and maximum \(max)."
+        var message = "The length of the dosimeter barcodes must be "
+        message += min == max ? "\(min) "
+                                : "between \(min) and \(max) "
+        message += "characters. Please rescan!"
         
         //set up alert
         let alert = UIAlertController.init(title: "Error", message: message, preferredStyle: .alert)
-        let OK = UIAlertAction(title: "Ok", style: .cancel)
+        let OK = UIAlertAction(title: "Try Again", style: .cancel)
         
         alert.addAction(OK)
         
