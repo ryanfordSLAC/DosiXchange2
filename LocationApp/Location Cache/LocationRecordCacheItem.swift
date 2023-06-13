@@ -50,7 +50,8 @@ class LocationRecordCacheItem: Codable, LocationRecordDelegate {
     var cycleDate:String?               // cycleDate field may contain nothing
     var mismatch:Int64?                 // mismatch field may contain nothing
     var moderator:Int64?                // moderator field may contain nothing
-    var createdDate:Date?               // creation date
+    var creationDate:Date?               // creation date
+    var createdDate:Date?               // created date
     var modifiedDate:Date?              // modified date
     var modificationDate:Date?          // modification date
     var recordName: String?             // record name (record.recordID.recordName)
@@ -129,11 +130,13 @@ class LocationRecordCacheItem: Codable, LocationRecordDelegate {
             return nil
        }
         self.moderator = moderator
-
+        
         // set the creation date
+        self.creationDate = record.creationDate
+        // set the deploy date
         self.createdDate = record["createdDate"] as? Date
 
-        // set the modified date
+        // set the collection/exchange date
         self.modifiedDate = record["modifiedDate"] as? Date
  
         // set the modification date
@@ -294,12 +297,10 @@ class LocationRecordCacheItem: Codable, LocationRecordDelegate {
     }
     
     func setValue(_ value: AnyObject?, forKey key: String) {
-        self.modifiedDate = Date()
         self[key] = value as? CKRecordValue
     }
 
     func setValue(_ value: Any?, forKey key: String) {
-        self.modifiedDate = Date()
         self[key] = value as? CKRecordValue
     }
     

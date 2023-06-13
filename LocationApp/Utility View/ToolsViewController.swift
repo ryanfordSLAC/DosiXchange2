@@ -252,11 +252,11 @@ extension ToolsViewController {
         //system dates - createdDate and modifiedDate Ver 1.2
         
         //block 3: these fields always have a value and are called differently than my date fields
-        //let date = Date(timeInterval: 0, since: record.creationDate!)
-        let date = Date(timeInterval: 0, since: record["createdDate"] as! Date) //Ver 1.2
+        let date = Date(timeInterval: 0, since: record.creationDate!)
+        //let date = Date(timeInterval: 0, since: record["createdDate"] as! Date) //Ver 1.2
         let formattedDate = dateFormatter.string(from: date)
-        //let dateModified = Date(timeInterval: 0, since: record.modificationDate!)
-        let dateModified = Date(timeInterval: 0, since: record["modifiedDate"] as! Date)
+        let dateModified = Date(timeInterval: 0, since: record.modificationDate!)
+        //let dateModified = Date(timeInterval: 0, since: record["modifiedDate"] as! Date)
         let formattedDateModified = dateFormatter.string(from: dateModified)
         
         //block 4: may not have a value when initially set up and tested
@@ -304,13 +304,9 @@ extension ToolsViewController {
     }
     
     @objc func devTap(_ sender: UITapGestureRecognizer) {
- /*       activityIndicator.startAnimating()
-        DispatchQueue.global(qos: .background).async {
-            UpdateGroups.update(completionHandler: {
-                self.activityIndicator.stopAnimating()
-            })
-        }*/
+/*        activityIndicator.startAnimating()
+        RestoreLocation.restore(completionHandler: {
+            self.activityIndicator.stopAnimating()
+        })*/
     }
-
-    
 } //end class
