@@ -1184,6 +1184,8 @@ extension ScannerViewController {  //alerts
                                 : "between \(min) and \(max) "
         message += "characters. Please rescan!"
         
+        self.beepFail()
+        
         //set up alert
         let alert = UIAlertController.init(title: "Invalid length", message: message, preferredStyle: .alert)
         let rescan = UIAlertAction(title: "Rescan", style: .default) { (_) in
@@ -1203,6 +1205,8 @@ extension ScannerViewController {  //alerts
     //MARK:  Alert15
     func alert15() { //Outside of SLAC
         let message = (outOfRangeCounter == numberOfGPSRetry) ? "Your fix is still outside of SLAC property. Please tap Try Again for a final attempt, and if it’s still out of range then standard coordinates will be assigned.  These can be adjusted later in the Tools menu. " : "Your fix is not on SLAC property.  Please tap Try Again."
+        
+        self.beepFail()
         
         let alert = UIAlertController(title: "GPS Coordinate Error\n", message: message, preferredStyle: .alert)
         
