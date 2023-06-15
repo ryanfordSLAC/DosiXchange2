@@ -22,6 +22,7 @@
 		5CF01FDE22D92F19004604BC /* ToolsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CF01FDD22D92F19004604BC /* ToolsViewController.swift */; };
 		5CFF888B22CAA5B700611F60 /* ActiveLocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CFF888A22CAA5B700611F60 /* ActiveLocations.swift */; };
 		5E4D12742A2776E9002E4D91 /* Slac.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E4D12732A2776E9002E4D91 /* Slac.swift */; };
+		5E660CC12A3AFD1F00BC6983 /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E660CC02A3AFD1F00BC6983 /* AudioPlayer.swift */; };
 		79A5CB15270E77E9007309EF /* DebugLocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A5CB14270E77E9007309EF /* DebugLocations.swift */; };
 		8409448921CC539900C4EA28 /* TODO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8409448821CC539900C4EA28 /* TODO.swift */; };
 		8409F52422022A3900B78BCC /* Queries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8409F52322022A3900B78BCC /* Queries.swift */; };
@@ -93,6 +94,7 @@
 		5CF01FDD22D92F19004604BC /* ToolsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsViewController.swift; sourceTree = "<group>"; };
 		5CFF888A22CAA5B700611F60 /* ActiveLocations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveLocations.swift; sourceTree = "<group>"; };
 		5E4D12732A2776E9002E4D91 /* Slac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slac.swift; sourceTree = "<group>"; };
+		5E660CC02A3AFD1F00BC6983 /* AudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
 		79A5CB14270E77E9007309EF /* DebugLocations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugLocations.swift; sourceTree = "<group>"; };
 		8409448821CC539900C4EA28 /* TODO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TODO.swift; sourceTree = "<group>"; };
 		8409F52322022A3900B78BCC /* Queries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queries.swift; sourceTree = "<group>"; };
@@ -298,6 +300,7 @@
 				8487FE2D21A8F4E000CC62E8 /* ScannerViewController.swift */,
 				84F5ED6621B2024900381E76 /* RecordsUpdate.swift */,
 				5E4D12732A2776E9002E4D91 /* Slac.swift */,
+				5E660CC02A3AFD1F00BC6983 /* AudioPlayer.swift */,
 			);
 			path = Scanner;
 			sourceTree = "<group>";
@@ -522,6 +525,7 @@
 				79A5CB15270E77E9007309EF /* DebugLocations.swift in Sources */,
 				8487FE2E21A8F4E000CC62E8 /* ScannerViewController.swift in Sources */,
 				8434D57B25956DE800B2E413 /* RepairCycleDate.swift in Sources */,
+				5E660CC12A3AFD1F00BC6983 /* AudioPlayer.swift in Sources */,
 				449A7E9D271341B2005AF1F7 /* LocationRecordCacheItem.swift in Sources */,
 				846606C121AA3CA00049814C /* ReadWriteText.swift in Sources */,
 				5C941E5522D93335008C9B3E /* LocationViewController.swift in Sources */,

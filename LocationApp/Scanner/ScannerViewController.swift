@@ -22,7 +22,6 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     var previewLayer: AVCaptureVideoPreviewLayer!
     var counter:Int64 = 0
     let dispatchGroup = DispatchGroup()
-    var beepSound: AVAudioPlayer?
     var records = [CKRecord]()
     var itemRecord:CKRecord?
     var tempRecords = [CKRecord]()
@@ -32,6 +31,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     var outOfRangeCounter: Int = 0
     let numberOfGPSRetry: Int = 2
     var settings: Settings?
+    var audioPlayer: AudioPlayer?
     
     @IBOutlet weak var innerView: UIView!
     @IBOutlet weak var outerView: UIView!
@@ -60,8 +60,6 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         
         guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else { return }
         let videoInput: AVCaptureDeviceInput
-        
-        
         //set zoom factor to 3x
         do {
             try    videoCaptureDevice.lockForConfiguration()
@@ -120,6 +118,8 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         configReachability()
         
         settingsService.getSettings(completionHandler: { self.settings = $0 })
+        
+        audioPlayer = AudioPlayer()
     }//end viewDidLoad()
     
     @IBAction func done(_ sender: Any) {
@@ -240,7 +240,7 @@ extension ScannerViewController {
                             
                             //deployed dosimeter
                             if variables.collected == 0 {
-                                self.beep()
+                                self.audioPlayer?.beep()
                                 if variables.active == 1 {
                                     
                                     if(RecordsUpdate.generateCycleDate() == variables.cycle){
@@ -262,11 +262,11 @@ extension ScannerViewController {
                             //collected or no dosimeter
                             else {
                                 if variables.active == 1 {
-                                    self.beep()
+                                    self.audioPlayer?.beep()
                                     self.alert2() //Location Found [cancel/deploy]
                                 }
                                 else {
-                                    self.beepFail()
+                                    self.audioPlayer?.beepFail()
                                     self.alert2a() //Inactive Location (activate to deploy)
                                 }
                             }
@@ -274,7 +274,7 @@ extension ScannerViewController {
                         
                         //no record found
                         else {
-                            self.beep()
+                            self.audioPlayer?.beep()
                             self.alert2() //New Location [cancel/deploy]
                         }
                         
@@ -299,7 +299,7 @@ extension ScannerViewController {
                             
                             //deployed dosimeter
                             if variables.collected == 0 {
-                                self.beep()
+                                self.audioPlayer?.beep()
                                 if variables.active == 1 {
                                     if(RecordsUpdate.generateCycleDate() == variables.cycle){
                                         self.alert13(nextFunction: self.alert3a)
@@ -318,14 +318,14 @@ extension ScannerViewController {
                             
                             //collected dosimeter
                             else {
-                                self.beepFail()
+                                self.audioPlayer?.beepFail()
                                 self.alert9a() //Invalid Dosimeter (already collected)
                             }
                         }
                         
                         //no record found
                         else {
-                            self.beep()
+                            self.audioPlayer?.beep()
                             self.alert1() //Dosimeter Not Found [cancel/deploy]
                         }
                     }
@@ -366,13 +366,13 @@ extension ScannerViewController {
                                 
                                 //location in use/inactive location
                                 if variables.collected == 0 || variables.active == 0 {
-                                    self.beepFail()
+                                    self.audioPlayer?.beepFail()
                                     self.alert7b(code: code!)
                                 }
                                 
                                 //valid location
                                 else {
-                                    self.beep()
+                                    self.audioPlayer?.beep()
                                     variables.QRCode = code
                                     self.save()
                                 }
@@ -380,7 +380,7 @@ extension ScannerViewController {
                             
                             //new location
                             else {
-                                self.beep()
+                                self.audioPlayer?.beep()
                                 variables.QRCode = code
                                 self.save()
                             }
@@ -391,7 +391,7 @@ extension ScannerViewController {
                     
                     //not looking for QRCode
                     else {
-                        beepFail()
+                        self.audioPlayer?.beepFail()
                         alert6b()
                     }
                     
@@ -410,13 +410,13 @@ extension ScannerViewController {
                             
                             //duplicate dosimeter
                             if self.records != [] {
-                                self.beepFail()
+                                self.audioPlayer?.beepFail()
                                 self.alert7a(code: code!)
                             }
                             
                             //new dosimeter
                             else {
-                                self.beep()
+                                self.audioPlayer?.beep()
                                 variables.dosiNumber = code
                                 self.save()
                             }
@@ -427,7 +427,7 @@ extension ScannerViewController {
                     
                     //not looking for barcode
                     else {
-                        beepFail()
+                        self.audioPlayer?.beepFail()
                         alert6a()
                     }
                     
@@ -529,46 +529,6 @@ extension ScannerViewController {
         variables.latitude = latitude
         variables.longitude = longitude
     }
-    
-    
-    @objc func beepFail() {
-        
-        //"Buzz!"
-        guard let path = Bundle.main.path(forResource: "beep-5", ofType: "wav") else {
-            print("URL Not Found")
-            return
-        }
-        
-        let url = URL(fileURLWithPath: path)
-        
-        do {
-            self.beepSound = try AVAudioPlayer(contentsOf: url)
-            self.beepSound?.play()
-        }
-        catch {
-            print(error.localizedDescription)
-        }
-    } //end beep fail
-    
-    
-    @objc func beep() {
-        
-        //"Beep!"
-        guard let path = Bundle.main.path(forResource: "scannerbeep", ofType: "mp3") else {
-            print("URL Not Found")
-            return
-        }
-        
-        let url = URL(fileURLWithPath: path)
-        
-        do {
-            self.beepSound = try AVAudioPlayer(contentsOf: url)
-            self.beepSound?.play()
-        }
-        catch {
-            print(error.localizedDescription)
-        }
-    } //end beep()
     
     fileprivate func configReachability() {
         reachability.whenReachable = { reachability in self.outerView.backgroundColor = UIColor(named: "MainOnline") }
@@ -1184,7 +1144,7 @@ extension ScannerViewController {  //alerts
                                 : "between \(min) and \(max) "
         message += "characters. Please rescan!"
         
-        self.beepFail()
+        self.audioPlayer?.beepFail()
         
         //set up alert
         let alert = UIAlertController.init(title: "Invalid length", message: message, preferredStyle: .alert)
@@ -1206,7 +1166,7 @@ extension ScannerViewController {  //alerts
     func alert15() { //Outside of SLAC
         let message = (outOfRangeCounter == numberOfGPSRetry) ? "Your fix is still outside of SLAC property. Please tap Try Again for a final attempt, and if it’s still out of range then standard coordinates will be assigned.  These can be adjusted later in the Tools menu. " : "Your fix is not on SLAC property.  Please tap Try Again."
         
-        self.beepFail()
+        self.audioPlayer?.beepFail()
         
         let alert = UIAlertController(title: "GPS Coordinate Error\n", message: message, preferredStyle: .alert)
         
