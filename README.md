@@ -18,7 +18,7 @@ See version notes below
 #### Installation
 
 ```
-Install from SLAC MDM, SLAC Apps folder.
+Install from SLAC JAMF, Self-service folder.
 ```
 #### Connectivity
 
