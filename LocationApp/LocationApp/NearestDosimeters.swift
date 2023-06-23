@@ -185,7 +185,7 @@ extension NearestLocations {
         //changed nils in string fields to "".
         if record.QRCode != "" {self.QRCode = record.QRCode }
         if record.latitude != "" {self.latitude = record.latitude }
-        if record.longitude != "" {self.longitude = record.latitude }
+        if record.longitude != "" {self.longitude = record.longitude }
         if record.dosinumber != "" {self.dosimeter = record.dosinumber!
         } else if record.dosinumber == "" {
             self.dosimeter = "Active without Dosimeter!"  //show "active no dosimeter" in lists Ver 1.2
