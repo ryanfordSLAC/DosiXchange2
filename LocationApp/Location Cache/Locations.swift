@@ -8,6 +8,7 @@
 
 import Foundation
 import CloudKit
+import UIKit
 
 protocol Locations {
         
@@ -271,7 +272,7 @@ class LocationsCK : Locations, SettingsService {
     
     private func setUser(completionHandler: @escaping (String) -> Void) {
         DispatchQueue.main.async {
-            CKContainer.default().requestApplicationPermission(.userDiscoverability) { (status, error) in
+/*            CKContainer.default().requestApplicationPermission(.userDiscoverability) { (status, error) in
                 if let error = error {
                     print(error.localizedDescription)
                 }
@@ -288,7 +289,8 @@ class LocationsCK : Locations, SettingsService {
                         }
                     }
                 completionHandler("")
-            }
+            }*/
+            completionHandler("\(UIDevice.current.identifierForVendor?.uuidString)")
         }
     }
     
