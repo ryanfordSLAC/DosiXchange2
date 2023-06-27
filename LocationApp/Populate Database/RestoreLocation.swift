@@ -36,7 +36,7 @@ class RestoreLocation {
                                     print("Failed to save record to CK: \(location.key), \(error.localizedDescription)")
                                 }
                                 else {
-                                    print("Record \(record?.recordID) updated.")
+                                    print("Record \(record?.recordID.description ?? "unknown") updated.")
                                 }
                                 dispatchGroup.leave()
                             })

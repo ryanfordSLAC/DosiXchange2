@@ -506,8 +506,8 @@ extension ScannerViewController {
         
         locationManager.requestAlwaysAuthorization()
         var currentLocation = CLLocation()
-        if (CLLocationManager.authorizationStatus() == .authorizedWhenInUse ||
-            CLLocationManager.authorizationStatus() ==  .authorizedAlways) {
+        if (locationManager.authorizationStatus == .authorizedWhenInUse ||
+            locationManager.authorizationStatus ==  .authorizedAlways) {
             currentLocation = locationManager.location!
         }
         

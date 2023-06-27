@@ -168,12 +168,10 @@ class LocationsCK : Locations, SettingsService {
    
             let operation = CKModifyRecordsOperation(recordsToSave: slice, recordIDsToDelete: nil)
             operation.savePolicy = .allKeys
-            operation.modifyRecordsCompletionBlock = { (_, _, error) in
-                if let error = error {
-                    print(error.localizedDescription)
-                }
-                else {
-                    print("Saved \(slice.count) locations.")
+            operation.modifyRecordsResultBlock = { result in
+                switch result {
+                    case .success : print("Saved locations.")
+                    case .failure(let error) :print(error.localizedDescription)
                 }
             }
             self.database.add(operation)
@@ -251,20 +249,28 @@ class LocationsCK : Locations, SettingsService {
         var result: [LocationRecordDelegate] = []
         let operation = query
         operation.resultsLimit = 500
-        operation.recordFetchedBlock = { record in result.append(record) }
-        operation.queryCompletionBlock = { cursor, error in
-            if let error = error {
+        operation.recordMatchedBlock = { _, res in
+            switch res {
+                case .success(let record) : result.append(record)
+                case .failure(let error) :print(error.localizedDescription)
+            }
+        }
+        operation.queryResultBlock = { res in
+            switch res {
+            case .success(let cursor) :
+                if let cursor {
+                    completionHandler(result, false, nil, loaded)
+                    result = []
+                    let operation = CKQueryOperation(cursor: cursor)
+                    self.add(operation, loaded:loaded, completionHandler:  completionHandler)
+                }
+                else {
+                    completionHandler(result, true, nil, loaded)
+                }
+            case .failure(let error) :
+                print(error.localizedDescription)
                 completionHandler([], nil, error, loaded)
-                return
             }
-            if let cursor = cursor {
-                completionHandler(result, false, nil, loaded)
-                result = []
-                let operation = CKQueryOperation(cursor: cursor)
-                self.add(operation, loaded:loaded, completionHandler:  completionHandler)
-                return
-            }
-            completionHandler(result, true, nil, loaded)
         }
         database.add(operation)
     }
@@ -296,16 +302,19 @@ class LocationsCK : Locations, SettingsService {
         let dispatchgroup = DispatchGroup()
         dispatchgroup.enter()
         let query = CKQuery(recordType: "Settings", predicate: NSPredicate(value: true))
-        database.perform(query, inZoneWith: nil, completionHandler: { records, error in
-            if let error = error {
-                print(error.localizedDescription)
-            }
-            else if let records, !records.isEmpty {
-                let settings = Settings()
-                settings.dosimeterMinimumLength = records.first?["dosimeterMinimumLength"] as? Int ?? 11
-                settings.dosimeterMaximumLength = records.first?["dosimeterMaximumLength"] as? Int ?? 11
-                self.cache!.setSettings(settings: settings)
-            }
+        database.fetch(withQuery: query, inZoneWith: nil, desiredKeys: nil, resultsLimit: 1, completionHandler: { results in
+            switch results {
+            case .failure(let error) : print(error.localizedDescription)
+            case .success((let matches, _)) :
+                switch matches.first!.1 {
+                case .failure(let error) : print(error.localizedDescription)
+                case .success(let record) :
+                    let settings = Settings()
+                    settings.dosimeterMinimumLength = record["dosimeterMinimumLength"] as? Int ?? 11
+                    settings.dosimeterMaximumLength = record["dosimeterMaximumLength"] as? Int ?? 11
+                    self.cache!.setSettings(settings: settings)
+                }
+            }            
             dispatchgroup.leave()
         })
         dispatchgroup.wait()
