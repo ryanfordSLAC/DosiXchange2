@@ -138,7 +138,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     override func viewWillAppear(_ animated: Bool) {
         
         super.viewWillAppear(animated)
-        self.previewLayer.frame.size = self.innerView.frame.size
+        self.previewLayer?.frame.size = self.innerView.frame.size
         if (captureSession?.isRunning == false) {
             DispatchQueue.global(qos: .background).async {
                 self.captureSession.startRunning()
