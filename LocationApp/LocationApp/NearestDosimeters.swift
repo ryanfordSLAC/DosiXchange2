@@ -51,7 +51,7 @@ class NearestLocations: UIViewController, UITableViewDataSource, UITableViewDele
         locationManager.delegate = self
         locationManager.requestAlwaysAuthorization()
         locationManager.startUpdatingLocation()
-        startLocation = locationManager.location
+        startLocation = locationManager.location ?? Slac.defaultCoordinates
         
         //get data
         queryAscendLocations()
@@ -91,7 +91,10 @@ class NearestLocations: UIViewController, UITableViewDataSource, UITableViewDele
     }//end func
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print(Error.self)
+        print("Location permission denied.")
+        if startLocation == nil {
+            startLocation = Slac.defaultCoordinates
+        }
     } //end func
     
     
