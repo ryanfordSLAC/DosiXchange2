@@ -12,6 +12,19 @@ import CoreLocation
 import CloudKit
 
 class NearestLocations: UIViewController, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate {
+    class Location {
+        var distance: Int
+        var qrCode: String
+        var details: String
+        var photo: CKAsset?
+        
+        init(distance: Int, qrCode: String, details: String, photo: CKAsset? = nil) {
+            self.distance = distance
+            self.qrCode = qrCode
+            self.details = details
+            self.photo = photo
+        }
+    }
 
     let dispatchGroup = DispatchGroup()
     let recordsupdate = RecordsUpdate()
@@ -29,9 +42,9 @@ class NearestLocations: UIViewController, UITableViewDataSource, UITableViewDele
     var mod:Int64 = 0
     var segment:Int = 0
     
-    var preSortedRecords = [(Int, String, String)]()
-    var sortedRecords = [(Int, String, String)]()
-    var abcRecords = [(Int, String, String)]()
+    var preSortedRecords = [Location]()
+    var sortedRecords = [Location]()
+    var abcRecords = [Location]()
     
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     @IBOutlet weak var nearestTableView: UITableView!
@@ -129,13 +142,13 @@ class NearestLocations: UIViewController, UITableViewDataSource, UITableViewDele
         
         switch segment {
         case 1:
-            distanceText = "\(self.abcRecords[indexPath.row].0)"
-            qrText =  "\(self.abcRecords[indexPath.row].1)"
-            detailsText = "\(self.abcRecords[indexPath.row].2)"
+            distanceText = "\(self.abcRecords[indexPath.row].distance)"
+            qrText =  "\(self.abcRecords[indexPath.row].qrCode)"
+            detailsText = "\(self.abcRecords[indexPath.row].details)"
         default:
-            distanceText = "\(self.sortedRecords[indexPath.row].0)"
-            qrText =  "\(self.sortedRecords[indexPath.row].1)"
-            detailsText = "\(self.sortedRecords[indexPath.row].2)"
+            distanceText = "\(self.sortedRecords[indexPath.row].distance)"
+            qrText =  "\(self.sortedRecords[indexPath.row].qrCode)"
+            detailsText = "\(self.sortedRecords[indexPath.row].details)"
         }
 
         
@@ -160,8 +173,8 @@ extension NearestLocations {
     
     @objc func queryAscendLocations() {
         //clear out buffer
-        self.preSortedRecords = [(Int, String, String)]()
-        self.sortedRecords = [(Int, String, String)]()
+        self.preSortedRecords = [Location]()
+        self.sortedRecords = [Location]()
 
         let cycleDate = RecordsUpdate.generateCycleDate()
         let priorCycleDate = RecordsUpdate.generatePriorCycleDate(cycleDate: cycleDate)
@@ -170,8 +183,8 @@ extension NearestLocations {
             recordFetchedBlock(record: item)
         }
         
-        self.sortedRecords = self.preSortedRecords.sorted { $0.0 < $1.0 }
-        self.abcRecords = self.preSortedRecords.sorted { $0.1 < $1.1 }
+        self.sortedRecords = self.preSortedRecords.sorted { $0.distance < $1.distance }
+        self.abcRecords = self.preSortedRecords.sorted { $0.qrCode < $1.qrCode }
         
         //refresh table
         DispatchQueue.main.async {
@@ -207,7 +220,7 @@ extension NearestLocations {
         //in order to be able to sort by distance as an integer (not a string).
         //let line = self.getLine(distance: self.distance, QRCode: self.QRCode, dosimeter: self.dosimeter, detail: details)
         //build the array
-        self.preSortedRecords.append((distance: self.distance, QRCode: self.QRCode, detail: details))
+        self.preSortedRecords.append(Location(distance: distance, qrCode: record.QRCode, details: details, photo: record.photo))
         
     }
     
