@@ -58,10 +58,11 @@ class LocationRecordCacheItem: Codable, LocationRecordDelegate {
     var recordName: String?             // record name (record.recordID.recordName)
     var modifiedBy: String?
     var reportGroup: String?
+    var hasPhoto: Bool
     var photo: CKAsset?
     
     private enum CodingKeys: String, CodingKey {
-        case QRCode, latitude, longitude, locdescription, active, dosinumber, collectedFlag, cycleDate, mismatch, moderator, creationDate, modifiedDate, modificationDate, recordName, modifiedBy, reportGroup
+        case QRCode, latitude, longitude, locdescription, active, dosinumber, collectedFlag, cycleDate, mismatch, moderator, creationDate, modifiedDate, modificationDate, recordName, modifiedBy, reportGroup, hasPhoto
     }
 
     // Location Record Metadata
@@ -151,6 +152,8 @@ class LocationRecordCacheItem: Codable, LocationRecordDelegate {
         self.modifiedBy = record["modifiedBy"] as? String
         
         self.reportGroup = record["reportGroup"] as? String
+        
+        self.hasPhoto = (record["hasPhoto"] ?? 0) == 0 ? false : true
         
         self.photo = record["photo"]
         
@@ -320,6 +323,7 @@ class LocationRecordCacheItem: Codable, LocationRecordDelegate {
                 throw error
             }
             self.photo = CKAsset(fileURL: fileUrl)
+            self.hasPhoto = true
         }
         else {
             throw NSError(domain: "LocationApp", code: 500, userInfo: ["Save error":"Unable to save the image file"])
@@ -342,6 +346,7 @@ class LocationRecordCacheItem: Codable, LocationRecordDelegate {
         newRecord.setValue(self.modifiedBy, forKey: "modifiedBy")
         newRecord.setValue(self.reportGroup, forKey: "reportGroup")
         newRecord.setValue(self.photo, forKey: "photo")
+        newRecord.setValue(self.hasPhoto ? 1 : 0, forKey: "hasPhoto")
     }
     
     func to() -> CKRecord {

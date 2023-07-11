@@ -13,16 +13,18 @@ import CloudKit
 
 class NearestLocations: UIViewController, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate {
     class Location {
-        var distance: Int
-        var qrCode: String
-        var details: String
-        var photo: CKAsset?
+        let id: String
+        let distance: Int
+        let qrCode: String
+        let details: String
+        let hasPhoto: Bool
         
-        init(distance: Int, qrCode: String, details: String, photo: CKAsset? = nil) {
+        init(id: String, distance: Int, qrCode: String, details: String, hasPhoto: Bool) {
+            self.id = id
             self.distance = distance
             self.qrCode = qrCode
             self.details = details
-            self.photo = photo
+            self.hasPhoto = hasPhoto
         }
     }
 
@@ -45,6 +47,7 @@ class NearestLocations: UIViewController, UITableViewDataSource, UITableViewDele
     var preSortedRecords = [Location]()
     var sortedRecords = [Location]()
     var abcRecords = [Location]()
+    var selected: Location?
     
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     @IBOutlet weak var nearestTableView: UITableView!
@@ -118,6 +121,14 @@ class NearestLocations: UIViewController, UITableViewDataSource, UITableViewDele
     //tableView protocol stubs
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let location = segment == 1 ? abcRecords[indexPath.row] : sortedRecords[indexPath.row]
+        if location.hasPhoto {
+            selected = location
+            self.performSegue(withIdentifier: "ShowPhoto", sender: self)
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -220,8 +231,20 @@ extension NearestLocations {
         //in order to be able to sort by distance as an integer (not a string).
         //let line = self.getLine(distance: self.distance, QRCode: self.QRCode, dosimeter: self.dosimeter, detail: details)
         //build the array
-        self.preSortedRecords.append(Location(distance: distance, qrCode: record.QRCode, details: details, photo: record.photo))
+        self.preSortedRecords.append(Location(id: record.recordName!, distance: distance, qrCode: record.QRCode, details: details, hasPhoto: record.hasPhoto))
         
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)  {
+      if segue.identifier == "ShowPhoto", let vc = segue.destination as? PhotoViewController {
+          locations.fetch(id: selected!.id, completionHandler: { location, error in
+              if let url = location?.photo?.fileURL?.path {
+                  DispatchQueue.main.async {
+                      vc.photoView.image = UIImage(contentsOfFile: url)
+                  }
+              }
+          })
+      }
     }
     
 } //end extension

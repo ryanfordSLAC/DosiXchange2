@@ -163,20 +163,38 @@
                         <rect key="frame" x="0.0" y="0.0" width="428" height="916"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="T6v-NN-ZT1">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" maximumZoomScale="6" translatesAutoresizingMaskIntoConstraints="NO" id="df7-uG-UMS">
                                 <rect key="frame" x="0.0" y="0.0" width="428" height="916"/>
-                            </imageView>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="T6v-NN-ZT1">
+                                        <rect key="frame" x="0.0" y="0.0" width="428" height="916"/>
+                                    </imageView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="T6v-NN-ZT1" firstAttribute="trailing" secondItem="2zM-jD-EL3" secondAttribute="trailing" id="1at-PO-BD2"/>
+                                    <constraint firstItem="T6v-NN-ZT1" firstAttribute="width" secondItem="26A-sg-BVi" secondAttribute="width" id="3VY-l2-dnL"/>
+                                    <constraint firstItem="T6v-NN-ZT1" firstAttribute="bottom" secondItem="2zM-jD-EL3" secondAttribute="bottom" id="3sA-6b-koa"/>
+                                    <constraint firstItem="2zM-jD-EL3" firstAttribute="top" secondItem="T6v-NN-ZT1" secondAttribute="top" id="9mk-2l-92d"/>
+                                    <constraint firstItem="T6v-NN-ZT1" firstAttribute="height" secondItem="26A-sg-BVi" secondAttribute="height" id="GAC-t9-A58"/>
+                                    <constraint firstItem="2zM-jD-EL3" firstAttribute="leading" secondItem="T6v-NN-ZT1" secondAttribute="leading" id="Xac-Sb-ova"/>
+                                </constraints>
+                                <viewLayoutGuide key="contentLayoutGuide" id="2zM-jD-EL3"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="26A-sg-BVi"/>
+                            </scrollView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="29s-Bn-zan"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="T6v-NN-ZT1" firstAttribute="centerX" secondItem="ErY-52-SMX" secondAttribute="centerX" id="DVg-rc-3fv"/>
-                            <constraint firstItem="T6v-NN-ZT1" firstAttribute="height" secondItem="29s-Bn-zan" secondAttribute="height" id="RHe-QG-TTr"/>
-                            <constraint firstItem="T6v-NN-ZT1" firstAttribute="width" secondItem="29s-Bn-zan" secondAttribute="width" id="fGS-bD-eZz"/>
-                            <constraint firstItem="T6v-NN-ZT1" firstAttribute="centerY" secondItem="ErY-52-SMX" secondAttribute="centerY" id="iFi-gI-6oW"/>
+                            <constraint firstItem="df7-uG-UMS" firstAttribute="width" secondItem="29s-Bn-zan" secondAttribute="width" id="Vxr-0p-vhF"/>
+                            <constraint firstItem="df7-uG-UMS" firstAttribute="centerX" secondItem="ErY-52-SMX" secondAttribute="centerX" id="e2c-Ba-frd"/>
+                            <constraint firstItem="df7-uG-UMS" firstAttribute="height" secondItem="29s-Bn-zan" secondAttribute="height" id="fsL-8a-SlP"/>
+                            <constraint firstItem="df7-uG-UMS" firstAttribute="centerY" secondItem="ErY-52-SMX" secondAttribute="centerY" id="zZy-Nw-bCe"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="zGT-Us-vvU"/>
+                    <connections>
+                        <outlet property="photoView" destination="T6v-NN-ZT1" id="7Yo-RB-pWo"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qn0-vO-iSU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

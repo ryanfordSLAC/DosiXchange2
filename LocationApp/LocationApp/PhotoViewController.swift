@@ -11,6 +11,7 @@ import UIKit
 
 class PhotoViewController: UIViewController {
     
+    @IBOutlet weak var photoView: UIImageView!
     override func viewDidLoad() {
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
