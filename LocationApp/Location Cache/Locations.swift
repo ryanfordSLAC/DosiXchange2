@@ -40,9 +40,11 @@ class LocationsCK : Locations, SettingsService {
     init() {
         reachability.whenReachable = reachable
         timer = Timer.scheduledTimer(withTimeInterval: timerSec, repeats: true) { _ in
-            if self.reachability.connection != .none {
-                print("Synchronization from timer")
-                self.synchronize(loaded: { _ in })
+            DispatchQueue.global(qos: .background).async {
+                if self.reachability.connection != .none {
+                    print("Synchronization from timer")
+                    self.synchronize(loaded: { _ in })
+                }
             }
         }
         do {
@@ -319,9 +321,5 @@ class LocationsCK : Locations, SettingsService {
         })
         dispatchgroup.wait()
     }
-                                         
-    @objc func fireTimer() {
-     print("Synchronization timer")
-     self.synchronize(loaded: { _ in })
-    }
+                                        
 }
