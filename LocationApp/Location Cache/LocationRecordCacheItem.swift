@@ -62,7 +62,7 @@ class LocationRecordCacheItem: Codable, LocationRecordDelegate {
     var photo: CKAsset?
     
     private enum CodingKeys: String, CodingKey {
-        case QRCode, latitude, longitude, locdescription, active, dosinumber, collectedFlag, cycleDate, mismatch, moderator, creationDate, modifiedDate, modificationDate, recordName, modifiedBy, reportGroup, hasPhoto
+        case QRCode, latitude, longitude, locdescription, active, dosinumber, collectedFlag, cycleDate, mismatch, moderator, creationDate, createdDate, modifiedDate, modificationDate, recordName, modifiedBy, reportGroup, hasPhoto
     }
 
     // Location Record Metadata
