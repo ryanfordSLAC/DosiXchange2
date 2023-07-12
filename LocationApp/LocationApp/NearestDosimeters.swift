@@ -150,18 +150,20 @@ class NearestLocations: UIViewController, UITableViewDataSource, UITableViewDele
         var distanceText = ""
         var qrText = ""
         var detailsText = ""
+        var hasPhoto = false
         
         switch segment {
         case 1:
             distanceText = "\(self.abcRecords[indexPath.row].distance)"
             qrText =  "\(self.abcRecords[indexPath.row].qrCode)"
             detailsText = "\(self.abcRecords[indexPath.row].details)"
+            hasPhoto = self.abcRecords[indexPath.row].hasPhoto
         default:
             distanceText = "\(self.sortedRecords[indexPath.row].distance)"
             qrText =  "\(self.sortedRecords[indexPath.row].qrCode)"
             detailsText = "\(self.sortedRecords[indexPath.row].details)"
+            hasPhoto = self.sortedRecords[indexPath.row].hasPhoto
         }
-
         
         //configure the cell
         cell.textLabel?.numberOfLines = 0
@@ -170,7 +172,13 @@ class NearestLocations: UIViewController, UITableViewDataSource, UITableViewDele
         cell.detailTextLabel?.font = UIFont(name: "Arial", size: 15)
         cell.detailTextLabel?.numberOfLines = 0
         cell.detailTextLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
-        cell.detailTextLabel?.text = "\(detailsText)"
+        if #available(iOS 13.0, *) {
+            cell.accessoryView = hasPhoto ? UIImageView(image: UIImage(systemName: "camera")) : nil
+        } else {
+            // Fallback on earlier versions
+        }
+        cell.accessoryType = hasPhoto ? .disclosureIndicator : .none
+        
         
         return cell
         

@@ -12,7 +12,7 @@ import CloudKit
 import CoreLocation
 
 //MARK:  Class
-class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
+class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     let reachability = Reachability()!
     let locations = container.locations
     let settingsService = container.settings
@@ -32,6 +32,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     let numberOfGPSRetry: Int = 2
     var settings: Settings?
     var audioPlayer: AudioPlayer?
+    var photo: UIImage?
     
     @IBOutlet weak var innerView: UIView!
     @IBOutlet weak var outerView: UIView!
@@ -490,6 +491,8 @@ extension ScannerViewController {
         itemRecord = nil
         counter = 0
         
+        self.photo = nil
+        
     }  //end clear data
     
     
@@ -659,6 +662,29 @@ extension ScannerViewController {  //queries
  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  
  */
+
+extension ScannerViewController { //camera
+    func openCamera(alert: UIAlertAction!){
+        let vc = UIImagePickerController()
+        vc.sourceType = .camera
+        vc.allowsEditing = true
+        vc.delegate = self
+        present(vc, animated: true)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true)
+
+        guard let image = info[.editedImage] as? UIImage else {
+            print("No image found")
+            return
+        }
+
+        self.photo = image
+        
+        self.alert8()
+    }
+}
 
 
 extension ScannerViewController {  //alerts
@@ -962,7 +988,20 @@ extension ScannerViewController {  //alerts
                         newRecord.setValue(reportGroup, forKey: "reportGroup")
                     }
                     
-                    self.locations.save(item: LocationRecordCacheItem(withRecord: newRecord)!, completionHandler: nil)
+                    var locationRecordCacheItem = LocationRecordCacheItem(withRecord: newRecord)!
+                    
+                    if let photo = self.photo {
+                        do {
+                            try locationRecordCacheItem.setPhoto(photo: photo)
+                           
+                        } catch {
+                            print("Unexpected error: \(error).")
+                        }
+                    }
+                    
+                    self.locations.save(item: locationRecordCacheItem, completionHandler: nil)
+                    
+                    self.photo = nil
                     
                     self.outOfRangeCounter = 0
                     
@@ -994,6 +1033,9 @@ extension ScannerViewController {  //alerts
         alert.addAction(saveRecord)
         alert.addAction(cancel)
         
+        let photo = UIAlertAction(title: (self.photo == nil) ? "Add photo" : "Replace photo", style: .default, handler: openCamera)
+        alert.addAction(photo)
+        
         DispatchQueue.main.async {   //UIAlerts need to be shown on the main thread.
             self.present(alert, animated: true, completion: nil)
         }
@@ -1024,7 +1066,6 @@ extension ScannerViewController {  //alerts
         //set up alert
         let alert = UIAlertController.init(title: "Invalid Dosimeter:\n\(variables.dosiNumber ?? "Nil Dosi")", message: message, preferredStyle: .alert)
         let OK = UIAlertAction(title: "OK", style: .cancel, handler: handlerCancel)
-        
         alert.addAction(OK)
         
         DispatchQueue.main.async {

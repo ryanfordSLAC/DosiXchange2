@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="46x-xA-AQB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="46x-xA-AQB">
     <device id="retina6_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -14,84 +14,84 @@
             <objects>
                 <viewController storyboardIdentifier="Location" title="Location Data" id="BYZ-38-t0r" customClass="LocationViewController" customModule="LocationApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="428" height="916"/>
+                        <rect key="frame" x="0.0" y="0.0" width="428" height="869"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current Latitude" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4ih-Pp-juu">
-                                <rect key="frame" x="35" y="85.666666666666671" width="125" height="21"/>
+                                <rect key="frame" x="35" y="132.66666666666666" width="125" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current Longitude" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZmE-Gp-Tpi">
-                                <rect key="frame" x="35" y="125.66666666666669" width="139" height="21"/>
+                                <rect key="frame" x="35" y="172.66666666666666" width="139" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Horizontal Accuracy (m)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f9U-h0-KrU">
-                                <rect key="frame" x="35" y="165.66666666666666" width="184" height="21"/>
+                                <rect key="frame" x="35" y="212.66666666666666" width="184" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current Altitude" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ugd-Ch-xfL">
-                                <rect key="frame" x="35" y="205.66666666666666" width="122" height="21"/>
+                                <rect key="frame" x="35" y="252.66666666666663" width="122" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Vertical Accuracy (m)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N43-Yo-08e">
-                                <rect key="frame" x="35" y="245.66666666666663" width="164" height="21"/>
+                                <rect key="frame" x="35" y="292.66666666666669" width="164" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="distance" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jUr-H2-KSR">
-                                <rect key="frame" x="109" y="290.66666666666669" width="65" height="21"/>
+                                <rect key="frame" x="109" y="337.66666666666669" width="65" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d7K-Lg-9Fn">
-                                <rect key="frame" x="15" y="286" width="74" height="30"/>
+                                <rect key="frame" x="15" y="333" width="74" height="30"/>
                                 <state key="normal" title="Reset Dist."/>
                                 <connections>
                                     <action selector="resetDistance:" destination="BYZ-38-t0r" eventType="touchUpInside" id="uTO-3a-COI"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lat" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Woq-Hi-Fsy">
-                                <rect key="frame" x="362" y="87.666666666666671" width="31" height="17"/>
+                                <rect key="frame" x="362" y="134.66666666666666" width="31" height="17"/>
                                 <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Long" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WfS-hC-PlL">
-                                <rect key="frame" x="352" y="127.66666666666669" width="41" height="17"/>
+                                <rect key="frame" x="352" y="174.66666666666666" width="41" height="17"/>
                                 <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hor Acc" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6OH-HP-UKr">
-                                <rect key="frame" x="321.66666666666669" y="167.66666666666666" width="71.333333333333314" height="17"/>
+                                <rect key="frame" x="321.66666666666669" y="214.66666666666666" width="71.333333333333314" height="17"/>
                                 <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Alti" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4yu-Jw-Nwe">
-                                <rect key="frame" x="352" y="207.66666666666666" width="41" height="17"/>
+                                <rect key="frame" x="352" y="254.66666666666663" width="41" height="17"/>
                                 <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Vert Acc" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ISW-PZ-oca">
-                                <rect key="frame" x="311" y="247.66666666666663" width="82" height="17"/>
+                                <rect key="frame" x="311" y="294.66666666666669" width="82" height="17"/>
                                 <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jss-xp-wSo">
-                                <rect key="frame" x="0.0" y="0.0" width="428" height="56"/>
+                                <rect key="frame" x="0.0" y="47" width="428" height="56"/>
                                 <items>
                                     <navigationItem title="Coordinates" id="hZB-aq-LyZ">
                                         <barButtonItem key="leftBarButtonItem" title="Back" id="sva-xf-q8r">
@@ -160,14 +160,14 @@
             <objects>
                 <viewController id="Mmf-xE-qWt" customClass="PhotoViewController" customModule="LocationApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ErY-52-SMX">
-                        <rect key="frame" x="0.0" y="0.0" width="428" height="916"/>
+                        <rect key="frame" x="0.0" y="0.0" width="428" height="869"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" maximumZoomScale="6" translatesAutoresizingMaskIntoConstraints="NO" id="df7-uG-UMS">
-                                <rect key="frame" x="0.0" y="0.0" width="428" height="916"/>
+                                <rect key="frame" x="0.0" y="103" width="428" height="766"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="T6v-NN-ZT1">
-                                        <rect key="frame" x="0.0" y="0.0" width="428" height="916"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="428" height="766"/>
                                     </imageView>
                                 </subviews>
                                 <constraints>
@@ -181,19 +181,35 @@
                                 <viewLayoutGuide key="contentLayoutGuide" id="2zM-jD-EL3"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="26A-sg-BVi"/>
                             </scrollView>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sO9-bv-PGM">
+                                <rect key="frame" x="0.0" y="47" width="428" height="56"/>
+                                <items>
+                                    <navigationItem id="dbi-5j-QdH">
+                                        <barButtonItem key="leftBarButtonItem" title="Back" id="CGa-ai-dyd">
+                                            <connections>
+                                                <action selector="backButton:" destination="Mmf-xE-qWt" id="ofO-M0-BYM"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="29s-Bn-zan"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="df7-uG-UMS" firstAttribute="top" secondItem="sO9-bv-PGM" secondAttribute="bottom" id="6Vy-kq-31L"/>
+                            <constraint firstAttribute="bottom" secondItem="df7-uG-UMS" secondAttribute="bottom" id="Gvo-ea-ZmW"/>
+                            <constraint firstItem="sO9-bv-PGM" firstAttribute="trailing" secondItem="29s-Bn-zan" secondAttribute="trailing" id="UX7-tT-7Ee"/>
                             <constraint firstItem="df7-uG-UMS" firstAttribute="width" secondItem="29s-Bn-zan" secondAttribute="width" id="Vxr-0p-vhF"/>
                             <constraint firstItem="df7-uG-UMS" firstAttribute="centerX" secondItem="ErY-52-SMX" secondAttribute="centerX" id="e2c-Ba-frd"/>
-                            <constraint firstItem="df7-uG-UMS" firstAttribute="height" secondItem="29s-Bn-zan" secondAttribute="height" id="fsL-8a-SlP"/>
-                            <constraint firstItem="df7-uG-UMS" firstAttribute="centerY" secondItem="ErY-52-SMX" secondAttribute="centerY" id="zZy-Nw-bCe"/>
+                            <constraint firstItem="sO9-bv-PGM" firstAttribute="top" secondItem="29s-Bn-zan" secondAttribute="top" id="hr3-SN-NQm"/>
+                            <constraint firstItem="sO9-bv-PGM" firstAttribute="leading" secondItem="29s-Bn-zan" secondAttribute="leading" id="uNK-MX-h1T"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="zGT-Us-vvU"/>
                     <connections>
                         <outlet property="photoView" destination="T6v-NN-ZT1" id="7Yo-RB-pWo"/>
+                        <outlet property="scrollView" destination="df7-uG-UMS" id="u0v-ej-4EX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qn0-vO-iSU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -205,11 +221,11 @@
             <objects>
                 <viewController storyboardIdentifier="Tools View Controller" title="ToolsAndSettings" id="M89-R5-CVf" customClass="ToolsViewController" customModule="LocationApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Kob-bg-1b1">
-                        <rect key="frame" x="0.0" y="0.0" width="428" height="916"/>
+                        <rect key="frame" x="0.0" y="0.0" width="428" height="869"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zZL-V9-XtT">
-                                <rect key="frame" x="0.0" y="0.0" width="428" height="56"/>
+                                <rect key="frame" x="0.0" y="47" width="428" height="56"/>
                                 <items>
                                     <navigationItem title="Tools" id="QSm-i8-SLV" userLabel="Tools and Settings">
                                         <barButtonItem key="leftBarButtonItem" title="Done" id="4d6-Ou-Ja2">
@@ -221,7 +237,7 @@
                                 </items>
                             </navigationBar>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="P1C-rk-auY">
-                                <rect key="frame" x="119" y="77" width="190" height="44"/>
+                                <rect key="frame" x="119" y="124" width="190" height="44"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="26"/>
                                 <state key="normal" title="All Locations">
                                     <color key="titleColor" red="0.58072251080000004" green="0.066734083" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -235,7 +251,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iL3-Xk-1J0">
-                                <rect key="frame" x="134" y="329" width="160" height="44"/>
+                                <rect key="frame" x="134" y="376" width="160" height="44"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="26"/>
                                 <state key="normal" title="Email Data">
@@ -249,7 +265,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f4q-J5-UJn">
-                                <rect key="frame" x="122" y="245" width="184" height="44"/>
+                                <rect key="frame" x="122" y="292" width="184" height="44"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="26"/>
                                 <state key="normal" title="Coordinates">
@@ -264,13 +280,13 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="May, 2023" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3FX-rC-9sw">
-                                <rect key="frame" x="180.33333333333334" y="879" width="67.666666666666657" height="17"/>
+                                <rect key="frame" x="180.33333333333334" y="832" width="67.666666666666657" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RcM-5r-EfG">
-                                <rect key="frame" x="124" y="413" width="180" height="44"/>
+                                <rect key="frame" x="124" y="460" width="180" height="44"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="26"/>
                                 <state key="normal" title="Reset Cache">
@@ -281,11 +297,11 @@
                                 </connections>
                             </button>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="12k-op-bR2">
-                                <rect key="frame" x="204" y="487" width="20" height="20"/>
+                                <rect key="frame" x="204" y="534" width="20" height="20"/>
                                 <color key="color" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </activityIndicatorView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="08g-6x-YOH">
-                                <rect key="frame" x="124" y="161" width="180" height="44"/>
+                                <rect key="frame" x="124" y="208" width="180" height="44"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="26"/>
                                 <state key="normal" title="Dosimeters">
@@ -345,11 +361,11 @@
             <objects>
                 <viewController title="Nearest Dosimeters" id="6TL-yL-fXu" customClass="NearestLocations" customModule="LocationApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="LZq-Hw-VfF">
-                        <rect key="frame" x="0.0" y="0.0" width="428" height="916"/>
+                        <rect key="frame" x="0.0" y="0.0" width="428" height="869"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hLD-RW-VpW">
-                                <rect key="frame" x="0.0" y="0.0" width="428" height="56"/>
+                                <rect key="frame" x="0.0" y="47" width="428" height="56"/>
                                 <items>
                                     <navigationItem title="Dosimeters" id="3CH-2U-uVH">
                                         <barButtonItem key="leftBarButtonItem" title="Back" id="Owx-Ea-NGM">
@@ -361,7 +377,7 @@
                                 </items>
                             </navigationBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Z2k-es-NAn">
-                                <rect key="frame" x="0.0" y="101" width="428" height="815"/>
+                                <rect key="frame" x="0.0" y="148" width="428" height="721"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="PlainCell" textLabel="hEW-8z-LYz" detailTextLabel="VVu-cr-qpr" style="IBUITableViewCellStyleSubtitle" id="UKv-iS-ify">
@@ -394,7 +410,7 @@
                                 </connections>
                             </tableView>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Q3R-xK-h38">
-                                <rect key="frame" x="6" y="63" width="416" height="32"/>
+                                <rect key="frame" x="6" y="110" width="416" height="32"/>
                                 <segments>
                                     <segment title="Nearest"/>
                                     <segment title="Alphabetical"/>
@@ -557,11 +573,11 @@
             <objects>
                 <viewController storyboardIdentifier="Scanner" title="Scan Barcode" id="Z99-ZC-Hyz" customClass="ScannerViewController" customModule="LocationApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="BbU-48-kaD">
-                        <rect key="frame" x="0.0" y="0.0" width="428" height="916"/>
+                        <rect key="frame" x="0.0" y="0.0" width="428" height="869"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GNg-Ha-38G" userLabel="outerView">
-                                <rect key="frame" x="0.0" y="0.0" width="428" height="916"/>
+                                <rect key="frame" x="0.0" y="0.0" width="428" height="869"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C6U-ya-27d">
                                         <rect key="frame" x="89" y="460" width="55" height="44"/>
@@ -631,14 +647,14 @@
             <objects>
                 <viewController storyboardIdentifier="Map" id="Pbj-ZR-7ZZ" customClass="MapViewController" customModule="LocationApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ivA-YD-Yxd">
-                        <rect key="frame" x="0.0" y="0.0" width="428" height="916"/>
+                        <rect key="frame" x="0.0" y="0.0" width="428" height="869"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="y2y-us-TaX">
-                                <rect key="frame" x="0.0" y="56" width="428" height="860"/>
+                                <rect key="frame" x="0.0" y="103" width="428" height="766"/>
                             </mapView>
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M7w-Bo-NTo">
-                                <rect key="frame" x="0.0" y="0.0" width="428" height="56"/>
+                                <rect key="frame" x="0.0" y="47" width="428" height="56"/>
                                 <items>
                                     <navigationItem title="Map View" id="cu5-mt-laI">
                                         <barButtonItem key="leftBarButtonItem" systemItem="done" id="9o9-lx-Ad5">
@@ -650,7 +666,7 @@
                                 </items>
                             </navigationBar>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xJo-UO-agN">
-                                <rect key="frame" x="184" y="71" width="60" height="30"/>
+                                <rect key="frame" x="184" y="118" width="60" height="30"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.75272902397260277" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="Jpu-aK-QDq"/>
@@ -662,7 +678,7 @@
                                 </connections>
                             </button>
                             <activityIndicatorView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="7pp-7d-LGl">
-                                <rect key="frame" x="393" y="24" width="20" height="20"/>
+                                <rect key="frame" x="393" y="71" width="20" height="20"/>
                             </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Vgy-5Z-yEy"/>
@@ -697,11 +713,11 @@
             <objects>
                 <viewController storyboardIdentifier="ActiveLocations" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="M2J-wt-yhg" customClass="ActiveLocations" customModule="LocationApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EKo-E9-4qz">
-                        <rect key="frame" x="0.0" y="0.0" width="428" height="916"/>
+                        <rect key="frame" x="0.0" y="0.0" width="428" height="869"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lcj-N0-aBJ">
-                                <rect key="frame" x="0.0" y="0.0" width="428" height="56"/>
+                                <rect key="frame" x="0.0" y="47" width="428" height="56"/>
                                 <items>
                                     <navigationItem title="All Locations" id="Sv9-df-A1k">
                                         <barButtonItem key="leftBarButtonItem" title="Done" id="SRA-Ky-SsG">
@@ -713,10 +729,10 @@
                                 </items>
                             </navigationBar>
                             <activityIndicatorView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="cQi-M6-zkx">
-                                <rect key="frame" x="393" y="24" width="20" height="20"/>
+                                <rect key="frame" x="393" y="71" width="20" height="20"/>
                             </activityIndicatorView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="1Rf-N1-EDl">
-                                <rect key="frame" x="0.0" y="148" width="428" height="768"/>
+                                <rect key="frame" x="0.0" y="195" width="428" height="674"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="QRCell" textLabel="vAW-gL-j2I" detailTextLabel="Bnt-WA-Kpi" style="IBUITableViewCellStyleSubtitle" id="WWW-xf-OOi">
@@ -746,7 +762,7 @@
                                 </prototypes>
                             </tableView>
                             <searchBar contentMode="redraw" searchBarStyle="minimal" text="" placeholder="Search" showsCancelButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ryS-kA-Lja">
-                                <rect key="frame" x="3" y="104" width="422" height="44"/>
+                                <rect key="frame" x="3" y="151" width="422" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="vYj-N2-WpY"/>
                                 </constraints>
@@ -757,7 +773,7 @@
                                 </scopeButtonTitles>
                             </searchBar>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="NbT-RM-wwD">
-                                <rect key="frame" x="14" y="66" width="400" height="32"/>
+                                <rect key="frame" x="14" y="113" width="400" height="32"/>
                                 <segments>
                                     <segment title="Active"/>
                                     <segment title="Inactive"/>
@@ -1188,15 +1204,15 @@
             <objects>
                 <viewController id="f56-9T-pFr" customClass="DosimetersViewController" customModule="LocationApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ItL-ax-ovd">
-                        <rect key="frame" x="0.0" y="0.0" width="428" height="916"/>
+                        <rect key="frame" x="0.0" y="0.0" width="428" height="869"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="fUB-qC-YyN">
-                                <rect key="frame" x="195.66666666666666" y="439.66666666666669" width="37" height="37"/>
+                                <rect key="frame" x="195.66666666666666" y="416" width="37" height="37"/>
                                 <color key="color" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </activityIndicatorView>
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="awN-50-gAY">
-                                <rect key="frame" x="0.0" y="0.0" width="428" height="56"/>
+                                <rect key="frame" x="0.0" y="47" width="428" height="56"/>
                                 <items>
                                     <navigationItem title="Dosimeters" id="Vce-iM-tir">
                                         <barButtonItem key="leftBarButtonItem" title="Done" id="SVT-iV-i9a">
@@ -1214,14 +1230,14 @@
                                 </items>
                             </navigationBar>
                             <searchBar contentMode="redraw" showsCancelButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GjE-uE-Q7p">
-                                <rect key="frame" x="0.0" y="56" width="428" height="56"/>
+                                <rect key="frame" x="0.0" y="103" width="428" height="56"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
                                     <outlet property="delegate" destination="f56-9T-pFr" id="zEq-uF-lgE"/>
                                 </connections>
                             </searchBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="cPA-QH-Nim">
-                                <rect key="frame" x="0.0" y="112" width="428" height="804"/>
+                                <rect key="frame" x="0.0" y="159" width="428" height="710"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DosiCell" rowHeight="103" id="Pcb-e8-Fzj" customClass="DosimetersCell" customModule="LocationApp" customModuleProvider="target">
