@@ -35,8 +35,11 @@ class RestoreLocation {
                                 if let error = error {
                                     print("Failed to save record to CK: \(location.key), \(error.localizedDescription)")
                                 }
+                                else if let desc = record?.recordID.description {
+                                    print("Record \(desc) updated.")
+                                }
                                 else {
-                                    print("Record \(record?.recordID.description ?? "unknown") updated.")
+                                    print("Record unkown updated")
                                 }
                                 dispatchGroup.leave()
                             })
