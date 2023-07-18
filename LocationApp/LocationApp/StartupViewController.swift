@@ -162,7 +162,7 @@ class StartupViewController: UIViewController, MFMailComposeViewControllerDelega
                 let numberDeployed:Float = numberCompleted + numberRemaining
                 let progress = (numberCompleted / numberDeployed)
                 
-                self.query.dispatchGroup.notify(queue: .main) {
+                DispatchQueue.main.async {
                     switch progress {
                         
                         case 0:
