@@ -172,6 +172,8 @@ class NearestLocations: UIViewController, UITableViewDataSource, UITableViewDele
         cell.detailTextLabel?.font = UIFont(name: "Arial", size: 15)
         cell.detailTextLabel?.numberOfLines = 0
         cell.detailTextLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
+        cell.detailTextLabel?.text = "\(detailsText)"
+
         if #available(iOS 13.0, *) {
             cell.accessoryView = hasPhoto ? UIImageView(image: UIImage(systemName: "camera")) : nil
         } else {
