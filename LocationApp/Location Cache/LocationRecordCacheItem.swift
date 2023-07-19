@@ -10,6 +10,7 @@
 
 import Foundation
 import CloudKit
+import UIKit
 
 protocol LocationRecordDelegate {
 
@@ -57,6 +58,12 @@ class LocationRecordCacheItem: Codable, LocationRecordDelegate {
     var recordName: String?             // record name (record.recordID.recordName)
     var modifiedBy: String?
     var reportGroup: String?
+    var hasPhoto: Bool
+    var photo: CKAsset?
+    
+    private enum CodingKeys: String, CodingKey {
+        case QRCode, latitude, longitude, locdescription, active, dosinumber, collectedFlag, cycleDate, mismatch, moderator, creationDate, createdDate, modifiedDate, modificationDate, recordName, modifiedBy, reportGroup, hasPhoto
+    }
 
     // Location Record Metadata
     
@@ -128,7 +135,7 @@ class LocationRecordCacheItem: Codable, LocationRecordDelegate {
         guard let moderator = record["moderator"] as? Int64 else {
             print("ERROR: Location record moderator is empty")
             return nil
-       }
+        }
         self.moderator = moderator
         
         // set the creation date
@@ -145,6 +152,10 @@ class LocationRecordCacheItem: Codable, LocationRecordDelegate {
         self.modifiedBy = record["modifiedBy"] as? String
         
         self.reportGroup = record["reportGroup"] as? String
+        
+        self.hasPhoto = (record["hasPhoto"] ?? 0) == 0 ? false : true
+        
+        self.photo = record["photo"]
         
         // set the record name
         self.recordName = record.recordID.recordName
@@ -304,6 +315,21 @@ class LocationRecordCacheItem: Codable, LocationRecordDelegate {
         self[key] = value as? CKRecordValue
     }
     
+    func setPhoto(photo: UIImage) throws {
+        if let fileUrl = NSURL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(NSUUID().uuidString+".raw"), let data = photo.pngData() {
+            do {
+                try data.write(to: fileUrl)
+            } catch let error as NSError {
+                throw error
+            }
+            self.photo = CKAsset(fileURL: fileUrl)
+            self.hasPhoto = true
+        }
+        else {
+            throw NSError(domain: "LocationApp", code: 500, userInfo: ["Save error":"Unable to save the image file"])
+        }
+    }
+    
     func update(newRecord:CKRecord) {
         newRecord.setValue(self.latitude, forKey: "latitude")
         newRecord.setValue(self.longitude, forKey: "longitude")
@@ -319,6 +345,8 @@ class LocationRecordCacheItem: Codable, LocationRecordDelegate {
         newRecord.setValue(self.mismatch, forKey: "mismatch")
         newRecord.setValue(self.modifiedBy, forKey: "modifiedBy")
         newRecord.setValue(self.reportGroup, forKey: "reportGroup")
+        newRecord.setValue(self.photo, forKey: "photo")
+        newRecord.setValue(self.hasPhoto ? 1 : 0, forKey: "hasPhoto")
     }
     
     func to() -> CKRecord {

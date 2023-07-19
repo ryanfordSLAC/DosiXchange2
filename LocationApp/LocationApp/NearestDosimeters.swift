@@ -12,6 +12,21 @@ import CoreLocation
 import CloudKit
 
 class NearestLocations: UIViewController, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate {
+    class Location {
+        let id: String
+        let distance: Int
+        let qrCode: String
+        let details: String
+        let hasPhoto: Bool
+        
+        init(id: String, distance: Int, qrCode: String, details: String, hasPhoto: Bool) {
+            self.id = id
+            self.distance = distance
+            self.qrCode = qrCode
+            self.details = details
+            self.hasPhoto = hasPhoto
+        }
+    }
 
     let dispatchGroup = DispatchGroup()
     let recordsupdate = RecordsUpdate()
@@ -29,9 +44,10 @@ class NearestLocations: UIViewController, UITableViewDataSource, UITableViewDele
     var mod:Int64 = 0
     var segment:Int = 0
     
-    var preSortedRecords = [(Int, String, String)]()
-    var sortedRecords = [(Int, String, String)]()
-    var abcRecords = [(Int, String, String)]()
+    var preSortedRecords = [Location]()
+    var sortedRecords = [Location]()
+    var abcRecords = [Location]()
+    var selected: Location?
     
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     @IBOutlet weak var nearestTableView: UITableView!
@@ -107,6 +123,14 @@ class NearestLocations: UIViewController, UITableViewDataSource, UITableViewDele
         return 1
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let location = segment == 1 ? abcRecords[indexPath.row] : sortedRecords[indexPath.row]
+        if location.hasPhoto {
+            selected = location
+            self.performSegue(withIdentifier: "ShowPhoto", sender: self)
+        }
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return sortedRecords.count
     }
@@ -126,18 +150,20 @@ class NearestLocations: UIViewController, UITableViewDataSource, UITableViewDele
         var distanceText = ""
         var qrText = ""
         var detailsText = ""
+        var hasPhoto = false
         
         switch segment {
         case 1:
-            distanceText = "\(self.abcRecords[indexPath.row].0)"
-            qrText =  "\(self.abcRecords[indexPath.row].1)"
-            detailsText = "\(self.abcRecords[indexPath.row].2)"
+            distanceText = "\(self.abcRecords[indexPath.row].distance)"
+            qrText =  "\(self.abcRecords[indexPath.row].qrCode)"
+            detailsText = "\(self.abcRecords[indexPath.row].details)"
+            hasPhoto = self.abcRecords[indexPath.row].hasPhoto
         default:
-            distanceText = "\(self.sortedRecords[indexPath.row].0)"
-            qrText =  "\(self.sortedRecords[indexPath.row].1)"
-            detailsText = "\(self.sortedRecords[indexPath.row].2)"
+            distanceText = "\(self.sortedRecords[indexPath.row].distance)"
+            qrText =  "\(self.sortedRecords[indexPath.row].qrCode)"
+            detailsText = "\(self.sortedRecords[indexPath.row].details)"
+            hasPhoto = self.sortedRecords[indexPath.row].hasPhoto
         }
-
         
         //configure the cell
         cell.textLabel?.numberOfLines = 0
@@ -147,6 +173,14 @@ class NearestLocations: UIViewController, UITableViewDataSource, UITableViewDele
         cell.detailTextLabel?.numberOfLines = 0
         cell.detailTextLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
         cell.detailTextLabel?.text = "\(detailsText)"
+
+        if #available(iOS 13.0, *) {
+            cell.accessoryView = hasPhoto ? UIImageView(image: UIImage(systemName: "camera")) : nil
+        } else {
+            // Fallback on earlier versions
+        }
+        cell.accessoryType = hasPhoto ? .disclosureIndicator : .none
+        
         
         return cell
         
@@ -160,8 +194,8 @@ extension NearestLocations {
     
     @objc func queryAscendLocations() {
         //clear out buffer
-        self.preSortedRecords = [(Int, String, String)]()
-        self.sortedRecords = [(Int, String, String)]()
+        self.preSortedRecords = [Location]()
+        self.sortedRecords = [Location]()
 
         let cycleDate = RecordsUpdate.generateCycleDate()
         let priorCycleDate = RecordsUpdate.generatePriorCycleDate(cycleDate: cycleDate)
@@ -170,8 +204,8 @@ extension NearestLocations {
             recordFetchedBlock(record: item)
         }
         
-        self.sortedRecords = self.preSortedRecords.sorted { $0.0 < $1.0 }
-        self.abcRecords = self.preSortedRecords.sorted { $0.1 < $1.1 }
+        self.sortedRecords = self.preSortedRecords.sorted { $0.distance < $1.distance }
+        self.abcRecords = self.preSortedRecords.sorted { $0.qrCode < $1.qrCode }
         
         //refresh table
         DispatchQueue.main.async {
@@ -207,8 +241,20 @@ extension NearestLocations {
         //in order to be able to sort by distance as an integer (not a string).
         //let line = self.getLine(distance: self.distance, QRCode: self.QRCode, dosimeter: self.dosimeter, detail: details)
         //build the array
-        self.preSortedRecords.append((distance: self.distance, QRCode: self.QRCode, detail: details))
+        self.preSortedRecords.append(Location(id: record.recordName!, distance: distance, qrCode: record.QRCode, details: details, hasPhoto: record.hasPhoto))
         
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)  {
+      if segue.identifier == "ShowPhoto", let vc = segue.destination as? PhotoViewController {
+          locations.fetch(id: selected!.id, completionHandler: { location, error in
+              if let url = location?.photo?.fileURL?.path {
+                  DispatchQueue.main.async {
+                      vc.photoView.image = UIImage(contentsOfFile: url)
+                  }
+              }
+          })
+      }
     }
     
 } //end extension

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		449A7E9D271341B2005AF1F7 /* LocationRecordCacheItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449A7E9C271341B2005AF1F7 /* LocationRecordCacheItem.swift */; };
+		5A38B45C2A5D790700489795 /* PhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A38B45B2A5D790700489795 /* PhotoViewController.swift */; };
 		5A5EFD742A306ED500547EB8 /* SettingsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5EFD712A306ED500547EB8 /* SettingsService.swift */; };
 		5A5EFD752A306ED500547EB8 /* DIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5EFD722A306ED500547EB8 /* DIContainer.swift */; };
 		5A5EFD762A306ED500547EB8 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5EFD732A306ED500547EB8 /* Settings.swift */; };
@@ -83,6 +84,7 @@
 
 /* Begin PBXFileReference section */
 		449A7E9C271341B2005AF1F7 /* LocationRecordCacheItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationRecordCacheItem.swift; sourceTree = "<group>"; };
+		5A38B45B2A5D790700489795 /* PhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewController.swift; sourceTree = "<group>"; };
 		5A5EFD712A306ED500547EB8 /* SettingsService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsService.swift; sourceTree = "<group>"; };
 		5A5EFD722A306ED500547EB8 /* DIContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DIContainer.swift; sourceTree = "<group>"; };
 		5A5EFD732A306ED500547EB8 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
@@ -246,6 +248,7 @@
 				8421B06A2165BBB90041A53A /* Assets.xcassets */,
 				84F477942167173A00A63336 /* LocationApp.xcdatamodeld */,
 				8487FE3121A9153100CC62E8 /* DatabaseContents.rtf */,
+				5A38B45B2A5D790700489795 /* PhotoViewController.swift */,
 			);
 			path = LocationApp;
 			sourceTree = "<group>";
@@ -527,6 +530,7 @@
 				8487FE2E21A8F4E000CC62E8 /* ScannerViewController.swift in Sources */,
 				8434D57B25956DE800B2E413 /* RepairCycleDate.swift in Sources */,
 				5E660CC12A3AFD1F00BC6983 /* AudioPlayer.swift in Sources */,
+				5A38B45C2A5D790700489795 /* PhotoViewController.swift in Sources */,
 				449A7E9D271341B2005AF1F7 /* LocationRecordCacheItem.swift in Sources */,
 				846606C121AA3CA00049814C /* ReadWriteText.swift in Sources */,
 				5C941E5522D93335008C9B3E /* LocationViewController.swift in Sources */,
