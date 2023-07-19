@@ -3,7 +3,7 @@
     <device id="retina6_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -1049,14 +1049,14 @@
                                         <rect key="frame" x="120" y="349" width="51" height="31"/>
                                         <color key="onTintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </switch>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Group: " textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wOU-H2-d1T" userLabel="Report Group:">
-                                        <rect key="frame" x="15" y="393" width="90" height="17"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Group: " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wOU-H2-d1T" userLabel="Report Group:">
+                                        <rect key="frame" x="54.333333333333343" y="393" width="50.666666666666657" height="17"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <textField opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="O69-kd-GPB" userLabel="PReportGroup">
-                                        <rect key="frame" x="118" y="388" width="155" height="34"/>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="O69-kd-GPB" userLabel="PReportGroup">
+                                        <rect key="frame" x="105" y="384.66666666666663" width="155" height="34"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="done"/>
                                     </textField>
@@ -1118,7 +1118,7 @@
                                     <constraint firstItem="3Zr-Qb-CI7" firstAttribute="leading" secondItem="Rib-3l-bHp" secondAttribute="trailing" constant="15" id="kL4-65-vXL"/>
                                     <constraint firstItem="ltg-xw-6L1" firstAttribute="top" secondItem="HWH-I7-GE2" secondAttribute="bottom" constant="20" id="lQH-MN-lqX"/>
                                     <constraint firstItem="10O-XW-b3b" firstAttribute="centerY" secondItem="xLb-Kb-WSR" secondAttribute="centerY" id="lhE-EH-wc1"/>
-                                    <constraint firstItem="wOU-H2-d1T" firstAttribute="leading" secondItem="H7a-rn-D7h" secondAttribute="leading" constant="15" id="nGw-TS-oUi"/>
+                                    <constraint firstItem="wOU-H2-d1T" firstAttribute="leading" secondItem="H7a-rn-D7h" secondAttribute="leading" priority="100" constant="15" id="nGw-TS-oUi"/>
                                     <constraint firstItem="kQQ-hs-cN5" firstAttribute="centerY" secondItem="Zz2-5G-lUH" secondAttribute="centerY" id="nNq-rC-3Vc"/>
                                     <constraint firstItem="kQQ-hs-cN5" firstAttribute="leading" secondItem="Zz2-5G-lUH" secondAttribute="trailing" constant="15" id="oIm-Gf-4eO"/>
                                     <constraint firstItem="1jI-as-FGg" firstAttribute="centerY" secondItem="VVB-0t-3NO" secondAttribute="centerY" id="p8u-dG-H1j"/>

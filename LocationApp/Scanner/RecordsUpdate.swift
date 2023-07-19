@@ -13,51 +13,8 @@ import CoreLocation
 
 //Initialize other classes
 
-let svController = ScannerViewController()
-
 class RecordsUpdate: UIViewController {
-    
-    //variables used to populate the database record
-
-    var locationManager = CLLocationManager()
-    var data = [CKRecord]()
-    let database = CKContainer.default().publicCloudDatabase
-    let dispatchGroup = DispatchGroup()
-
-    func handler(alert: UIAlertAction!){  //used for cancel in the alert prompt.
-        
-        svController.captureSession.startRunning()
-        
-    }
-    //MARK:  Save Record
-    func saveRecord(latitude:String, longitude:String, dosiNumber:String, text:String, flag:Int64, cycle:String, QRCode:String, mismatch:Int64, moderator:Int64, active:Int64, createdDate:Date, modifiedDate:Date) {
-                
-        //save data to database
-        let newRecord = CKRecord(recordType: "Location")
-        newRecord.setValue(latitude, forKey: "latitude")
-        newRecord.setValue(longitude, forKey: "longitude")
-        newRecord.setValue(text, forKey: "locdescription")
-        newRecord.setValue(dosiNumber, forKey: "dosinumber")
-        newRecord.setValue(flag, forKey: "collectedFlag")
-        newRecord.setValue(cycle, forKey: "cycleDate")
-        newRecord.setValue(QRCode, forKey: "QRCode")
-        newRecord.setValue(moderator, forKey: "moderator")
-        newRecord.setValue(active, forKey: "active")
-        newRecord.setValue(createdDate, forKey: "createdDate")
-        newRecord.setValue(modifiedDate, forKey: "modifiedDate")
-        
-        let operation = CKModifyRecordsOperation(recordsToSave: [newRecord], recordIDsToDelete: nil)
-        
-        operation.modifyRecordsCompletionBlock = { (records, recordIDs, error) in
-            if let error = error {
-                print(error.localizedDescription)
-            }
-        }
-        
-        database.add(operation)
-        
-    }  //end saveRecord
-    
+      
     //MARK:  Cycle Date
     static func generateCycleDate() -> String {
         return getLastCycles(cycles: 1)[0]
