@@ -30,4 +30,13 @@ class UpdateGroups {
             }
         }
     }
+    
+    static func updateRGFromPreviousLocations(completionHandler: (() -> Void)?) {
+        let locations = container.locations
+        
+        let missingGroups = locations.filter(by: { l in l.reportGroup == nil || l.reportGroup!.isEmpty })
+        if !missingGroups.isEmpty {
+            locations.save(items: missingGroups, completionHandler: completionHandler)
+        }
+    }
 }
