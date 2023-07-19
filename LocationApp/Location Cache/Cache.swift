@@ -33,10 +33,6 @@ class Cache: Codable {
     }
     
     func add(_ item: LocationRecordCacheItem) {
-        if item.reportGroup == nil || item.reportGroup!.isEmpty, let location = locations.first(where: { l in l.reportGroup != nil && !l.reportGroup!.isEmpty}) {
-            item.reportGroup = location.reportGroup
-        }
-        
         if let index = locations.firstIndex(where: { l in l.recordName == item.recordName}) {
             locations[index] = item
         }

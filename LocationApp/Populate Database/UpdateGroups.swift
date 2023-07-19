@@ -32,11 +32,25 @@ class UpdateGroups {
     }
     
     static func updateRGFromPreviousLocations(completionHandler: (() -> Void)?) {
+        print("updateRGFromPreviousLocations")
         let locations = container.locations
-        
-        let missingGroups = locations.filter(by: { l in l.reportGroup == nil || l.reportGroup!.isEmpty })
+               
+        let all = locations.filter(by: { _ in true })
+        let buff = all.filter({ l in l.QRCode == "BLG 006-005"})
+        let missingGroups = all.filter({ l in l.reportGroup == nil || l.reportGroup!.isEmpty })
         if !missingGroups.isEmpty {
-            locations.save(items: missingGroups, completionHandler: completionHandler)
+            var changes = [LocationRecordCacheItem]()
+            for missing in missingGroups {
+                if let group = all.first(where: { l in l.reportGroup != nil && !l.reportGroup!.isEmpty}).map( {l in l.reportGroup}) {
+                    missing.reportGroup = group
+                    changes.append(missing)
+                }
+            }
+                        
+            locations.save(items: changes, completionHandler: completionHandler)
+        }
+        else {
+            completionHandler?()
         }
     }
 }
