@@ -304,15 +304,9 @@ extension ToolsViewController {
     }
     
     @objc func devTap(_ sender: UITapGestureRecognizer) {
-     /*   if let first = locations.filter(by: { _ in true}).first {
-            do {
-                try first.setPhoto(photo: UIImage(named: "AppIcon")!)
-                print("photo set to \(first.QRCode)")
-            }
-            catch let error as NSError {
-                print("Failed to set photo: \(error)")
-            }
-            locations.save(item: first, completionHandler: nil)
-        }*/
+        activityIndicator.startAnimating()
+        UpdateGroups.updateRGFromPreviousLocations(completionHandler: {
+            self.activityIndicator.stopAnimating()
+        })
     }
 } //end class
