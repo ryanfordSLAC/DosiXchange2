@@ -664,7 +664,11 @@ extension ScannerViewController {  //queries
  */
 
 extension ScannerViewController { //camera
-    func openCamera(alert: UIAlertAction!){
+    func openCamera(tempDesc: String?){
+        if tempDesc != nil {
+            variables.dosiLocation = tempDesc
+        }
+        
         let vc = UIImagePickerController()
         vc.sourceType = .camera
         vc.allowsEditing = true
@@ -951,6 +955,9 @@ extension ScannerViewController {  //alerts
         let alert = UIAlertController(title: "Deploy Dosimeter:\n\(variables.dosiNumber ?? "Nil Dosi")", message: "\nLocation: \(variables.QRCode ?? "Nil QRCode")", preferredStyle: .alert)
         
         let moderator = UIAlertAction(title: "Moderator", style: .default) { (_) in
+            if let tempDesc = alert.textFields?.first?.text {
+                variables.dosiLocation = tempDesc
+            }
             self.alert8()
         }
         
@@ -1033,7 +1040,12 @@ extension ScannerViewController {  //alerts
         alert.addAction(saveRecord)
         alert.addAction(cancel)
         
-        let photo = UIAlertAction(title: (self.photo == nil) ? "Add photo" : "Replace photo", style: .default, handler: openCamera)
+        
+        
+        let photo = UIAlertAction(title: (self.photo == nil) ? "Add photo" : "Replace photo", style: .default, handler: {(action) in
+            let tempDesc = alert.textFields?.first?.text
+            self.openCamera(tempDesc: tempDesc)
+        })
         alert.addAction(photo)
         
         DispatchQueue.main.async {   //UIAlerts need to be shown on the main thread.
