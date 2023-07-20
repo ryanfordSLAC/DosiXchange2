@@ -24,6 +24,7 @@ class LocationDetails: UIViewController {
     var lat = ""
     var long = ""
     var active = 0
+    var id = ""
     var locationDetailDelegate: LocationDetailDelegate?
     
     var records = [LocationRecordCacheItem]()
@@ -269,9 +270,39 @@ extension LocationDetails: UITableViewDelegate, UITableViewDataSource {
         cell.textLabel?.text = "Dosimeter:\nWear Period:\nModerator:\nCollected:"
         cell.detailTextLabel?.text = "\(dosimeter)\n\(cycleDate)\n\(modFlagStr)\n\(collectedFlagStr)"
         
+        if(records[indexPath.section].hasPhoto){
+            let button = UIButton(type: .custom)
+            button.setImage(UIImage(systemName: "camera"), for: UIControl.State.normal)
+            button.setPreferredSymbolConfiguration(.init(scale: UIImage.SymbolScale.large), forImageIn: .normal)
+            button.sizeToFit()
+            button.tag = indexPath.section
+            button.addTarget(self, action: #selector(openPhoto(_ :)), for: .touchUpInside)
+            cell.accessoryView = button
+            self.id = records[indexPath.section].recordName!
+        } else {
+            cell.accessoryView = nil
+        }
+        
         return cell
         
     }
+    
+    @objc func openPhoto(_ sender: UIButton) {
+        
+        self.id = records[sender.tag].recordName!
+        self.performSegue(withIdentifier: "showPhotoFromLocationDetails", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)  {
+        if segue.identifier == "showPhotoFromLocationDetails", let vc = segue.destination as? PhotoViewController {
+            locations.fetch(id: id, completionHandler: { location, error in
+                if let url = location?.photo?.fileURL?.path {
+                    DispatchQueue.main.async {
+                        vc.photoView.image = UIImage(contentsOfFile: url)
+                    }
+                }
+            })
+        } }
     
     //popup pop up
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -496,7 +527,7 @@ extension LocationDetails: UITextFieldDelegate {
         
         var message = "The length of the dosimeter barcodes must be "
         message += min == max ? "\(min) "
-                                : "between \(min) and \(max) "
+        : "between \(min) and \(max) "
         message += "characters. Please rescan!"
         
         //set up alert
