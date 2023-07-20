@@ -26,6 +26,8 @@ protocol Locations {
     func save(items: [LocationRecordCacheItem], completionHandler: (() -> Void)?)
     
     func reset(_ loaded: @escaping  ((Int) -> Void))
+    
+    func fetch(id: String, completionHandler: @escaping (LocationRecordCacheItem?, Error?) -> Void)
 }
 
 class LocationsCK : Locations, SettingsService {
@@ -246,6 +248,18 @@ class LocationsCK : Locations, SettingsService {
             self.semaphore.signal()
             completionHandler(settings)
         }
+    }
+    
+    func fetch(id: String, completionHandler: @escaping (LocationRecordCacheItem?, Error?) -> Void) {
+        database.fetch(withRecordID: CKRecord.ID(recordName: id), completionHandler: { record, error in
+            if let error = error {
+                print(error)
+                completionHandler(nil, error)
+            }
+            if let record = record {
+                completionHandler(LocationRecordCacheItem(withRecord: record), nil)
+            }
+        })
     }
     
     private func add(_ query : CKQueryOperation, loaded: @escaping ((Int) -> Void), completionHandler: @escaping ([LocationRecordDelegate], Bool?, Error?,@escaping ((Int) -> Void)) -> Void) {

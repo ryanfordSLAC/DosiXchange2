@@ -36,7 +36,7 @@ class UpdateGroups {
         let locations = container.locations
                
         let all = locations.filter(by: { _ in true })
-        let buff = all.filter({ l in l.QRCode == "BLG 006-005"})
+
         let missingGroups = all.filter({ l in l.reportGroup == nil || l.reportGroup!.isEmpty })
         if !missingGroups.isEmpty {
             var changes = [LocationRecordCacheItem]()
