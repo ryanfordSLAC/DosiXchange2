@@ -2,8 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="46x-xA-AQB">
     <device id="retina6_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -1193,6 +1192,7 @@
                         <outlet property="pReportGroup" destination="O69-kd-GPB" id="nYn-X9-qXR"/>
                         <outlet property="popupConstraint" destination="pbi-8l-9wv" id="nnH-Bq-hnA"/>
                         <outlet property="qrTable" destination="BRE-vb-1za" id="c0E-ys-dex"/>
+                        <segue destination="Mmf-xE-qWt" kind="show" identifier="showPhotoFromLocationDetails" id="3A0-3f-Ix4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Hr-zd-Tdt" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1365,6 +1365,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="ar4-0B-Xd6"/>
+        <segue reference="3A0-3f-Ix4"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Tools" width="512" height="512"/>
