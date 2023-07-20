@@ -41,7 +41,7 @@ class UpdateGroups {
         if !missingGroups.isEmpty {
             var changes = [LocationRecordCacheItem]()
             for missing in missingGroups {
-                if let group = all.first(where: { l in l.reportGroup != nil && !l.reportGroup!.isEmpty}).map( {l in l.reportGroup}) {
+                if let group = all.first(where: { l in l.reportGroup != nil && !l.reportGroup!.isEmpty && l.QRCode == missing.QRCode}).map( {l in l.reportGroup}) {
                     missing.reportGroup = group
                     changes.append(missing)
                 }

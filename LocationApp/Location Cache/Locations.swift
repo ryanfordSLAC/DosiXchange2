@@ -338,7 +338,8 @@ class LocationsCK : Locations, SettingsService {
     }
     
     private func reportGroupUpdate(_ item: LocationRecordCacheItem) {
-        if item.reportGroup == nil || item.reportGroup!.isEmpty, let location = cache!.locations.first(where: { l in l.reportGroup != nil && !l.reportGroup!.isEmpty}) {
+        if item.reportGroup == nil || item.reportGroup!.isEmpty
+           , let location = cache!.locations.first(where: { l in l.reportGroup != nil && !l.reportGroup!.isEmpty && l.QRCode == item.QRCode }) {
             item.reportGroup = location.reportGroup
         }
     }
