@@ -1037,17 +1037,18 @@ extension ScannerViewController {  //alerts
         
         alert.addAction(moderator)
         alert.view.addSubview(modSwitch())
+       
+        if(reachability.isReachable){
+            let photo = UIAlertAction(title: (self.photo == nil) ? "Add photo" : "Replace photo", style: .default, handler: {(action) in
+                let tempDesc = alert.textFields?.first?.text
+                self.openCamera(tempDesc: tempDesc)
+            })
+            alert.addAction(photo)
+        }
+        
         alert.addAction(saveRecord)
         alert.addAction(cancel)
-        
-        
-        
-        let photo = UIAlertAction(title: (self.photo == nil) ? "Add photo" : "Replace photo", style: .default, handler: {(action) in
-            let tempDesc = alert.textFields?.first?.text
-            self.openCamera(tempDesc: tempDesc)
-        })
-        alert.addAction(photo)
-        
+       
         DispatchQueue.main.async {   //UIAlerts need to be shown on the main thread.
             self.present(alert, animated: true, completion: nil)
         }
