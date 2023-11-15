@@ -32,7 +32,7 @@ Install from SLAC JAMF, Self-service folder.
 
 #### Version Notes
 
-Version 2.0 / May 2023:
+Version 2.1 / May 2023:
 * By CosyLab (Laszlo Szollosi, Attila Lakatos)
   - Statement of Work
   - Simulator bug fix (map coordinates)
@@ -52,6 +52,8 @@ Version 2.0 / May 2023:
   - Search by Dosinumber
   - GPS Validation on Second Scan with new Alert 15
   - Code128 barcode validation with configurable number of character check.
+  - Take a photo of the dosimeter and save to cloudkit
+ 
 
 
 Version 1.3 / October 2021:
